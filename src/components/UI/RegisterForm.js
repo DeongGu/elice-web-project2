@@ -59,11 +59,6 @@ const formReducer = (state, action) => {
 const RegisterForm = (props) => {
   const [formState, dispatchForm] = useReducer(formReducer, initialState);
 
-  const emailRef = useRef();
-  const nicknameRef = useRef();
-  const passwordRef = useRef();
-  const confirmPwdRef = useRef();
-
   // const errorRef = useRef(); -> 에러 메시지 화면 출력을 만들까 말까 생각 중
 
   const inputCheck = {
@@ -85,23 +80,21 @@ const RegisterForm = (props) => {
   const onFocusHandler = (event) => {
     dispatchForm({
       type: 'FOCUS',
-      name: event.target.name,
+      name: event.target.id,
       value: true,
     });
 
     dispatchForm({
       type: 'FIRST_INPUT',
-      name: event.target.name,
+      name: event.target.id,
       value: formState.name,
     });
   };
 
-  // Focus 있는 이유는 처음 눌렀을 때 도움말 비스무리하게 뜨게 하기 위해서
-
   const onBlurHandler = (event) => {
     dispatchForm({
       type: 'FOCUS',
-      name: event.target.name,
+      name: event.target.id,
       value: false,
     });
   };
@@ -212,11 +205,9 @@ const RegisterForm = (props) => {
         <form onSubmit={submitHandler}>
           <label htmlFor='email'>이메일</label>
           <input
-            ref={emailRef}
             className={inputCheck.email}
             type='email'
             id='email'
-            name='email'
             value={formState.email}
             autoComplete='off'
             required
@@ -235,11 +226,9 @@ const RegisterForm = (props) => {
           )}
           <label htmlFor='nickname'>별명</label>
           <input
-            ref={nicknameRef}
             className={inputCheck.nickname}
             type='text'
             id='nickname'
-            name='nickname'
             value={formState.nickname}
             autoComplete='off'
             required
@@ -258,11 +247,9 @@ const RegisterForm = (props) => {
           )}
           <label htmlFor='password'>비밀번호</label>
           <input
-            ref={passwordRef}
             className={inputCheck.password}
             type='password'
             id='password'
-            name='password'
             value={formState.password}
             autoComplete='off'
             required
@@ -281,11 +268,9 @@ const RegisterForm = (props) => {
           )}
           <label htmlFor='confirmPwd'>비밀번호 확인</label>
           <input
-            ref={confirmPwdRef}
             className={inputCheck.confirmPwd}
             type='password'
             id='confirmPwd'
-            name='confirmPwd'
             value={formState.confirmPwd}
             autoComplete='off'
             required
