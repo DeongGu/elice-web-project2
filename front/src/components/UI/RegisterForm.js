@@ -289,7 +289,7 @@ const RegisterForm = (props) => {
           )}
           <button>회원가입</button>
         </form>
-        <div className='line'></div>
+        <div className='line' />
         <p>
           이미 가입하셨나요?
           <span className='login-button'>로그인</span>

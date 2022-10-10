@@ -8,7 +8,7 @@ import '../../assets/style/LoginForm.css';
 
 const USER = '/users';
 
-const LoginForm = (props) => {
+const LoginForm = ({ setShowLoginForm }) => {
   const userCheck = useContext(UserCheckContext);
 
   const [form, setForm] = useState({
@@ -60,7 +60,7 @@ const LoginForm = (props) => {
 
   return (
     <React.Fragment>
-      <ModalBackground toggleHandler={props.setShowLoginForm} />
+      <ModalBackground toggleHandler={setShowLoginForm} />
       <div className='login-form'>
         <h1>로그인</h1>
         {form.isEmpty && <h2>로그인에 실패했습니다. 다시 확인해주세요.</h2>}
@@ -70,18 +70,18 @@ const LoginForm = (props) => {
             type='email'
             id='email'
             onChange={onChangeHandler}
-            value={form.email || ''}
+            value={form.email ?? ''}
           />
           <label htmlFor='password'>비밀번호</label>
           <input
             type='password'
             id='password'
             onChange={onChangeHandler}
-            value={form.password || ''}
+            value={form.password ?? ''}
           />
           <button>로그인</button>
         </form>
-        <div className='line'></div>
+        <div className='line' />
         <p>
           가입하지 않으셨나요?
           <span className='register-button'>회원가입</span>
