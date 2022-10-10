@@ -56,7 +56,7 @@ const formReducer = (state, action) => {
   }
 };
 
-const RegisterForm = (props) => {
+const RegisterForm = ({ setShowRegisterForm }) => {
   const [formState, dispatchForm] = useReducer(formReducer, initialState);
 
   // const errorRef = useRef(); -> 에러 메시지 화면 출력을 만들까 말까 생각 중
@@ -199,7 +199,7 @@ const RegisterForm = (props) => {
 
   return (
     <React.Fragment>
-      <ModalBackground toggleHandler={props.setShowRegisterForm} />
+      <ModalBackground toggleHandler={setShowRegisterForm} />
       <div className='register-form'>
         <h1>회원가입</h1>
         <form onSubmit={submitHandler}>
