@@ -7,7 +7,7 @@ const ModalBackground = ({ toggleHandler }) => {
       onClick={() => {
         toggleHandler(false);
       }}
-    ></div>
+    />
   );
 };
 

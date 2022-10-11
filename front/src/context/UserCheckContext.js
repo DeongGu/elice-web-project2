@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
 
 const UserCheckContext = React.createContext({
+  userList: [],
+  setUserList: () => {},
   user: {},
   setUser: () => {},
 });
 
 export const UserCheckContextProvider = (props) => {
-  const [user, setUser] = useState({});
+  const [userList, setUserList] = useState('');
+  const [user, setUser] = useState('');
 
   const contextValues = {
+    userList,
+    setUserList,
     user,
     setUser,
   };
