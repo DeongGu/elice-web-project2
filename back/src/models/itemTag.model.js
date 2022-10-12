@@ -2,20 +2,19 @@ export default (sequelize, DataTypes) => {
   const ItemTag = sequelize.define(
     "ItemTag",
     {
-      item_id: {
-        type: DataTypes.STRING(300),
+      itemId: {
+        type: DataTypes.UUID,
         allowNull: false,
-        unique: true,
       },
-      tag_name: {
-        type: DataTypes.STRING(30),
+      tagName: {
+        type: DataTypes.STRING(300),
         allowNull: false,
       },
     },
     {
       charset: "utf8mb4",
       collate: "utf8mb4_general_ci",
-      underscored: true,
+      underscored: false,
       paranoid: true,
       freezeTableName: true,
     }

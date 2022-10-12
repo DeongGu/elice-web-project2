@@ -22,7 +22,7 @@ Docker version 20.10.17, build 100c701
 
 ```
 $ git clone https://kdt-gitlab.elice.io/ai_track/class05/data_project/team12.git
-$ git pull back
+$ git pull back ??
 ...
 ```
 

@@ -4,7 +4,7 @@ export default (sequelize, DataTypes) => {
   const User = sequelize.define(
     "User",
     {
-      user_id: {
+      userId: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         allowNull: false,
@@ -15,14 +15,14 @@ export default (sequelize, DataTypes) => {
       nickname: { type: DataTypes.STRING(300), allowNull: false },
       role: { type: DataTypes.STRING(300), allowNull: false },
       username: { type: DataTypes.STRING(300), allowNull: false },
-      phone_number: { type: DataTypes.STRING(300), allowNull: false },
-      profile_image: { type: DataTypes.STRING(300), allowNull: true },
-      user_desc: { type: DataTypes.STRING(3000), allowNull: true },
+      phoneNumber: { type: DataTypes.STRING(300), allowNull: false },
+      profileImage: { type: DataTypes.STRING(300), allowNull: true },
+      userDesc: { type: DataTypes.STRING(3000), allowNull: true },
     },
     {
       charset: "utf8mb4",
       collate: "utf8mb4_general_ci",
-      underscored: true,
+      underscored: false,
       paranoid: true,
       freezeTableName: true,
     }
@@ -40,13 +40,13 @@ export default (sequelize, DataTypes) => {
     }
   });
 
-  User.prototype.isValidPassword = async function (pw) {
-    try {
-      return await bcrypt.compare(pw, this.password);
-    } catch (err) {
-      throw new Error(err);
-    }
-  };
+  // User.prototype.isValidPassword = async function (pw) {
+  //   try {
+  //     return await bcrypt.compare(pw, this.password);
+  //   } catch (err) {
+  //     throw new Error(err);
+  //   }
+  // };
 
   return User;
 };

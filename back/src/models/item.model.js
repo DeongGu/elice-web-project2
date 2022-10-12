@@ -2,17 +2,17 @@ export default (sequelize, DataTypes) => {
   const Item = sequelize.define(
     "Item",
     {
-      item_id: {
+      itemId: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         allowNull: false,
         primaryKey: true,
       },
-      item_name: {
+      itemName: {
         type: DataTypes.STRING(300),
         allowNull: false,
       },
-      itemd_desc: {
+      itemdDesc: {
         type: DataTypes.STRING(300),
         allowNull: false,
       },
@@ -20,15 +20,15 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.STRING(300),
         allowNull: false,
       },
-      user_id: {
-        type: DataTypes.STRING(300),
+      userId: {
+        type: DataTypes.UUID,
         allowNull: false,
       },
     },
     {
       charset: "utf8mb4",
       collate: "utf8mb4_general_ci",
-      underscored: true,
+      underscored: false,
       paranoid: true,
       freezeTableName: true,
     }

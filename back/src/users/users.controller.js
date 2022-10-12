@@ -1,18 +1,9 @@
 import db from "../models";
 
-// exports.createUser = (data, hash) => {
 exports.createUser = (data) => {
   try {
     db.User.create({
-      email: data.email,
-      password: data.password,
-      nickname: data.nickname,
-      role: data.role,
-      username: data.username,
-      phone_number: data.phoneNumber,
-      profile_image: data.profileImage,
-      user_desc: data.userDesc,
-      // ...data,
+      ...data,
     });
 
     return true;
@@ -26,32 +17,41 @@ exports.createUser = (data) => {
 exports.findOneUser = (data) => {
   try {
     return db.User.findOne({
-      where: {
-        userId: data.userId,
-      },
+      where: { ...data },
     });
   } catch (err) {
     throw err;
   }
 };
 
-exports.checkUserEmail = (data) => {
+exports.findUsers = () => {
   try {
-    return db.User.findOne({
-      where: {
-        email: data.email,
-      },
-    });
+    return db.User.findAll();
   } catch (err) {
     throw err;
   }
 };
 
-exports.updateUser = (username, userId) => {
+exports.updateUser = (data, userId) => {
+  try {
+    db.User.update(
+      { ...data },
+      {
+        where: { userId },
+      }
+    );
+
+    return true;
+  } catch (err) {
+    return false;
+  }
+};
+
+exports.updatePassword = (userId, password) => {
   try {
     db.User.update(
       {
-        username,
+        password,
       },
       {
         where: { userId },
@@ -64,16 +64,11 @@ exports.updateUser = (username, userId) => {
   }
 };
 
-exports.updateUserPassword = (userId, password) => {
+exports.deleteUser = (userId) => {
   try {
-    db.User.update(
-      {
-        password,
-      },
-      {
-        where: { userId },
-      }
-    );
+    db.User.destroy({
+      where: { userId },
+    });
 
     return true;
   } catch (err) {

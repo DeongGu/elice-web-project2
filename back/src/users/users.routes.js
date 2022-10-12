@@ -11,10 +11,16 @@ router.post("/register", service.register);
 // 로그인
 router.post("/login", service.login);
 
+// 회원전체 조회
+router.get("/", service.findUsers);
+
 // 프로필조회
-router.post("/readProfile", service.readProfile);
+router.get("/profile/:userId", service.getProfile);
 
 // 프로필수정
-router.post("/updateProfile", service.updateProfile);
+router.put("/profile", service.updateProfile);
+
+// 회원탈퇴
+router.delete("/leave", service.leave);
 
 export default router;

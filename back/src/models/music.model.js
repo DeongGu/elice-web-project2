@@ -34,14 +34,14 @@ export default (sequelize, DataTypes) => {
     {
       charset: "utf8mb4",
       collate: "utf8mb4_general_ci",
-      underscored: true,
+      underscored: false,
       paranoid: true,
       freezeTableName: true,
     }
   );
-  Music.associate = (db) => {
-    db.Music.belongsTo(db.User);
-  };
+  // Music.associate = (db) => {
+  //   db.Music.belongsTo(db.User);
+  // };
 
   return Music;
 };
