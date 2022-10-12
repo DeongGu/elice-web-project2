@@ -23,7 +23,7 @@ exports.login = async (req, res) => {
       userId: user.userId,
       email: user.email,
       nickname: user.nickname,
-      username: user.username,
+      // username: user.username,
     };
 
     if (result === true) {
