@@ -16,12 +16,7 @@ class App {
 
   setMiddleWare() {
     this.app.use(bodyParser.json());
-    this.app.use(
-      cors({
-        origin: "*",
-        credentials: false,
-      })
-    );
+    this.app.use(cors({ credentials: true, origin: true }));
   }
 
   router() {
