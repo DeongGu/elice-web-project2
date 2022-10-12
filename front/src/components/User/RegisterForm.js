@@ -1,7 +1,5 @@
-import { useState, useContext } from 'react';
-
+import useForm from '../../hooks/useForm';
 import FormInputList from './FormInputList';
-import UserCheckContext from '../../context/UserCheckContext';
 
 const formInputData = [
   {
@@ -34,36 +32,13 @@ const initialState = {
 };
 
 export default function RegisterForm() {
-  const [form, setForm] = useState(initialState);
-  const userCheck = useContext(UserCheckContext);
+  const { form, onChangeHandler, onSubmitHandler } = useForm(initialState);
 
-  const onSubmitHandler = (event) => {
-    event.preventDefault();
-
-    if (userCheck.user) {
-      return;
-    }
-
-    userCheck.setUserList((prevState) => [
-      ...prevState,
-      {
-        email: form.email,
-        nickname: form.nickname,
-        pwd: form.pwd,
-      },
-    ]);
-
-    setForm(initialState);
-    console.log('회원가입 성공');
-  };
+  const inputProps = { form, formInputData, onChangeHandler, onSubmitHandler };
 
   return (
     <form onSubmit={onSubmitHandler}>
-      <FormInputList
-        form={form}
-        setForm={setForm}
-        formInputData={formInputData}
-      />
+      <FormInputList {...inputProps} />
       <button>회원가입</button>
     </form>
   );

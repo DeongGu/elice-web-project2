@@ -1,7 +1,5 @@
-import { useState, useContext } from 'react';
-
+import useForm from '../../hooks/useForm';
 import FormInputList from './FormInputList';
-import UserCheckContext from '../../context/UserCheckContext';
 
 const formInputData = [
   {
@@ -22,36 +20,13 @@ const initialState = {
 };
 
 export default function DeleteForm() {
-  const [form, setForm] = useState(initialState);
-  const userCheck = useContext(UserCheckContext);
+  const { form, onChangeHandler, onSubmitHandler } = useForm(initialState);
 
-  const onSubmitHandler = (event) => {
-    event.preventDefault();
-
-    if (!(form.email && form.pwd)) {
-      return;
-    }
-
-    userCheck.userList.forEach((user) => {
-      if (user.email === form.email && user.pwd === form.pwd) {
-        userCheck.setUser('');
-        userCheck.setUserList(
-          userCheck.userList.filter((listUser) => listUser !== user)
-        );
-      }
-    });
-
-    setForm(initialState);
-    console.log('삭제 성공');
-  };
+  const inputProps = { form, formInputData, onChangeHandler, onSubmitHandler };
 
   return (
     <form onSubmit={onSubmitHandler}>
-      <FormInputList
-        form={form}
-        setForm={setForm}
-        formInputData={formInputData}
-      />
+      <FormInputList {...inputProps} />
       <button>삭제</button>
     </form>
   );
