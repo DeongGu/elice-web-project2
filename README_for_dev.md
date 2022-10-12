@@ -2,7 +2,7 @@
 
 <br>
 
-## 1. Docker 설치
+7## 1. Docker 설치
 
 - https://www.docker.com \
   운영체제에 맞는 docker 다운로드 및 설치
@@ -22,8 +22,11 @@ Docker version 20.10.17, build 100c701
 
 ```
 $ git clone https://kdt-gitlab.elice.io/ai_track/class05/data_project/team12.git
-$ git pull back ??
-...
+$ cd team12
+$ git checkout -t origin/back
+Switched to a new branch 'back'
+branch 'back' set up to track 'origin/back'.
+(back) $
 ```
 
 <br>
@@ -31,8 +34,20 @@ $ git pull back ??
 ## 3. git 기본경로 \_db 및 back 폴더 생성 확인
 
 ```
-$ ls -la
-$ dir
+$ ls -la 또는 dir
+
+total 24
+drwxr-xr-x 1 wisht 197609    0 10월 12 18:57 ./
+drwxr-xr-x 1 wisht 197609    0 10월 12 18:54 ../
+drwxr-xr-x 1 wisht 197609    0 10월 12 18:57 .git/
+drwxr-xr-x 1 wisht 197609    0 10월 12 18:57 .vscode/
+drwxr-xr-x 1 wisht 197609    0 10월 12 18:57 _db/
+drwxr-xr-x 1 wisht 197609    0 10월 12 18:57 _doc/
+drwxr-xr-x 1 wisht 197609    0 10월 12 18:57 back/
+drwxr-xr-x 1 wisht 197609    0 10월 12 18:57 front/
+-rw-r--r-- 1 wisht 197609 6029 10월 12 18:52 README.md
+-rw-r--r-- 1 wisht 197609 2412 10월 12 18:57 README_for_dev.md
+
 ```
 
 <br>
@@ -40,7 +55,7 @@ $ dir
 ## 4. Docker 실행
 
 ```
-$ cd _db
+$ cd back
 $ yarn db
 ```
 
@@ -74,7 +89,7 @@ $ yarn
 
 ## 7. 벡엔드 환경 파일 작성
 
-- /back/src/ 경로에 `.env` 파일을 작성한다.
+- ./back 경로에 `.env` 파일을 작성한다.
 - 내용은 아래와 같다. \
   (복붙하세요~~)
 
