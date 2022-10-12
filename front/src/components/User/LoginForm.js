@@ -1,7 +1,8 @@
 import useForm from '../../hooks/useForm';
-import FormInputList from './FormInputList';
 
-const formInputData = [
+import InputList from './InputList';
+
+const inputData = [
   {
     type: 'email',
     name: 'email',
@@ -9,24 +10,28 @@ const formInputData = [
   },
   {
     type: 'password',
-    name: 'pwd',
+    name: 'password',
     description: '비밀번호',
   },
 ];
 
 const initialState = {
   email: '',
-  pwd: '',
+  password: '',
 };
 
 export default function LoginForm() {
-  const { form, onChangeHandler, onSubmitHandler } = useForm(initialState);
+  const { form, onChangeHandler, onSubmitHandler } = useForm(
+    initialState,
+    'get',
+    'users/profile/'
+  );
 
-  const inputProps = { form, formInputData, onChangeHandler, onSubmitHandler };
+  const inputProps = { form, inputData, onChangeHandler };
 
   return (
     <form onSubmit={onSubmitHandler}>
-      <FormInputList {...inputProps} />
+      <InputList {...inputProps} />
       <button>로그인</button>
     </form>
   );

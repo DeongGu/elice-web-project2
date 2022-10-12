@@ -1,10 +1,12 @@
 import { useContext } from 'react';
 
 import useForm from '../../hooks/useForm';
-import UserCheckContext from '../../context/UserCheckContext';
-import FormInputList from './FormInputList';
 
-const formInputData = [
+import InputList from './InputList';
+
+import UserCheckContext from '../../context/UserCheckContext';
+
+const inputData = [
   {
     type: 'text',
     name: 'nickname',
@@ -19,13 +21,19 @@ const formInputData = [
 
 export default function EditForm() {
   const userCheck = useContext(UserCheckContext);
+
   const initialState = { ...userCheck.user };
-  const { form, onChangeHandler, onSubmitHandler } = useForm(initialState);
-  const inputProps = { form, formInputData, onChangeHandler, onSubmitHandler };
+
+  const { form, onChangeHandler, onSubmitHandler } = useForm(
+    initialState,
+    'put',
+    'users/profile'
+  );
+  const inputProps = { form, inputData, onChangeHandler };
 
   return (
     <form onSubmit={onSubmitHandler}>
-      <FormInputList {...inputProps} />
+      <InputList {...inputProps} />
       <button>수정</button>
     </form>
   );

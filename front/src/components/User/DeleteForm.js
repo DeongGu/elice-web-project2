@@ -1,7 +1,8 @@
 import useForm from '../../hooks/useForm';
-import FormInputList from './FormInputList';
 
-const formInputData = [
+import InputList from './InputList';
+
+const inputData = [
   {
     type: 'email',
     name: 'email',
@@ -20,13 +21,17 @@ const initialState = {
 };
 
 export default function DeleteForm() {
-  const { form, onChangeHandler, onSubmitHandler } = useForm(initialState);
+  const { form, onChangeHandler, onSubmitHandler } = useForm(
+    initialState,
+    'delete',
+    'users/leave'
+  );
 
-  const inputProps = { form, formInputData, onChangeHandler, onSubmitHandler };
+  const inputProps = { form, inputData, onChangeHandler };
 
   return (
     <form onSubmit={onSubmitHandler}>
-      <FormInputList {...inputProps} />
+      <InputList {...inputProps} />
       <button>삭제</button>
     </form>
   );

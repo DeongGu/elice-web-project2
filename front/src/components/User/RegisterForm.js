@@ -1,7 +1,9 @@
 import useForm from '../../hooks/useForm';
-import FormInputList from './FormInputList';
+import useValidation from '../../hooks/useValidation';
 
-const formInputData = [
+import ValidateInputList from './ValidateInputList';
+
+const inputData = [
   {
     type: 'email',
     name: 'email',
@@ -14,7 +16,7 @@ const formInputData = [
   },
   {
     type: 'password',
-    name: 'pwd',
+    name: 'password',
     description: '비밀번호',
   },
   {
@@ -27,18 +29,26 @@ const formInputData = [
 const initialState = {
   email: '',
   nickname: '',
-  pwd: '',
+  password: '',
   confirmPwd: '',
 };
 
 export default function RegisterForm() {
-  const { form, onChangeHandler, onSubmitHandler } = useForm(initialState);
+  const { form, setForm, formIsValid, setFormIsValid, onSubmitHandler } =
+    useForm(initialState, 'post', 'users/register');
 
-  const inputProps = { form, formInputData, onChangeHandler, onSubmitHandler };
+  const { validateHandler } = useValidation(setForm, setFormIsValid);
+
+  const inputProps = {
+    inputData,
+    validateHandler,
+    form,
+    formIsValid,
+  };
 
   return (
     <form onSubmit={onSubmitHandler}>
-      <FormInputList {...inputProps} />
+      <ValidateInputList {...inputProps} />
       <button>회원가입</button>
     </form>
   );

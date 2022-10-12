@@ -1,12 +1,22 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 
-import UserCheckContext from '../context/UserCheckContext';
+import useRequest from './useRequest';
 
-export default function useForm(initialState = {}, endPoint = '') {
-  const userCheck = useContext(UserCheckContext);
+export default function useForm(
+  initialState = {},
+  method = 'get',
+  endPoint = ''
+) {
   const [form, setForm] = useState(initialState);
   const [formIsValid, setFormIsValid] = useState(initialState);
-  const [formIsFocused, setFormIsFocused] = useState(initialState);
+
+  const { onSubmitHandler } = useRequest(
+    method,
+    endPoint,
+    form,
+    setForm,
+    initialState
+  );
 
   const onChangeHandler = (event) => {
     const { value, id } = event.target;
@@ -14,27 +24,11 @@ export default function useForm(initialState = {}, endPoint = '') {
     setForm((prevState) => ({ ...prevState, [id]: value }));
   };
 
-  const onSubmitHandler = (event) => {
-    event.preventDefault();
-
-    if (endPoint === 'GET') {
-    }
-    if (endPoint === 'GET') {
-    }
-    if (endPoint === 'GET') {
-    }
-    if (endPoint === 'GET') {
-    }
-
-    setForm(initialState);
-  };
-
   return {
     form,
+    setForm,
     formIsValid,
     setFormIsValid,
-    formIsFocused,
-    setFormIsFocused,
     onChangeHandler,
     onSubmitHandler,
   };
