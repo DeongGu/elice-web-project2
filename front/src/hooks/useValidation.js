@@ -2,7 +2,7 @@ import { useRef } from 'react';
 
 import { Validate } from '../components/User/Validate';
 
-export default function useValidation(setForm, setFormIsValid, TIME = 1000) {
+export default function useValidation(setForm, setFormIsValid, TIME = 500) {
   const timerRef = useRef();
 
   const validateHandler = (event) => {

@@ -42,11 +42,7 @@ export default function useRequest(
         }
       );
 
-      if (endPoint === 'users/profile') {
-        userCheck.setUser(response);
-        setIsLoading(false);
-        return;
-      }
+      const accessToken = response?.data?.accessToken;
     } catch (err) {
       setError(err);
     } finally {
@@ -54,5 +50,5 @@ export default function useRequest(
     }
   };
 
-  return { onSubmitHandler };
+  return { onSubmitHandler, isLoading };
 }

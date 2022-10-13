@@ -10,7 +10,7 @@ export default function useForm(
   const [form, setForm] = useState(initialState);
   const [formIsValid, setFormIsValid] = useState(initialState);
 
-  const { onSubmitHandler } = useRequest(
+  const { onSubmitHandler, isLoading } = useRequest(
     method,
     endPoint,
     form,
@@ -31,5 +31,6 @@ export default function useForm(
     setFormIsValid,
     onChangeHandler,
     onSubmitHandler,
+    isLoading,
   };
 }
