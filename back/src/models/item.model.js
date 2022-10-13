@@ -14,11 +14,11 @@ export default (sequelize, DataTypes) => {
       },
       itemdDesc: {
         type: DataTypes.STRING(300),
-        allowNull: false,
+        allowNull: true,
       },
       status: {
-        type: DataTypes.STRING(300),
-        allowNull: false,
+        type: DataTypes.ENUM("inStock", "onTrading", "outOfStock"),
+        defaultValue: "inStock",
       },
       userId: {
         type: DataTypes.UUID,

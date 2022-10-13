@@ -40,13 +40,13 @@ export default (sequelize, DataTypes) => {
     }
   });
 
-  // User.prototype.isValidPassword = async function (pw) {
-  //   try {
-  //     return await bcrypt.compare(pw, this.password);
-  //   } catch (err) {
-  //     throw new Error(err);
-  //   }
-  // };
+  User.prototype.isValidPassword = async function (pw) {
+    try {
+      return await bcrypt.compare(pw, this.password);
+    } catch (err) {
+      throw new Error(err);
+    }
+  };
 
   return User;
 };
