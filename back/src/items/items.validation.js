@@ -11,6 +11,5 @@ export default {
     phoneNumber: Joi.string(),
     profileImage: Joi.string(),
     itemDesc: Joi.string(),
-    createdAt: Joi.string(),
   }),
 };

@@ -12,7 +12,7 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.STRING(300),
         allowNull: false,
       },
-      itemdDesc: {
+      itemDesc: {
         type: DataTypes.STRING(300),
         allowNull: true,
       },
