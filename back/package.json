@@ -20,8 +20,7 @@
   },
   "scripts": {
     "db": "docker-compose up -d",
-    "start": "nodemon --exec babel-node src/server.js --delay 2",
-    "pm2": "pm2 start src/startscript.js --name back-server"
+    "start": "nodemon --exec babel-node src/server.js --delay 2"
   },
   "devDependencies": {
     "nodemon": "^2.0.4",
