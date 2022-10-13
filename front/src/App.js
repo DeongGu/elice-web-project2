@@ -1,9 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-import Main from './components/Main/Main';
-import UserInfo from './components/User/UserInfo';
-
 import './App.css';
+
+import RegisterForm from './components/User/RegisterForm';
 
 import { UserCheckContextProvider } from './context/UserCheckContext';
 
@@ -12,8 +11,7 @@ function App() {
     <UserCheckContextProvider>
       <Router>
         <Routes>
-          <Route path='/' element={<Main />} exact />
-          <Route path='/:userid' element={<UserInfo />} />
+          <Route path='/' element={<RegisterForm />} exact />
         </Routes>
       </Router>
     </UserCheckContextProvider>

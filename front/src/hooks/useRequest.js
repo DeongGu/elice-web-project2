@@ -43,6 +43,7 @@ export default function useRequest(
       );
 
       const accessToken = response?.data?.accessToken;
+      console.log(`${method}, ${endPoint}로 요청 성공`);
     } catch (err) {
       setError(err);
     } finally {
