@@ -1,25 +1,26 @@
 import express from "express";
+import service from "./users.service";
 import validation from "./users.validation";
-const controller = require("./users.controller");
-const { validate } = require("express-validation");
+import { validate } from "express-validation";
 const router = express.Router();
 
 // 회원가입
-router.post("/users/register", validate(validation, {}, {}), controller.create);
+// router.post('/register', validate(validation, {}, {}), service.register);
+router.post("/register", service.register);
 
-// id로 조회
-router.get("/users/:userId", controller.findOne);
+// 로그인
+router.post("/login", service.login);
 
-// id로 수정
-router.put("/users/:userId", validate(validation, {}, {}), controller.update);
+// 회원전체 조회
+router.get("/", service.findUsers);
 
-// id로 삭제
-router.delete("/users/:userId", controller.delete);
+// 프로필조회
+router.get("/profile/:userId", service.getProfile);
 
-// 전체 조회
-router.get("/users", controller.findAll);
+// 프로필수정
+router.put("/profile", service.updateProfile);
 
-// 전체 삭제
-router.delete("/users", controller.deleteAll);
+// 회원탈퇴
+router.delete("/leave", service.leave);
 
-module.exports = router;
+export default router;

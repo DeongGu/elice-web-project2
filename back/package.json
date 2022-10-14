@@ -1,37 +1,30 @@
 {
-  "name": "team12",
-  "version": "1.0.0",
-  "description": "",
-  "main": "src/app.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon src/app --exec babel-node",
-    "dev": "nodemon src/app --exec babel-node --watch 'src/**/*.js' --require dotenv/config"
-  },
-  "author": "team12",
-  "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.20.0",
-    "connect-redis": "^6.1.3",
+    "@babel/core": "^7.11.4",
+    "@babel/node": "^7.10.5",
+    "@babel/preset-env": "^7.11.0",
+    "aws-sdk": "^2.741.0",
+    "bcrypt": "^5.0.0",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
     "cors": "^2.8.5",
-    "debug": "^4.3.4",
-    "express": "^4.18.1",
-    "express-session": "^1.17.3",
+    "dotenv": "^16.0.3",
+    "express": "^4.17.1",
     "express-validation": "^4.1.0",
-    "http-status": "^1.5.3",
-    "joi": "^17.6.2",
-    "method-override": "^3.0.0",
-    "mysql2": "^2.3.3",
-    "redis": "^3.1.2",
-    "uuid": "^9.0.0"
+    "jsonwebtoken": "^8.5.1",
+    "multer": "^1.4.2",
+    "multer-s3": "^2.9.0",
+    "mysql2": "^2.1.0",
+    "pm2": "^5.2.0",
+    "sequelize": "^6.3.4"
+  },
+  "scripts": {
+    "db": "docker-compose up -d",
+    "start": "nodemon --exec babel-node src/server.js --delay 2",
+    "pm2": "pm2 start src/startscript.js --name back-server"
   },
   "devDependencies": {
-    "@babel/cli": "^7.19.3",
-    "@babel/core": "^7.19.3",
-    "@babel/node": "^7.19.1",
-    "@babel/plugin-transform-runtime": "^7.19.1",
-    "@babel/preset-env": "^7.19.3",
-    "dotenv": "^16.0.3",
-    "nodemon": "^2.0.20"
+    "nodemon": "^2.0.4",
+    "sequelize-cli": "^6.5.1"
   }
 }

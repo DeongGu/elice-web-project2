@@ -1,14 +1,44 @@
-require("dotenv/config");
-const mysql = require("mysql2");
-const DB_URL = process.env.DB_URL || "DB 서버 주소가 설정되지 않았습니다.";
+import dotenv from "dotenv";
+dotenv.config();
 
-const db = (schema) => {
-  return mysql.createPool({
-    host: `${DB_URL}`,
-    user: `${process.env.DB_USER}`,
-    password: `${process.env.DB_PASSWORD}`,
-    database: `${schema}`,
-  });
+const env = process.env;
+
+console.log(`username: ${env.MYSQL_USERNAME}`);
+
+const development = {
+  username: env.MYSQL_USERNAME,
+  password: env.MYSQL_PASSWORD,
+  database: env.MYSQL_DATABASE,
+  host: env.MYSQL_HOST,
+  dialect: "mysql",
+  port: env.MYSQL_PORT,
+  ssl: "Amazon RDS",
+  logging: console.log,
+  timezone: "+09:00",
 };
 
-module.exports = db;
+const production = {
+  username: env.MYSQL_USERNAME,
+  password: env.MYSQL_PASSWORD,
+  database: env.MYSQL_DATABASE,
+  host: env.MYSQL_HOST,
+  dialect: "mysql",
+  port: env.MYSQL_PORT,
+  ssl: "Amazon RDS",
+  logging: console.log,
+  timezone: "+09:00",
+};
+
+const test = {
+  username: env.MYSQL_USERNAME,
+  password: env.MYSQL_PASSWORD,
+  database: env.MYSQL_DATABASE_TEST,
+  host: env.MYSQL_HOST,
+  dialect: "mysql",
+  port: env.MYSQL_PORT,
+  ssl: "Amazon RDS",
+  logging: console.log,
+  timezone: "+09:00",
+};
+
+module.exports = { development, production, test };

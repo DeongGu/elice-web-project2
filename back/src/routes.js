@@ -1,37 +1,11 @@
-import debug from "debug";
-import HTTPStatus from "http-status";
-import { APIClientError } from "./helpers/APIResponse";
-import wrapAsync from "./helpers/wrapAsync";
+import usersRoutes from "./users/users.routes";
+import itemRoutes from "./items/items.routes";
+import musicRoutes from "./music/music.routes";
 
-// Routes
-import userRoutes from "./users/users.routes";
+export default (App) => {
+  const router = App;
 
-const log = debug("routes");
-
-const app = (app) => {
-  // logger
-  app.use((req, res, next) => {
-    console.log(`${new Date().toISOString()} [${req.method}] ${req.url}`);
-    log(`${new Date().toISOString()} [${req.method}] ${req.url}`);
-    next();
-  });
-
-  // Insert routes below
-  app.use("/api", userRoutes);
-
-  // Handler for invalid routes
-  app.all(
-    "*",
-    wrapAsync(async (req, res, next) => {
-      throw new APIClientError(
-        {
-          message: "Invalid route.",
-        },
-        HTTPStatus.NOT_FOUND,
-        HTTPStatus["404"]
-      );
-    })
-  );
+  router.use("/users", usersRoutes);
+  router.use("/items", itemRoutes);
+  router.use("/music", musicRoutes);
 };
-
-module.exports = app;

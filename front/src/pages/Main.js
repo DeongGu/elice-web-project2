@@ -1,39 +1,72 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
 import ItemList from "../components/Item/ItemList.js";
+import SlideBanner from "../components/UI/SlideBanner.js";
 
 const Main = (props) => {
-  const [itemList, setItemList] = useState([]);
-  useEffect(() => {
-    axios.get("/dummy/data.json").then((res) => {
-      // console.log(res.data);
-      setItemList(res.data);
-    });
-  }, []);
-
+  const navigate = useNavigate();
   return (
     <>
-      <h1>여기는 메인페이지입니다.</h1>
-      <ul>
-        <li key={1}>
-          <Link to="/prolog">
-            <span>소개</span>
-          </Link>
-        </li>
+      <SlideBanner></SlideBanner>
+      <MainBlock>
+        <Search>
+          <select>
+            <option value="1">인기순</option>
+            <option value="2">조회순</option>
+            <option value="3">상품명</option>
+            <option value="4">한마디</option>
+          </select>
+          <input type={"text"} placeholder="검색하세요"></input>
+          <button>검색</button>
+        </Search>
 
-        <li key={2}>
-          <Link to="/item/create">
-            <span>상품 생성</span>
-          </Link>
-        </li>
-      </ul>
+        <StyledBtn onClick={() => navigate("/item")}>상품 생성</StyledBtn>
 
-      <ul>
-        <ItemList itemList={itemList}></ItemList>
-      </ul>
+        <ItemList></ItemList>
+      </MainBlock>
     </>
   );
 };
 
 export default Main;
+
+const MainBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+  border-top: 2px solid rgba(0, 0, 0, 0.2);
+`;
+
+const Search = styled.div`
+  margin: 30px;
+
+  & select {
+    height: 40px;
+  }
+
+  input {
+    margin-left: 10px;
+    height: 35px;
+    width: 200px;
+  }
+
+  button {
+    margin-left: 10px;
+    height: 30px;
+  }
+`;
+
+const StyledBtn = styled.button`
+  display: block;
+  width: 100px;
+  margin: 0 1000px;
+  height: 50px;
+  cursor: pointer;
+  border-radius: 15px;
+  border: none;
+  background-color: rgba(23, 255, 256, 0.7);
+
+  &:hover {
+    background-color: rgba(23, 255, 256, 0.3);
+  }
+`;
