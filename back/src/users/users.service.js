@@ -21,15 +21,13 @@ exports.login = async (req, res) => {
     const result = await bcrypt.compare(password, user.password);
     const userInfo = {
       userId: user.userId,
-      email: user.email,
       nickname: user.nickname,
-      // username: user.username,
     };
 
     if (result === true) {
       const token = jwt.sign(userInfo, SECRET_KEY);
 
-      return res.status(200).send({ Authentication: token });
+      return res.status(200).send({ Authentication: token, ...userInfo });
     }
 
     return res.status(401).send({ message: "INCORRECT PASSWORD" });
