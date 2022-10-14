@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
 import useForm from '../../hooks/useForm';
+import useRequest from '../../hooks/useRequest';
 import useValidation from '../../hooks/useValidation';
 
 import ValidateInputList from './ValidateInputList';
@@ -35,29 +35,28 @@ const initialState = {
 };
 
 export default function RegisterForm() {
-  const {
-    form,
-    setForm,
-    formIsValid,
-    setFormIsValid,
-    onSubmitHandler,
-    isLoading,
-  } = useForm(initialState, 'post', 'users/register');
-
+  const { form, setForm, formIsValid, setFormIsValid } = useForm(initialState);
   const { validateHandler } = useValidation(setForm, setFormIsValid);
+  const { requestHandler } = useRequest('post', 'users', '', form);
+
+  const onSubmitHandler = async (event) => {
+    event.preventDefault();
+    await requestHandler();
+    setForm(initialState);
+    setFormIsValid(initialState);
+  };
 
   const inputProps = {
     inputData,
-    validateHandler,
     form,
     formIsValid,
+    validateHandler,
   };
 
   return (
     <form onSubmit={onSubmitHandler}>
       <ValidateInputList {...inputProps} />
       <button>회원가입</button>
-      {isLoading ? console.log('로딩 중') : ''}
     </form>
   );
 }
