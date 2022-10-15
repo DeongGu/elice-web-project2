@@ -1,7 +1,7 @@
 import express from "express";
 import service from "./users.service";
-import validation from "./users.validation";
-import { validate } from "express-validation";
+// import validation from "./users.validation";
+// import { validate } from "express-validation";
 const router = express.Router();
 
 // 회원가입

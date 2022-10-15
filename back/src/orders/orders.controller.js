@@ -1,8 +1,8 @@
 import db from "../models";
 
-exports.createItem = (newItem) => {
+exports.createOrder = (newOrder) => {
   try {
-    db.item.create(newItem);
+    db.order.create(newOrder);
     return true;
   } catch (err) {
     console.error(err.message);
@@ -11,9 +11,9 @@ exports.createItem = (newItem) => {
   }
 };
 
-exports.findOneItem = (data) => {
+exports.findOneOrder = (data) => {
   try {
-    return db.item.findOne({
+    return db.order.findOne({
       where: data,
     });
   } catch (err) {
@@ -21,17 +21,17 @@ exports.findOneItem = (data) => {
   }
 };
 
-exports.findAllItems = () => {
+exports.findAllOrders = () => {
   try {
-    return db.item.findAll();
+    return db.order.findAll();
   } catch (err) {
     throw err;
   }
 };
 
-exports.updateItem = (updateItem, id) => {
+exports.updateOrder = (updateOrder, id) => {
   try {
-    db.item.update(updateItem, {
+    db.order.update(updateOrder, {
       where: { id: id },
     });
 
@@ -41,9 +41,9 @@ exports.updateItem = (updateItem, id) => {
   }
 };
 
-exports.deleteItem = (id) => {
+exports.deleteOrder = (id) => {
   try {
-    db.item.destroy({
+    db.order.destroy({
       where: { id: id },
     });
 

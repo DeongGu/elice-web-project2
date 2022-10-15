@@ -1,8 +1,8 @@
 import db from "../models";
 
-exports.createItem = (newItem) => {
+exports.createDelivery = (newDelivery) => {
   try {
-    db.item.create(newItem);
+    db.delivery.create(newDelivery);
     return true;
   } catch (err) {
     console.error(err.message);
@@ -11,9 +11,9 @@ exports.createItem = (newItem) => {
   }
 };
 
-exports.findOneItem = (data) => {
+exports.findOneDelivery = (data) => {
   try {
-    return db.item.findOne({
+    return db.delivery.findOne({
       where: data,
     });
   } catch (err) {
@@ -21,17 +21,17 @@ exports.findOneItem = (data) => {
   }
 };
 
-exports.findAllItems = () => {
+exports.findAllDeliveries = () => {
   try {
-    return db.item.findAll();
+    return db.delivery.findAll();
   } catch (err) {
     throw err;
   }
 };
 
-exports.updateItem = (updateItem, id) => {
+exports.updateDelivery = (updateDelivery, id) => {
   try {
-    db.item.update(updateItem, {
+    db.delivery.update(updateDelivery, {
       where: { id: id },
     });
 
@@ -41,9 +41,9 @@ exports.updateItem = (updateItem, id) => {
   }
 };
 
-exports.deleteItem = (id) => {
+exports.deleteDelivery = (id) => {
   try {
-    db.item.destroy({
+    db.delivery.destroy({
       where: { id: id },
     });
 

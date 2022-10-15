@@ -20,14 +20,14 @@ exports.login = async (req, res) => {
 
     const result = await bcrypt.compare(password, user.password);
     const userInfo = {
-      userId: user.userId,
+      userId: user.id,
       nickname: user.nickname,
     };
 
     if (result === true) {
       const token = jwt.sign(userInfo, SECRET_KEY);
 
-      return res.status(200).send({ Authentication: token, ...userInfo });
+      return res.status(200).send({ Authentication: token });
     }
 
     return res.status(401).send({ message: "INCORRECT PASSWORD" });
@@ -58,10 +58,14 @@ exports.getProfile = async (req, res) => {
     const result = checkJWT(req.headers);
     let editable = false;
 
-    if (result && req.headers.userId === searchId) {
+    if (result === false) {
+      return res.status(401).send({ message: "UNSERVICEABLE TOKEN" });
+    }
+
+    if (result.userId === searchId) {
       editable = true;
     }
-    const user = await controller.findOneUser({ userId: searchId });
+    const user = await controller.findOneUser({ id: searchId });
 
     return res.status(200).send([user, { editable }]);
   } catch (err) {
@@ -77,13 +81,25 @@ exports.register = async (req, res) => {
       return res.status(400).send({ message: "NEED REGISTER USER INFO" });
     }
 
-    const user = await controller.findOneUser({ email });
+    const existingUser = await controller.findOneUser({ email });
 
-    if (user) {
-      return res.status(400).send({ message: "UNUSABLE EMAIL" });
+    if (existingUser) {
+      return res.status(400).send({ message: "Email already exists." });
     }
 
-    const result = controller.createUser(req.body);
+    const user = {
+      id: req.body.userId,
+      email: req.body.email,
+      password: req.body.password,
+      nickname: req.body.nickname,
+      role: req.body.role,
+      name: req.body.username,
+      phone_number: req.body.phoneNumber,
+      profile_image: req.body.profileImage,
+      user_desc: req.body.userDesc,
+    };
+
+    const result = controller.createUser(user);
 
     if (result === false) {
       return res.status(500).send({ message: "FAIL CREATE USER" });
@@ -104,8 +120,17 @@ exports.updateProfile = async (req, res) => {
       return res.status(401).send({ message: "UNSERVICEABLE TOKEN" });
     }
 
+    const user = {
+      nickname: req.body.nickname,
+      role: req.body.role,
+      username: req.body.username,
+      phone_number: req.body.phoneNumber,
+      profile_image: req.body.profileImage,
+      user_desc: req.body.userDesc,
+    };
+
     if (result.userId) {
-      controller.updateUser(req.body, result.userId);
+      controller.updateUser(user, result.userId);
     }
 
     return res.status(200).send({ message: "UPDATED PROFILE" });
