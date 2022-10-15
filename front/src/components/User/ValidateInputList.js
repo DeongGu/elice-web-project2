@@ -1,8 +1,8 @@
 export default function ValidateInputList({
   inputData,
-  validateHandler,
   form,
   formIsValid,
+  validateHandler,
 }) {
   return inputData.map((data, index) => {
     return (

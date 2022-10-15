@@ -1,11 +1,11 @@
-import { useRef } from 'react';
+import { useCallback, useRef } from 'react';
 
 import { Validate } from '../components/User/Validate';
 
-export default function useValidation(setForm, setFormIsValid, TIME = 500) {
+export default function useValidation(setForm, setFormIsValid, TIME = 300) {
   const timerRef = useRef();
 
-  const validateHandler = (event) => {
+  const validateHandler = useCallback((event) => {
     const { id, value } = event.target;
 
     setForm((prevState) => ({
@@ -23,7 +23,7 @@ export default function useValidation(setForm, setFormIsValid, TIME = 500) {
         [id]: Validate[id].test(value),
       }));
     }, TIME);
-  };
+  });
 
   return { validateHandler };
 }

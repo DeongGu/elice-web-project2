@@ -1,4 +1,5 @@
 import useForm from '../../hooks/useForm';
+import useRequest from '../../hooks/useRequest';
 
 import InputList from './InputList';
 
@@ -21,11 +22,19 @@ const initialState = {
 };
 
 export default function LoginForm() {
-  const { form, onChangeHandler, onSubmitHandler } = useForm(
-    initialState,
-    'get',
-    'users/profile/'
+  const { form, setForm, onChangeHandler } = useForm(initialState);
+  const { requestHandler, isLoading } = useRequest(
+    'post',
+    'users/login',
+    '',
+    form
   );
+
+  const onSubmitHandler = async (event) => {
+    event.preventDefault();
+    await requestHandler();
+    setForm(initialState);
+  };
 
   const inputProps = { form, inputData, onChangeHandler };
 
