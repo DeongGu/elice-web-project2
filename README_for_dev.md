@@ -60,7 +60,7 @@ drwxr-xr-x 1 wisht 197609    0 10월 12 18:57 front/
 ```
 PORT=5000
 DB_DIALECT=mysql
-MYSQL_USERNAME= root
+MYSQL_USERNAME= team12
 MYSQL_PASSWORD= pwteam12
 MYSQL_DATABASE= shop
 MYSQL_HOST=localhost
@@ -98,11 +98,11 @@ $ yarn db
 
 <br>
 
-## 7. Docker 정상실행 확인
+## 7. Docker 정상실행 확인 <br>
 
-- ![01](/_doc/img/01.png)
-
-- ![02](/_doc/img/02.png)
+![01](/_doc/img/01.png)
+<br><br>
+![02](/_doc/img/02.png)
 
 <br>
 
@@ -132,23 +132,67 @@ $ yarn start
 ## 10. 접속 및 API 동작을 테스트를 해본다.
 
 - API URL 예시\
-  http://localhost:5000/api/users
+  http://localhost:5000/api/items
 - Postman API Doc \
   https://www.postman.com/tlabtlab/workspace/team12/collection/17580924-3eba8753-7078-456e-abb0-ac5c8d3dea26?action=share&creator=17580924
 
 <br>
 
-## 11. DB는 관리자 화면으로 로그인하여 확인 가능하다.
+## 11. 간단한 DB 확인은 관리자 화면에서 가능하다.
 
 - http://localhost:8080
+- 상세한 사항은 '기타' 참고
 
 ```
 - 데이터베이스 형식: MySQL
 - 서버: mysqldb
-- 사용자이름: root
+- 사용자이름: root 또는 team12
 - 비밀번호: pwteam12
 - 데이터베이스: shop
 ```
 
-- ![03](/_doc/img/03.png)
-- ![04](/_doc/img/04.png)
+![03](/_doc/img/03.png)
+![04](/_doc/img/04.png)
+
+---
+
+<br>
+
+# 기타
+
+## pm2 로 yarn 실행 (windows 기준)
+
+```
+yarn pm2
+```
+
+<br>
+
+## 포스트맨 테스트 방법
+
+1. Local에서 테스트할지 VM에서 테스트할지 정하고, 해당 콜랙션으로 들어간다.
+
+2. User API 에서 회원가입을 한다.
+
+3. 로그인을 하고 응답 body 값을 확인한다.
+   { "Authentication": "긴 JWT 코드"}
+
+4. 이걸 콜랙션(ex. Local)에 Authentication 에 넣는다. <br><br>
+   ![05](/_doc/img/05.png)
+
+5. 회원 목록을 조회한다.
+
+6. 내가 로그인한 userId 값을 복사한다.
+
+7. 이걸 콜랙션(ex. Local)에 Varables 의 userId의 VALUE 에 넣는다. <br><br>
+   ![06](/_doc/img/06.png)
+
+8. 이제 테스트를 진행한다.
+
+<br>
+
+## DB 편리하게 보기
+
+- DBeaver 툴 사용
+  https://dbeaver.io <br><br>
+  ![07](/_doc/img/07.png)

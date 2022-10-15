@@ -1,0 +1,26 @@
+const path = require("path");
+
+module.exports = {
+  config: path.resolve("src/config/db.config.json"),
+  "models-path": path.resolve("src/models"),
+  "seeders-path": path.resolve("src/models/seeders"),
+  "migrations-path": path.resolve("src/models/migrations"),
+};
+
+// const path = require("path");
+// const storage = path.join(__dirname, "../_db/mysql/data");
+
+// module.exports = {
+//   development: {
+//     dialect: "mysql",
+//     storage,
+//   },
+//   test: {
+//     storage,
+//   },
+//   production: {
+//     use_env_variable: "DB_CONNECTION_STRING",
+//     dialect: "mysql",
+//     logging: false,
+//   },
+// };
