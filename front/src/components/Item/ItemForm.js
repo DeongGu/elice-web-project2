@@ -54,12 +54,10 @@ const ItemForm = () => {
     const data = { itemImage, itemName, itemDetail, description };
 
     try {
-      await axios
-        .post("http://localhost:5000/item/create", data)
-        .then((res) => {
-          console.log("response:", res.data);
-          navigate("/");
-        });
+      await axios.post("http://localhost:5000/item", data).then((res) => {
+        console.log("response:", res.data);
+        navigate("/");
+      });
     } catch (err) {
       console.log(err);
     }
@@ -80,7 +78,7 @@ const ItemForm = () => {
         />
 
         <div className="preview">
-          {itemImage && <StyledImage src={itemImage} alt="미리보기 이미지" />}
+          <StyledImage src={itemImage} alt="미리보기 이미지" />
         </div>
 
         <label htmlFor="itemName">상품명</label>
@@ -118,13 +116,14 @@ export default ItemForm;
 const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
-  margin: 0 auto;
+  margin: 20px auto;
   border: 1px solid black;
-
   width: 500px;
-  height: 1000px;
+  height: 700px;
 `;
 
 const StyledImage = styled.img`
-  width: 100%;
+  width: 400px;
 `;
+
+const StyledInput = styled.input``;
