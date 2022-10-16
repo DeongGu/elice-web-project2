@@ -8,7 +8,7 @@ const Item = ({ item }) => {
   return (
     <ItemBlock
       onClick={() => {
-        navigate(`/item/:${userId}/edit`);
+        navigate(`/item/:${userId}`);
       }}
       key={useId}
     >

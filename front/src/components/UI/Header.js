@@ -5,7 +5,7 @@ const Header = (props) => {
   return (
     <Wrapper>
       <StyledTitle>
-        <StyledImg src="../assets/images/default.jpg"></StyledImg>
+        <StyledImg src="/assets/images/default.jpg"></StyledImg>
         <StyledH1>브링브링</StyledH1>
       </StyledTitle>
 

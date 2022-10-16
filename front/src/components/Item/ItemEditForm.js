@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 
 const ItemEditForm = () => {
   const navigate = useNavigate();
-  const [item, setItem] = useState(null);
+  const [item, setItem] = useState({});
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -17,17 +17,11 @@ const ItemEditForm = () => {
     try {
       const response = await axios.get("/dummy/data.json");
       setItem(response.data);
+      console.log(item);
     } catch (err) {
       console.log(err);
     }
     setLoading(false);
-  };
-
-  const initialValues = {
-    itemImage: "/assets/images/default.jpg",
-    itemName: "",
-    itemDetail: "",
-    description: "",
   };
 
   const encodeFile = async (fileBlob) => {
@@ -70,7 +64,7 @@ const ItemEditForm = () => {
 
     try {
       await axios
-        .post("http://localhost:5000/item/create", data)
+        .put("http://localhost:5000/item/:itemId", data)
         .then((res) => {
           console.log("response:", res.data);
           navigate("/");
@@ -83,7 +77,7 @@ const ItemEditForm = () => {
   return (
     <>
       <StyledForm onSubmit={handleSubmit}>
-        <label htmlFor="itemImage">상품 이미지</label>
+        <StyledLabel htmlFor="itemImage">상품 이미지</StyledLabel>
         <input
           type="file"
           name="itemImage"
@@ -98,7 +92,7 @@ const ItemEditForm = () => {
           {itemImage && <StyledImage src={itemImage} alt="미리보기 이미지" />}
         </div>
 
-        <label htmlFor="itemName">상품명</label>
+        <StyledLabel htmlFor="itemName">상품명</StyledLabel>
         <input
           onChange={handleChange}
           name="itemName"
@@ -106,7 +100,7 @@ const ItemEditForm = () => {
           type="text"
           value={itemName}
         />
-        <label htmlFor="itemDetail">상품소개</label>
+        <StyledLabel htmlFor="itemDetail">상품소개</StyledLabel>
         <input
           onChange={handleChange}
           name="itemDetail"
@@ -114,7 +108,7 @@ const ItemEditForm = () => {
           type="text"
           value={itemDetail}
         />
-        <label htmlFor="description">한 마디</label>
+        <StyledLabel htmlFor="description">한 마디</StyledLabel>
         <input
           type="text"
           onChange={handleChange}
@@ -142,4 +136,8 @@ const StyledForm = styled.form`
 
 const StyledImage = styled.img`
   width: 100%;
+`;
+
+const StyledLabel = styled.label`
+  margin: 10px 0 0 20px;
 `;

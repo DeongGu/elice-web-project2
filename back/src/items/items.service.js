@@ -1,6 +1,4 @@
-import jwt from "jsonwebtoken";
 import checkJWT from "../middlewares/checkJWT";
-import { SECRET_KEY } from "../config/env.config";
 import controller from "./items.controller";
 
 exports.uploadItem = async (req, res) => {
@@ -17,9 +15,15 @@ exports.uploadItem = async (req, res) => {
       return res.status(400).send({ message: "NEED UPLOAD ITEM INFO" });
     }
 
-    const item = controller.createItem({ ...req.body, userId: result.userId });
+    const item = {
+      item_name: req.body.itemName,
+      item_desc: req.body.itemDesc,
+      user_id: result.userId,
+    };
 
-    if (item === false) {
+    const itemResult = controller.createItem(item);
+
+    if (itemResult === false) {
       return res.status(500).send({ message: "FAIL CREATE ITEM" });
     }
 
@@ -56,9 +60,9 @@ exports.findItem = async (req, res) => {
       return res.status(401).send({ message: "UNSERVICEABLE TOKEN" });
     }
 
-    const item = await controller.findOneItem({ itemId: searchId });
+    const item = await controller.findOneItem({ id: searchId });
 
-    if (searchId === item.itemId) {
+    if (searchId === item.id) {
       editable = true;
     }
 
@@ -77,8 +81,15 @@ exports.updateItem = async (req, res) => {
       return res.status(401).send({ message: "UNSERVICEABLE TOKEN" });
     }
 
+    const item = {
+      item_name: req.body.itemName,
+      item_desc: req.body.itemDesc,
+      status : req.body.status ,
+    };
+
+
     if (itemId) {
-      controller.updateItem(req.body, itemId);
+      controller.updateItem(item, itemId);
     }
 
     return res.status(200).send({ message: "UPDATED ITEM" });

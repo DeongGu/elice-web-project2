@@ -2,7 +2,7 @@ import db from "../models";
 
 exports.createUser = (data) => {
   try {
-    db.User.create({
+    db.user.create({
       ...data,
     });
 
@@ -16,7 +16,7 @@ exports.createUser = (data) => {
 
 exports.findOneUser = (data) => {
   try {
-    return db.User.findOne({
+    return db.user.findOne({
       where: { ...data },
     });
   } catch (err) {
@@ -26,18 +26,20 @@ exports.findOneUser = (data) => {
 
 exports.findUsers = () => {
   try {
-    return db.User.findAll();
+    return db.user.findAll();
   } catch (err) {
     throw err;
   }
 };
 
-exports.updateUser = (data, userId) => {
+exports.updateUser = (data, id) => {
+  console.log(data);
+  console.log(id);
   try {
-    db.User.update(
+    db.user.update(
       { ...data },
       {
-        where: { userId },
+        where: { id: id },
       }
     );
 
@@ -47,14 +49,14 @@ exports.updateUser = (data, userId) => {
   }
 };
 
-exports.updatePassword = (userId, password) => {
+exports.updatePassword = (id, password) => {
   try {
-    db.User.update(
+    db.user.update(
       {
         password,
       },
       {
-        where: { userId },
+        where: { id },
       }
     );
 
@@ -64,10 +66,10 @@ exports.updatePassword = (userId, password) => {
   }
 };
 
-exports.deleteUser = (userId) => {
+exports.deleteUser = (id) => {
   try {
-    db.User.destroy({
-      where: { userId },
+    db.user.destroy({
+      where: { id: id },
     });
 
     return true;

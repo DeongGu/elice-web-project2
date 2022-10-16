@@ -14,6 +14,7 @@ const ItemForm = () => {
   };
 
   const [item, setItem] = useState(initialValues);
+  const [createSuccess, setCreateSucess] = useState(false);
 
   const encodeFile = async (fileBlob) => {
     const reader = new FileReader();
@@ -64,50 +65,58 @@ const ItemForm = () => {
   };
 
   return (
-    <>
-      <StyledForm onSubmit={handleSubmit}>
-        <label htmlFor="itemImage">상품 이미지</label>
-        <input
-          type="file"
-          name="itemImage"
-          onChange={(e) => {
-            encodeFile(e.target.files[0]);
+    <StyledForm onSubmit={handleSubmit}>
+      <StyledLabel htmlFor="itemImage">상품 이미지</StyledLabel>
+      <StyledInput
+        type="file"
+        name="itemImage"
+        onChange={(e) => {
+          encodeFile(e.target.files[0]);
+        }}
+        accept="image/*"
+        multiple
+      />
+
+      <StyledPreview>
+        <StyledImage src={itemImage} alt="미리보기 이미지" />
+      </StyledPreview>
+
+      <StyledLabel htmlFor="itemName">상품명</StyledLabel>
+      <StyledInput
+        onChange={handleChange}
+        name="itemName"
+        id="itemName"
+        type="text"
+        value={itemName}
+      />
+      <StyledLabel htmlFor="itemDetail">상품소개</StyledLabel>
+      <StyledInput
+        onChange={handleChange}
+        name="itemDetail"
+        id="itemDetail"
+        type="text"
+        value={itemDetail}
+      />
+      <StyledLabel htmlFor="description">한 마디</StyledLabel>
+      <StyledInput
+        type="text"
+        onChange={handleChange}
+        name="description"
+        id="description"
+        value={description}
+      />
+
+      <ButtonBlock>
+        <StyledBtn disabled={!validate}>생성</StyledBtn>
+        <StyledBtn
+          onClick={() => {
+            navigate("/");
           }}
-          accept="image/*"
-          multiple
-        />
-
-        <div className="preview">
-          <StyledImage src={itemImage} alt="미리보기 이미지" />
-        </div>
-
-        <label htmlFor="itemName">상품명</label>
-        <input
-          onChange={handleChange}
-          name="itemName"
-          id="itemName"
-          type="text"
-          value={itemName}
-        />
-        <label htmlFor="itemDetail">상품소개</label>
-        <input
-          onChange={handleChange}
-          name="itemDetail"
-          id="itemDetail"
-          type="text"
-          value={itemDetail}
-        />
-        <label htmlFor="description">한 마디</label>
-        <input
-          type="text"
-          onChange={handleChange}
-          name="description"
-          id="description"
-          value={description}
-        />
-        <button disabled={!validate}>생성</button>
-      </StyledForm>
-    </>
+        >
+          취소
+        </StyledBtn>
+      </ButtonBlock>
+    </StyledForm>
   );
 };
 
@@ -119,11 +128,48 @@ const StyledForm = styled.form`
   margin: 20px auto;
   border: 1px solid black;
   width: 500px;
-  height: 700px;
+  height: 800px;
+  box-sizing: content-box;
 `;
 
 const StyledImage = styled.img`
-  width: 400px;
+  max-width: 490px;
+  max-height: 300px;
 `;
 
-const StyledInput = styled.input``;
+const StyledPreview = styled.div`
+  display: flex;
+  justify-content: center;
+
+  margin-bottom: 50px;
+`;
+const StyledInput = styled.input`
+  margin: 10px 20px;
+  height: 30px;
+`;
+
+const StyledBtn = styled.button`
+  width: 200px;
+  height: 50px;
+  margin: 30px auto;
+  background-color: rgb(83, 151, 223);
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    background-color: rgba(83, 151, 223, 0.5);
+  }
+
+  &:active {
+    position: relative;
+    top: 2px;
+  }
+`;
+
+const ButtonBlock = styled.div`
+  display: flex;
+`;
+
+const StyledLabel = styled.label`
+  margin: 10px 0 0 20px;
+`;
