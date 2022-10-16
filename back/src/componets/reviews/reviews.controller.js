@@ -1,8 +1,8 @@
-import db from "../models";
+import db from "../../models";
 
-exports.createDelivery = (newDelivery) => {
+exports.createReview = (newReview) => {
   try {
-    db.delivery.create(newDelivery);
+    db.review.create(newReview);
     return true;
   } catch (err) {
     console.error(err.message);
@@ -11,9 +11,9 @@ exports.createDelivery = (newDelivery) => {
   }
 };
 
-exports.findOneDelivery = (data) => {
+exports.findOneReview = (data) => {
   try {
-    return db.delivery.findOne({
+    return db.review.findOne({
       where: data,
     });
   } catch (err) {
@@ -21,17 +21,17 @@ exports.findOneDelivery = (data) => {
   }
 };
 
-exports.findAllDeliveries = () => {
+exports.findAllReviews = () => {
   try {
-    return db.delivery.findAll();
+    return db.review.findAll();
   } catch (err) {
     throw err;
   }
 };
 
-exports.updateDelivery = (updateDelivery, id) => {
+exports.updateReview = (updateReview, id) => {
   try {
-    db.delivery.update(updateDelivery, {
+    db.review.update(updateReview, {
       where: { id: id },
     });
 
@@ -41,9 +41,9 @@ exports.updateDelivery = (updateDelivery, id) => {
   }
 };
 
-exports.deleteDelivery = (id) => {
+exports.deleteReview = (id) => {
   try {
-    db.delivery.destroy({
+    db.review.destroy({
       where: { id: id },
     });
 

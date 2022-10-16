@@ -1,4 +1,4 @@
-import checkJWT from "../middlewares/checkJWT";
+import checkJWT from "../../middlewares/checkJWT";
 import controller from "./items.controller";
 
 exports.uploadItem = async (req, res) => {
@@ -84,9 +84,8 @@ exports.updateItem = async (req, res) => {
     const item = {
       item_name: req.body.itemName,
       item_desc: req.body.itemDesc,
-      status : req.body.status ,
+      status: req.body.status,
     };
-
 
     if (itemId) {
       controller.updateItem(item, itemId);

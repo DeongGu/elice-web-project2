@@ -1,4 +1,4 @@
-import checkJWT from "../middlewares/checkJWT";
+import checkJWT from "../../middlewares/checkJWT";
 import controller from "./orders.controller";
 
 exports.makeOrder = async (req, res) => {

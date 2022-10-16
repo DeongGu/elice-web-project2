@@ -53,7 +53,19 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  user.beforeSave(async (user) => {
+  user.beforeCreate(async (user) => {
+    try {
+      if (user.changed("password")) {
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(user.password, salt);
+        user.password = hash;
+      }
+    } catch (err) {
+      throw new Error(err);
+    }
+  });
+
+  user.beforeUpdate(async (user) => {
     try {
       if (user.changed("password")) {
         const salt = await bcrypt.genSalt(10);

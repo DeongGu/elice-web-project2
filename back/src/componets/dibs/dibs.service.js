@@ -1,4 +1,4 @@
-import checkJWT from "../middlewares/checkJWT";
+import checkJWT from "../../middlewares/checkJWT";
 import controller from "./dibs.controller";
 
 exports.uploadDibs = async (req, res) => {

@@ -1,8 +1,8 @@
-import db from "../models";
+import db from "../../models";
 
-exports.createItem = (newItem) => {
+exports.createDibs = (newDibs) => {
   try {
-    db.item.create(newItem);
+    db.dibs.create(newDibs);
     return true;
   } catch (err) {
     console.error(err.message);
@@ -11,9 +11,9 @@ exports.createItem = (newItem) => {
   }
 };
 
-exports.findOneItem = (data) => {
+exports.findOneDibs = (data) => {
   try {
-    return db.item.findOne({
+    return db.dibs.findOne({
       where: data,
     });
   } catch (err) {
@@ -21,17 +21,17 @@ exports.findOneItem = (data) => {
   }
 };
 
-exports.findAllItems = () => {
+exports.findAllDibs = () => {
   try {
-    return db.item.findAll();
+    return db.dibs.findAll();
   } catch (err) {
     throw err;
   }
 };
 
-exports.updateItem = (updateItem, id) => {
+exports.updateDibs = (updateDibs, id) => {
   try {
-    db.item.update(updateItem, {
+    db.dibs.update(updateDibs, {
       where: { id: id },
     });
 
@@ -41,9 +41,9 @@ exports.updateItem = (updateItem, id) => {
   }
 };
 
-exports.deleteItem = (id) => {
+exports.deleteDibs = (id) => {
   try {
-    db.item.destroy({
+    db.dibs.destroy({
       where: { id: id },
     });
 

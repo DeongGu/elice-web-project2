@@ -1,4 +1,4 @@
-import checkJWT from "../middlewares/checkJWT";
+import checkJWT from "../../middlewares/checkJWT";
 import controller from "./adderss.controller";
 
 exports.uploadAdderss = async (req, res) => {
