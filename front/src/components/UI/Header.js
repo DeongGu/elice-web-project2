@@ -1,5 +1,9 @@
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
+import EditForm from "../User/EditForm";
+import LoginForm from "../User/LoginForm";
+import RegisterForm from "../User/RegisterForm";
+import ModalBackground from "./ModalBackground";
 
 const Header = (props) => {
   return (
@@ -16,7 +20,8 @@ const Header = (props) => {
       </StyledNav>
 
       <StyledUser>
-        <button>로그인</button>
+        <LoginForm></LoginForm>
+        <RegisterForm></RegisterForm>
       </StyledUser>
     </Wrapper>
   );

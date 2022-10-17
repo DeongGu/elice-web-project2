@@ -1,20 +1,27 @@
 import styled from "styled-components";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const ItemForm = () => {
   const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   if (!sessionStorage.getItem("accessToken")) {
+  //     navigate("/");
+  //     alert("로그인부탁드려요^^");
+  //   }
+  // }, []);
 
   const initialValues = {
     itemImage: "/assets/images/default.jpg",
     itemName: "",
     itemDetail: "",
-    description: "",
+    itemDesc: "",
   };
 
   const [item, setItem] = useState(initialValues);
-  const [createSuccess, setCreateSucess] = useState(false);
+  // const [createSuccess, setCreateSucess] = useState(false);
 
   const encodeFile = async (fileBlob) => {
     const reader = new FileReader();
@@ -34,13 +41,13 @@ const ItemForm = () => {
     }
   };
 
-  const { itemImage, itemName, itemDetail, description } = item;
+  const { itemImage, itemName, itemDetail, itemDesc } = item;
 
   const isItemName = itemName.length >= 2 && itemName.length <= 25;
   const isItemDetail = itemDetail.length >= 2 && itemDetail.length <= 100;
-  const isdescription = description.length >= 2 && description.length <= 30;
+  const isItemDesc = itemDesc.length >= 2 && itemDesc.length <= 30;
 
-  const validate = isItemName && isItemDetail && isdescription;
+  const validate = isItemName && isItemDetail && isItemDesc;
 
   const handleChange = (e) => {
     const newItem = {
@@ -52,15 +59,34 @@ const ItemForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const data = { itemImage, itemName, itemDetail, description };
+
+    const files = e.target.itemImage.files;
+    const formData = new FormData();
+
+    for (let i = 0; i < files.length; i++) {
+      formData.append("files", files[i]);
+    }
+
+    const data = { itemName, itemDetail, itemDesc };
+
+    formData.append("data", JSON.stringify(data));
 
     try {
-      await axios.post("http://localhost:5000/item", data).then((res) => {
-        console.log("response:", res.data);
-        navigate("/");
-      });
+      await axios
+        .post("http://localhost:5000/item", formData, {
+          headers: {
+            "content-type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          console.log("response:", res.data);
+          alert("상품 생성 성공");
+          navigate("/");
+        });
     } catch (err) {
       console.log(err);
+      alert("상품 생성 실패");
+      setItem(initialValues);
     }
   };
 
@@ -97,13 +123,13 @@ const ItemForm = () => {
         type="text"
         value={itemDetail}
       />
-      <StyledLabel htmlFor="description">한 마디</StyledLabel>
+      <StyledLabel htmlFor="itemDesc">한 마디</StyledLabel>
       <StyledInput
         type="text"
         onChange={handleChange}
-        name="description"
-        id="description"
-        value={description}
+        name="itemDesc"
+        id="itemDesc"
+        value={itemDesc}
       />
 
       <ButtonBlock>

@@ -1,22 +1,24 @@
-import usersRoutes from "./users/users.routes";
-import itemRoutes from "./items/items.routes";
-import dibsRoutes from "./dibs/dibs.routes";
-import orderRoutes from "./orders/orders.routes";
-import deliveryRoutes from "./deliveries/deliveries.routes";
-import reviewRoutes from "./reviews/reviews.routes";
-import adderssRoutes from "./adderss/adderss.routes";
+import usersRoutes from "./componets/users/users.routes";
+// import { itemRoutes } from "./componets/items/items.routes";
+// import { dibsRoutes } from "./componets/dibs/dibs.routes";
+// import { orderRoutes } from "./componets/orders/orders.routes";
+// import { deliveryRoutes } from "./componets/deliveries/deliveries.routes";
+// import { reviewRoutes } from "./componets/reviews/reviews.routes";
+// import { adderssRoutes } from "./componets/adderss/adderss.routes";
 
 export default (App) => {
   const router = App;
-  router.use("/users", usersRoutes);
-  router.use("/items", itemRoutes);
-  router.use("/dibs", dibsRoutes);
-  router.use("/orders", orderRoutes);
-  router.use("/deliveries", deliveryRoutes);
-  router.use("/review", reviewRoutes);
-  router.use("/adderss", adderssRoutes);
+  // logger
+  // app.use((req, res, next) => {
+  //   log(`${new Date().toISOString()} [${req.method}] ${req.url}`);
+  //   next();
+  // });
 
-  router.use("/", (req, res) => {
-    return res.status(200).send("Team12 API");
-  });
+  router.use("/", usersRoutes);
+  // app.use(itemRoutes);
+  // app.use(dibsRoutes);
+  // app.use(orderRoutes);
+  // app.use(deliveryRoutes);
+  // app.use(reviewRoutes);
+  // app.use(adderssRoutes);
 };

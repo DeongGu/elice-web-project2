@@ -11,7 +11,7 @@ const ItemList = () => {
     const fetchData = async () => {
       // setLoading(true);
       try {
-        const response = await axios.get("/dummy/data.json");
+        const response = await axios.get("http://localhost:5000/items");
         setItemList(response.data);
       } catch (err) {
         console.log(err);

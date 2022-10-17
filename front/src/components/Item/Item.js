@@ -4,19 +4,19 @@ import styled from "styled-components";
 
 const Item = ({ item }) => {
   const navigate = useNavigate();
-  const userId = useId();
+
   return (
     <ItemBlock
       onClick={() => {
-        navigate(`/item/:${userId}`);
+        navigate(`/item/:${item.id}`);
       }}
       key={useId}
     >
       <StyledImg src={item.itemImage} alt="상품" />
       <p>
-        상품명 : <span>{item.itemName}</span>
+        상품명 : <span>{item.item_name}</span>
       </p>
-      <p>한마디: {item.description}</p>
+      <p>한마디: {item.item_desc}</p>
     </ItemBlock>
   );
 };

@@ -1,15 +1,48 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import { useContext } from "react";
+import UserCheckContext from "../../context/UserCheckContext";
 
 const ItemInfo = () => {
   const navigate = useNavigate();
+  const { itemId } = useParams();
+  const userCheck = useContext(UserCheckContext);
+
   const [item, setItem] = useState("");
 
   const [isEdit, setIsEdit] = useState(false);
 
-  const [isMyItem, setIsMyItem] = useState(true);
+  const [isMyItem, setIsMyItem] = useState(false);
+
+  let initialValue = [];
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/items/${itemId}`,
+          {
+            headers: {
+              Authentication: `${sessionStorage.getItem("accessToken")}`,
+            },
+          }
+        );
+        setItem(response.data);
+        initialValue.push(response.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchData();
+
+    if (userCheck.user.id === item.user_id) {
+      setIsMyItem(true);
+    }
+  }, []);
+
+  const { itemImage, itemName, itemDetail, itemDesc } = item;
 
   const encodeFile = async (fileBlob) => {
     const reader = new FileReader();
@@ -29,26 +62,66 @@ const ItemInfo = () => {
     }
   };
 
-  useEffect(() => {
-    //토큰 보내서 유저 확인 후에 상품id에 맞는 정보 얻기
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("/dummy/item.json");
-        setItem(response.data);
-      } catch (err) {
-        console.log(err);
-      }
+  const isItemName = itemName.length >= 2 && itemName.length <= 25;
+  const isItemDetail = itemDetail.length >= 2 && itemDetail.length <= 100;
+  const isItemDesc = itemDesc.length >= 2 && itemDesc.length <= 30;
+
+  const validate = isItemName && isItemDetail && isItemDesc;
+
+  const handleChange = (e) => {
+    const newItem = {
+      ...item,
+      [e.target.name]: e.target.value,
     };
-    fetchData();
-  }, []);
+    setItem(newItem);
+  };
 
-  const { itemImage, itemName, itemDetail, description } = item;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const files = e.target.itemImage.files;
+    const formData = new FormData();
 
-  const handleChange = () => {};
-  const handleSubmit = () => {};
+    for (let i = 0; i < files.length; i++) {
+      formData.append("files", files[i]);
+    }
 
-  /* 찜하기 버튼 - 클릭했을때 로그인 상태 확인, //로그인 o 상품정보에 */
-  /* 찜(배열)에 유저id 넣기 //로그인 x 로그인 모달창 or 로그인하라는 메시지창 */
+    const data = { itemName, itemDetail, itemDesc };
+
+    formData.append("data", JSON.stringify(data));
+
+    try {
+      await axios
+        .put("http://localhost:5000/items/:itemId", formData, {
+          headers: {
+            "content-type": "multipart/form-data",
+            Authentication: `${sessionStorage.getItem("accessToken")}`,
+          },
+        })
+        .then((res) => {
+          console.log("response:", res.data);
+          navigate("/");
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleDelete = async (e) => {
+    try {
+      await axios
+        .delete("http://localhost:5000/items/:itemId", {
+          headers: {
+            Authentication: `${sessionStorage.getItem("accessToken")}`,
+          },
+        })
+        .then((res) => {
+          console.log("삭제되었습니다.");
+          navigate("/");
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <StyledForm onSubmit={handleSubmit}>
@@ -91,23 +164,25 @@ const ItemInfo = () => {
       ) : (
         <StyledP>{itemDetail}</StyledP>
       )}
-      <StyledLabel htmlFor="description">한 마디</StyledLabel>
+      <StyledLabel htmlFor="itemDesc">한 마디</StyledLabel>
       {isEdit ? (
         <StyledInput
           type="text"
           onChange={handleChange}
-          name="description"
-          id="description"
-          value={description}
+          name="itemDesc"
+          id="itemDesc"
+          value={itemDesc}
         />
       ) : (
-        <StyledP>{description}</StyledP>
+        <StyledP>{itemDesc}</StyledP>
       )}
       <ButtonBlock>
         {isEdit ? (
           <>
-            <StyledBtn>완료</StyledBtn>
-            <StyledBtn type="button">삭제</StyledBtn>
+            <StyledBtn disabled={!validate}>완료</StyledBtn>
+            <StyledBtn type="button" onClick={handleDelete}>
+              삭제
+            </StyledBtn>
           </>
         ) : (
           <>
@@ -122,6 +197,7 @@ const ItemInfo = () => {
               type="button"
               onClick={() => {
                 setIsEdit(!isEdit);
+                setItem(initialValue[0]);
               }}
             >
               {isEdit ? "취소" : "편집"}
