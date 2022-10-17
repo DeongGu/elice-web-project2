@@ -5,8 +5,6 @@ import usersRoutes from "./componets/users/users.routes";
 // import { deliveryRoutes } from "./componets/deliveries/deliveries.routes";
 // import { reviewRoutes } from "./componets/reviews/reviews.routes";
 // import { adderssRoutes } from "./componets/adderss/adderss.routes";
-import { APIClientError } from "./middlewares/APIResponse";
-import wrapAsync from "./middlewares/wrapAsync";
 
 export default (App) => {
   const router = App;
@@ -23,19 +21,4 @@ export default (App) => {
   // app.use(deliveryRoutes);
   // app.use(reviewRoutes);
   // app.use(adderssRoutes);
-
-  // Handler for invalid routes
-  router.all(
-    "*",
-    // eslint-disable-next-line
-    wrapAsync(async (req, res, next) => {
-      throw new APIClientError(
-        {
-          message: "Invalid route.",
-        },
-        HTTPStatus.NOT_FOUND,
-        HTTPStatus["404"]
-      );
-    })
-  );
 };

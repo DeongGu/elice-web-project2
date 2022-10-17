@@ -9,7 +9,7 @@ class App {
     this.app = express();
     this.setMiddleWare();
     this.router();
-    this.handleError();
+    // this.handleError();
   }
 
   getApp() {
@@ -26,13 +26,6 @@ class App {
       return res.status(200).send("Team12 API");
     });
     this.router = routers(this.app);
-  }
-
-  handleError() {
-    this.app.use((err, req, res, next) =>{
-      this.app = errorHandle(this.app);
-      next(err);
-    });
   }
 }
 

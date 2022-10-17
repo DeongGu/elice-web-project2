@@ -1,15 +1,13 @@
 import db from "../../models";
 import jwt from "jsonwebtoken";
-// import debug from 'debug';
-import expressValidation from "express-validation";
-// import { generateToken } from '../../helpers/authentication';
-import { APISuccess, APIClientError } from "../../middlewares/APIResponse";
+import bcrypt from "bcrypt";
+import { SECRET_KEY } from "../../config/env.config";
 
 const User = db.user;
 
 export const register = async (req, res, next) => {
   try {
-    const existingUser = User.findOne({
+    const existingUser = await User.findOne({
       where: {
         email: req.body.email,
       },
@@ -34,22 +32,13 @@ export const register = async (req, res, next) => {
       res.status(201).json({ message: "User registered successfully!" });
     }
   } catch (err) {
-    if (
-      !(
-        err instanceof APIClientError ||
-        err instanceof expressValidation.ValidationError
-      )
-    ) {
-      throw new Error(err);
-    } else {
-      throw err;
-    }
+    next(err);
   }
 };
 
 export const login = async (req, res, next) => {
   try {
-    const foundUser = User.findOne({
+    const foundUser = await User.findOne({
       where: {
         email: req.body.email,
       },
@@ -59,7 +48,7 @@ export const login = async (req, res, next) => {
       return res.status(404).send({ message: "User Not found." });
     }
 
-    const passwordMatch = await User.isValidPassword(password);
+    const passwordMatch = await foundUser.isValidPassword(req.body.password);
 
     if (!passwordMatch) {
       return res.status(401).send({
@@ -74,7 +63,7 @@ export const login = async (req, res, next) => {
         nickname: foundUser.nickname,
         email: foundUser.email,
       },
-      config.secret,
+      SECRET_KEY,
       {
         expiresIn: 86400, // 24 hours
       }
@@ -87,16 +76,7 @@ export const login = async (req, res, next) => {
       Authentication: token,
     });
   } catch (err) {
-    if (
-      !(
-        err instanceof APIClientError ||
-        err instanceof expressValidation.ValidationError
-      )
-    ) {
-      throw new Error(err);
-    } else {
-      throw err;
-    }
+    next(err);
   }
 };
 
@@ -106,24 +86,22 @@ export const logout = async (req, res, next) => {
 
     res.send({ message: "Successfully logged out." });
   } catch (err) {
-    if (
-      !(
-        err instanceof APIClientError ||
-        err instanceof expressValidation.ValidationError
-      )
-    ) {
-      throw new Error(err);
-    } else {
-      throw err;
-    }
+    next(err);
   }
 };
 
-export const findUser = async (req, res) => {
+export const findUser = async (req, res, next) => {
+  console.log(req.headers);
   try {
-    const currentUserId = req.currentUserId;
+    const currentUserId = jwt.verify(
+      req.headers.authentication,
+      SECRET_KEY
+    ).userId;
     const searchId = req.params.userId;
     let editable = false;
+
+    console.log(currentUserId);
+    console.log(searchId);
 
     if (currentUserId && currentUserId === searchId) {
       editable = true;
@@ -146,70 +124,55 @@ export const findUser = async (req, res) => {
 
     res.status(200).send({ ...foundUser, editable });
   } catch (err) {
-    if (
-      !(
-        err instanceof APIClientError ||
-        err instanceof expressValidation.ValidationError
-      )
-    ) {
-      throw new Error(err);
-    } else {
-      throw err;
-    }
+    next(err);
   }
 };
 
-export const updateUser = async (req, res) => {
+export const updateUser = async (req, res, next) => {
   try {
-    const currentUserId = req.currentUserId;
-    const foundUser = await User.update(
-      {
-        nickname: req.body.nickname,
-        username: req.body.username,
-        phone_number: req.body.phoneNumber,
-        profile_image: req.body.profileImage,
-        user_desc: req.body.userDesc,
-      },
-      {
-        where: { id: currentUserId },
-      }
-    );
+    const currentUserId = jwt.verify(
+      req.headers.authentication,
+      SECRET_KEY
+    ).userId;
+
+    let chgUserInfo = { ...req.body };
+
+    if (chgUserInfo.password) {
+      chgUserInfo["password"] = await bcrypt.hash(req.body.password, 10);
+    }
+
+    if (chgUserInfo.phoneNumber) {
+      chgUserInfo["phone_number"] = chgUserInfo.phoneNumber;
+    }
+
+    if (chgUserInfo.userDesc) {
+      chgUserInfo["user_desc"] = chgUserInfo.userDesc;
+    }
+
+    const foundUser = await User.update(chgUserInfo, {
+      where: { id: currentUserId },
+    });
     if (foundUser) {
       res.status(200).send({ message: "User pofile is updated" });
     }
   } catch (err) {
-    if (
-      !(
-        err instanceof APIClientError ||
-        err instanceof expressValidation.ValidationError
-      )
-    ) {
-      throw new Error(err);
-    } else {
-      throw err;
-    }
+    next(err);
   }
 };
 
-export const deleteUser = async (req, res) => {
+export const deleteUser = async (req, res, next) => {
   try {
-    const currentUserId = req.currentUserId;
-    const foundUser = await User.delete({
+    const currentUserId = jwt.verify(
+      req.headers.authentication,
+      SECRET_KEY
+    ).userId;
+    const foundUser = await User.destroy({
       where: { id: currentUserId },
     });
     if (foundUser) {
       res.status(200).send({ message: "User is deleted" });
     }
   } catch (err) {
-    if (
-      !(
-        err instanceof APIClientError ||
-        err instanceof expressValidation.ValidationError
-      )
-    ) {
-      throw new Error(err);
-    } else {
-      throw err;
-    }
+    next(err);
   }
 };
