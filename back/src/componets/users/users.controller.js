@@ -95,13 +95,14 @@ export const findUser = async (req, res, next) => {
     }
 
     const foundUser = await User.findOne({
+      raw: true,
       attributes: { exclude: "password" },
       where: {
         userId: searchId,
       },
     });
 
-    res.status(200).send({ ...foundUser.dataValues, editable });
+    res.status(200).send({ ...foundUser, editable });
   } catch (err) {
     next(err);
   }

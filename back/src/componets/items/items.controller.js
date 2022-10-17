@@ -45,16 +45,17 @@ export const findItem = async (req, res, next) => {
     let editable = false;
 
     const foundItem = await Item.findOne({
+      raw: true,
       where: {
         itemId: searchId,
       },
     });
 
-    if (foundItem.dataValues.userId === currentUserId) {
+    if (foundItem.userId === currentUserId) {
       editable = true;
     }
 
-    res.status(200).send({ ...foundItem.dataValues, editable });
+    res.status(200).send({ ...foundItem, editable });
   } catch (err) {
     next(err);
   }
@@ -62,7 +63,7 @@ export const findItem = async (req, res, next) => {
 
 export const findItems = async (req, res, next) => {
   try {
-    const foundItem = await Item.findAll();
+    const foundItem = await Item.findAll({ raw: true });
     res.status(200).send({ ...foundItem });
   } catch (err) {
     next(err);
@@ -113,12 +114,13 @@ export const deleteItem = async (req, res, next) => {
     let targetItemId = req.params.itemId;
 
     const foundItem = await Item.findOne({
+      raw: true,
       where: {
         itemId: targetItemId,
       },
     });
 
-    if (foundItem.dataValues.userId !== currentUserId) {
+    if (foundItem.userId !== currentUserId) {
       return res
         .status(401)
         .send({ message: "You do not have permission to delete" });
