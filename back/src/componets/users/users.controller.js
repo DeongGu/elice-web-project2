@@ -100,9 +100,6 @@ export const findUser = async (req, res, next) => {
     const searchId = req.params.userId;
     let editable = false;
 
-    console.log(currentUserId);
-    console.log(searchId);
-
     if (currentUserId && currentUserId === searchId) {
       editable = true;
     }
