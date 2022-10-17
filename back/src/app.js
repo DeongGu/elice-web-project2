@@ -2,7 +2,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import express from "express";
 import routers from "./routes";
-import errorHandle from "./middlewares/errorHandle";
+const methodOverride = require("method-override");
 
 class App {
   constructor() {
@@ -19,6 +19,7 @@ class App {
   setMiddleWare() {
     this.app.use(bodyParser.json());
     this.app.use(cors({ credentials: true, origin: true }));
+    this.app.use(methodOverride("_method"));
   }
 
   router() {

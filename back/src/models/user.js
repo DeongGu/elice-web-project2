@@ -5,11 +5,12 @@ module.exports = (sequelize, DataTypes) => {
   const user = sequelize.define(
     "user",
     {
-      id: {
+      userId: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         allowNull: false,
         primaryKey: true,
+        field: "id",
       },
       email: {
         type: DataTypes.STRING,
@@ -17,6 +18,13 @@ module.exports = (sequelize, DataTypes) => {
       },
       password: {
         type: DataTypes.STRING,
+        set(value) {
+          if (value.length >= 1 && value.length <= 20) {
+            this.setDataValue("password", bcrypt.hashSync(value, 10));
+          } else {
+            throw new Error("Your password should be between 1-20 characters!");
+          }
+        },
         allowNull: false,
       },
       nickname: {
@@ -27,21 +35,24 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      name: {
+      username: {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      phone_number: {
+      phoneNumber: {
         type: DataTypes.STRING,
         allowNull: true,
+        field: "phone_number",
       },
-      profile_image: {
+      profileImage: {
         type: DataTypes.STRING,
         allowNull: true,
+        field: "profile_image",
       },
-      user_desc: {
+      userDesc: {
         type: DataTypes.TEXT,
         allowNull: true,
+        field: "user_desc",
       },
     },
     {
@@ -53,30 +64,6 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  user.beforeCreate(async (user) => {
-    try {
-      if (user.changed("password")) {
-        const salt = await bcrypt.genSalt(10);
-        const hash = await bcrypt.hash(user.password, salt);
-        user.password = hash;
-      }
-    } catch (err) {
-      throw new Error(err);
-    }
-  });
-
-  user.beforeUpdate(async (user) => {
-    try {
-      if (user.changed("password")) {
-        const salt = await bcrypt.genSalt(10);
-        const hash = await bcrypt.hash(user.password, salt);
-        user.password = hash;
-      }
-    } catch (err) {
-      throw new Error(err);
-    }
-  });
-
   user.prototype.isValidPassword = async function (pw) {
     try {
       return await bcrypt.compare(pw, this.password);
@@ -87,16 +74,12 @@ module.exports = (sequelize, DataTypes) => {
 
   user.associate = function (models) {
     user.hasMany(models.address, {
-      foreignKey: "user_id",
+      foreignKey: "userId",
       as: "address",
     });
     user.hasMany(models.item, {
-      foreignKey: "user_id",
+      foreignKey: "userId",
       as: "item",
-    });
-    user.hasMany(models.user_image, {
-      foreignKey: "user_id",
-      as: "user_image",
     });
   };
   return user;

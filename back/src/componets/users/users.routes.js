@@ -1,4 +1,5 @@
 import express from "express";
+import { uploadS3 } from "../../middlewares/uploadS3";
 import * as controller from "./users.controller";
 
 const router = express.Router();
@@ -27,7 +28,7 @@ router.get("/users/:userId", controller.findUser);
 router.get("/users", controller.findUser);
 
 // 회원프로필수정
-router.put("/users", controller.updateUser);
+router.put("/users", uploadS3.single("file"), controller.updateUser);
 
 // 회원탈퇴
 router.delete("/users", controller.deleteUser);

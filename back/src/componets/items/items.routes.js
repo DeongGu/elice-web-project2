@@ -1,20 +1,30 @@
 import express from "express";
-import service from "./items.service";
+import { uploadS3 } from "../../middlewares/uploadS3";
+import * as controller from "./items.controller";
+
 const router = express.Router();
 
-// 상품등록(C)
-router.post("/", service.uploadItem);
+router.use((req, res, next) => {
+  res.header(
+    "Access-Control-Allow-Headers",
+    "x-access-token, Origin, Content-Type, Accept"
+  );
+  next();
+});
 
-// 상품목록조회(R/L)
-router.get("/", service.findItems);
+// 등록
+router.post("/items", uploadS3.array("file"), controller.createItem);
 
-// 상품조회(R)
-router.get("/:itemId", service.findItem);
+// 조회
+router.get("/items/:itemId", controller.findItem);
 
-// 상품수정(U)
-router.put("/:itemId", service.updateItem);
+// 목록조회 (검색포함 예정)
+router.get("/items", controller.findItems);
 
-// 상품삭제(D)
-router.delete("/:itemId", service.deleteItem);
+// 수정
+router.put("/items/:itemId", uploadS3.array("file"), controller.updateItem);
+
+// 삭제
+router.delete("/items/:itemId", controller.deleteItem);
 
 export default router;

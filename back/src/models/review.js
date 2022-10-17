@@ -3,11 +3,12 @@ module.exports = (sequelize, DataTypes) => {
   const review = sequelize.define(
     "review",
     {
-      id: {
+      reviewId: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         allowNull: false,
         primaryKey: true,
+        field: "id",
       },
       reviewStar: {
         type: DataTypes.INTEGER,
@@ -19,10 +20,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
         field: "review_desc",
       },
-      item_id: {
+      itemId: {
         type: DataTypes.UUID,
       },
-      user_id: {
+      userId: {
         type: DataTypes.UUID,
       },
     },
@@ -35,12 +36,11 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
   review.associate = function (models) {
-    // associations can be defined here
     review.belongsTo(models.user, {
-      foreignKey: "user_id",
+      foreignKey: "userId",
     });
     review.belongsTo(models.item, {
-      foreignKey: "item_id",
+      foreignKey: "itemId",
     });
   };
   return review;

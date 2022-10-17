@@ -3,19 +3,22 @@ module.exports = (sequelize, DataTypes) => {
   const order = sequelize.define(
     "order",
     {
-      id: {
+      orderId: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         allowNull: false,
         primaryKey: true,
+        field: "id",
       },
-      item_id: {
+      itemId: {
         type: DataTypes.UUID,
         allowNull: false,
+        field: "item_id",
       },
-      user_id: {
+      userId: {
         type: DataTypes.UUID,
         allowNull: false,
+        field: "user_id",
       },
       message: {
         type: DataTypes.STRING(1000),
@@ -31,12 +34,11 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
   order.associate = function (models) {
-    // associations can be defined here
     order.belongsTo(models.user, {
-      foreignKey: "user_id",
+      foreignKey: "userId",
     });
     order.belongsTo(models.item, {
-      foreignKey: "item_id",
+      foreignKey: "itemId",
     });
   };
   return order;

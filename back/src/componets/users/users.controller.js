@@ -1,6 +1,5 @@
 import db from "../../models";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
 import { SECRET_KEY } from "../../config/env.config";
 
 const User = db.user;
@@ -17,16 +16,7 @@ export const register = async (req, res, next) => {
       return res.status(400).send({ message: "Email already exists." });
     }
 
-    const createResult = await User.create({
-      email: req.body.email,
-      password: req.body.password,
-      nickname: req.body.nickname,
-      role: req.body.role,
-      name: req.body.username,
-      phone_number: req.body.phoneNumber,
-      profile_image: req.body.profileImage,
-      user_desc: req.body.userDesc,
-    });
+    const createResult = await User.create(req.body);
 
     if (createResult) {
       res.status(201).json({ message: "User registered successfully!" });
@@ -59,7 +49,7 @@ export const login = async (req, res, next) => {
 
     const token = jwt.sign(
       {
-        userId: foundUser.id,
+        userId: foundUser.userId,
         nickname: foundUser.nickname,
         email: foundUser.email,
       },
@@ -70,7 +60,7 @@ export const login = async (req, res, next) => {
     );
 
     res.status(200).send({
-      userId: foundUser.id,
+      userId: foundUser.userId,
       nickname: foundUser.nickname,
       email: foundUser.email,
       Authentication: token,
@@ -91,35 +81,27 @@ export const logout = async (req, res, next) => {
 };
 
 export const findUser = async (req, res, next) => {
-  console.log(req.headers);
   try {
     const currentUserId = jwt.verify(
       req.headers.authentication,
       SECRET_KEY
     ).userId;
-    const searchId = req.params.userId;
+    let searchId = req.params.userId;
     let editable = false;
 
-    if (currentUserId && currentUserId === searchId) {
+    if (!searchId && currentUserId) {
+      searchId = currentUserId;
       editable = true;
     }
 
     const foundUser = await User.findOne({
-      attributes: [
-        ["id", "userId"],
-        "email",
-        "nickname",
-        "name",
-        ["phone_number", "phoneNumber"],
-        ["profile_image", "profileImage"],
-        ["user_desc", "userDesc"],
-      ],
+      attributes: { exclude: "password" },
       where: {
-        id: currentUserId || searchId,
+        userId: searchId,
       },
     });
 
-    res.status(200).send({ ...foundUser, editable });
+    res.status(200).send({ ...foundUser.dataValues, editable });
   } catch (err) {
     next(err);
   }
@@ -134,20 +116,12 @@ export const updateUser = async (req, res, next) => {
 
     let chgUserInfo = { ...req.body };
 
-    if (chgUserInfo.password) {
-      chgUserInfo["password"] = await bcrypt.hash(req.body.password, 10);
-    }
-
-    if (chgUserInfo.phoneNumber) {
-      chgUserInfo["phone_number"] = chgUserInfo.phoneNumber;
-    }
-
-    if (chgUserInfo.userDesc) {
-      chgUserInfo["user_desc"] = chgUserInfo.userDesc;
+    if (req.file) {
+      chgUserInfo["profileImage"] = req.file.location;
     }
 
     const foundUser = await User.update(chgUserInfo, {
-      where: { id: currentUserId },
+      where: { userId: currentUserId },
     });
     if (foundUser) {
       res.status(200).send({ message: "User pofile is updated" });
@@ -164,7 +138,7 @@ export const deleteUser = async (req, res, next) => {
       SECRET_KEY
     ).userId;
     const foundUser = await User.destroy({
-      where: { id: currentUserId },
+      where: { userId: currentUserId },
     });
     if (foundUser) {
       res.status(200).send({ message: "User is deleted" });
@@ -173,3 +147,4 @@ export const deleteUser = async (req, res, next) => {
     next(err);
   }
 };
+8;

@@ -3,19 +3,32 @@ module.exports = (sequelize, DataTypes) => {
   const item = sequelize.define(
     "item",
     {
-      id: {
+      itemId: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         allowNull: false,
         primaryKey: true,
+        field: "id",
       },
-      item_name: {
+      itemName: {
         type: DataTypes.STRING,
         allowNull: false,
+        field: "item_name",
       },
-      item_desc: {
+      itemType: {
+        type: DataTypes.JSON,
+        allowNull: true,
+        field: "item_type",
+      },
+      itemImage: {
+        type: DataTypes.JSON,
+        allowNull: true,
+        field: "item_image",
+      },
+      itemDesc: {
         type: DataTypes.TEXT,
         allowNull: true,
+        field: "item_desc",
       },
       status: {
         type: DataTypes.ENUM("inStock", "onTrading", "outOfStock"),
@@ -31,25 +44,12 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
   item.associate = function (models) {
-    // associations can be defined here
     item.belongsTo(models.user, {
-      foreignKey: "user_id",
+      foreignKey: "userId",
     });
     item.hasMany(models.order, {
-      foreignKey: "item_id",
+      foreignKey: "itemId",
       as: "order",
-    });
-    item.hasMany(models.code_type, {
-      foreignKey: "item_id",
-      as: "code_type",
-    });
-    item.hasMany(models.code_info, {
-      foreignKey: "item_id",
-      as: "code_info",
-    });
-    item.hasMany(models.item_image, {
-      foreignKey: "item_id",
-      as: "item_image",
     });
   };
   return item;
