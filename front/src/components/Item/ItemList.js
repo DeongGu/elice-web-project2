@@ -1,27 +1,8 @@
 import Item from "./Item";
-import { useEffect, useState } from "react";
-import axios from "axios";
+
 import styled from "styled-components";
 
-const ItemList = () => {
-  const [itemList, setItemList] = useState([]);
-  // const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      // setLoading(true);
-      try {
-        const response = await axios.get("http://localhost:5000/items");
-        setItemList(response.data);
-      } catch (err) {
-        console.log(err);
-      }
-      // setLoading(false);
-    };
-
-    fetchData();
-  }, []);
-
+const ItemList = ({ itemList }) => {
   return (
     <ItemListBlock>
       {itemList.map((item, idx) => {

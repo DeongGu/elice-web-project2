@@ -160,7 +160,7 @@ const ItemInfo = () => {
       ) : (
         <StyledP>{itemName}</StyledP>
       )}
-      <StyledLabel htmlFor="itemType">상품소개</StyledLabel>
+      <StyledLabel htmlFor="itemType">상품타입</StyledLabel>
       {isEdit ? (
         <StyledInput
           onChange={handleChange}

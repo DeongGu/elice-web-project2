@@ -1,6 +1,7 @@
 import db from "../../models";
 import jwt from "jsonwebtoken";
 import { SECRET_KEY } from "../../config/env.config";
+import { Op } from "sequelize";
 const Item = db.item;
 
 export const createItem = async (req, res, next) => {
@@ -63,8 +64,28 @@ export const findItem = async (req, res, next) => {
 
 export const findItems = async (req, res, next) => {
   try {
-    const foundItem = await Item.findAll({ raw: true });
-    res.status(200).send([...foundItem]);
+    const { status, search, limit, offset } = req.query;
+    const foundItem = await Item.findAll({
+      raw: true,
+      where: {
+        [Op.and]: [
+          status ? { status: status } : null,
+          search
+            ? {
+                [Op.or]: [
+                  { itemName: { [Op.like]: `%${search}%` } },
+                  { itemType: { [Op.substring]: `${search}` } },
+                  { itemDesc: { [Op.like]: `%${search}%` } },
+                ],
+              }
+            : null,
+        ],
+      },
+      order: [["updatedAt", "DESC"]],
+      limit: Number(!limit ? 10 : limit),
+      offset: Number(!offset ? 0 : offset),
+    });
+    res.status(200).send(foundItem);
   } catch (err) {
     next(err);
   }

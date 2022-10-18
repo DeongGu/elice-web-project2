@@ -117,7 +117,7 @@ const ItemForm = () => {
         type="text"
         value={itemName}
       />
-      <StyledLabel htmlFor="itemType">상품소개</StyledLabel>
+      <StyledLabel htmlFor="itemType">상품타입</StyledLabel>
       <StyledInput
         onChange={handleChange}
         name="itemType"
