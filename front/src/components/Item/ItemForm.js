@@ -6,17 +6,17 @@ import { useEffect, useState } from "react";
 const ItemForm = () => {
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   if (!sessionStorage.getItem("accessToken")) {
-  //     navigate("/");
-  //     alert("로그인부탁드려요^^");
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (!sessionStorage.getItem("accessToken")) {
+      navigate("/");
+      alert("로그인부탁드려요^^");
+    }
+  }, []);
 
   const initialValues = {
     itemImage: "/assets/images/default.jpg",
     itemName: "",
-    itemDetail: "",
+    itemType: "",
     itemDesc: "",
   };
 
@@ -41,10 +41,10 @@ const ItemForm = () => {
     }
   };
 
-  const { itemImage, itemName, itemDetail, itemDesc } = item;
+  const { itemImage, itemName, itemType, itemDesc } = item;
 
   const isItemName = itemName.length >= 2 && itemName.length <= 25;
-  const isItemDetail = itemDetail.length >= 2 && itemDetail.length <= 100;
+  const isItemDetail = itemType.length >= 2 && itemType.length <= 100;
   const isItemDesc = itemDesc.length >= 2 && itemDesc.length <= 30;
 
   const validate = isItemName && isItemDetail && isItemDesc;
@@ -60,22 +60,24 @@ const ItemForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const files = e.target.itemImage.files;
     const formData = new FormData();
 
+    const files = e.target.itemImage.files;
+
     for (let i = 0; i < files.length; i++) {
-      formData.append("files", files[i]);
+      formData.append("file", files[i]);
     }
 
-    const data = { itemName, itemDetail, itemDesc };
-
-    formData.append("data", JSON.stringify(data));
+    formData.append("itemName", itemName);
+    formData.append("itemDesc", itemDesc);
+    formData.append("itemType", itemType);
 
     try {
-      await axios
-        .post("http://localhost:5000/item", formData, {
+      axios
+        .post("http://localhost:5000/items", formData, {
           headers: {
-            "content-type": "multipart/form-data",
+            // "content-Type": "multipart/form-data",
+            Authentication: `${sessionStorage.getItem("accessToken")}`,
           },
         })
         .then((res) => {
@@ -91,7 +93,7 @@ const ItemForm = () => {
   };
 
   return (
-    <StyledForm onSubmit={handleSubmit}>
+    <StyledForm onSubmit={handleSubmit} enctype="multipart/form-data">
       <StyledLabel htmlFor="itemImage">상품 이미지</StyledLabel>
       <StyledInput
         type="file"
@@ -115,13 +117,13 @@ const ItemForm = () => {
         type="text"
         value={itemName}
       />
-      <StyledLabel htmlFor="itemDetail">상품소개</StyledLabel>
+      <StyledLabel htmlFor="itemType">상품소개</StyledLabel>
       <StyledInput
         onChange={handleChange}
-        name="itemDetail"
-        id="itemDetail"
+        name="itemType"
+        id="itemType"
         type="text"
-        value={itemDetail}
+        value={itemType}
       />
       <StyledLabel htmlFor="itemDesc">한 마디</StyledLabel>
       <StyledInput

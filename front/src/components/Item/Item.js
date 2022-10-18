@@ -8,15 +8,19 @@ const Item = ({ item }) => {
   return (
     <ItemBlock
       onClick={() => {
-        navigate(`/item/:${item.id}`);
+        navigate(`/items/${item.itemId}`);
       }}
       key={useId}
     >
-      <StyledImg src={item.itemImage} alt="상품" />
+      {item.itemImage ? (
+        <StyledImg src={item.itemImage} alt="상품" />
+      ) : (
+        <StyledImg src={"assets/images/default.jpg"} alt="상품" />
+      )}
       <p>
-        상품명 : <span>{item.item_name}</span>
+        상품명 : <span>{item.itemName}</span>
       </p>
-      <p>한마디: {item.item_desc}</p>
+      <p>한마디: {item.itemDesc}</p>
     </ItemBlock>
   );
 };

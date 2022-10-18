@@ -64,7 +64,7 @@ export const findItem = async (req, res, next) => {
 export const findItems = async (req, res, next) => {
   try {
     const foundItem = await Item.findAll({ raw: true });
-    res.status(200).send({ ...foundItem });
+    res.status(200).send([...foundItem]);
   } catch (err) {
     next(err);
   }
@@ -137,4 +137,3 @@ export const deleteItem = async (req, res, next) => {
     next(err);
   }
 };
-8;

@@ -2,21 +2,28 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { useContext } from "react";
-import UserCheckContext from "../../context/UserCheckContext";
 
 const ItemInfo = () => {
   const navigate = useNavigate();
   const { itemId } = useParams();
-  const userCheck = useContext(UserCheckContext);
 
-  const [item, setItem] = useState("");
+  useEffect(() => {
+    if (!sessionStorage.getItem("accessToken")) {
+      navigate("/");
+      alert("로그인부탁드려요^^");
+    }
+  }, []);
+
+  const [item, setItem] = useState({
+    itemImage: "/assets/images/default.jpg",
+    itemName: "",
+    itemType: "",
+    itemDesc: "",
+    userId: "",
+    editable: false,
+  });
 
   const [isEdit, setIsEdit] = useState(false);
-
-  const [isMyItem, setIsMyItem] = useState(false);
-
-  let initialValue = [];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,19 +37,15 @@ const ItemInfo = () => {
           }
         );
         setItem(response.data);
-        initialValue.push(response.data);
       } catch (err) {
         console.log(err);
       }
     };
-    fetchData();
 
-    if (userCheck.user.id === item.user_id) {
-      setIsMyItem(true);
-    }
+    fetchData();
   }, []);
 
-  const { itemImage, itemName, itemDetail, itemDesc } = item;
+  const { itemImage, itemName, itemType, itemDesc, editable } = item;
 
   const encodeFile = async (fileBlob) => {
     const reader = new FileReader();
@@ -63,10 +66,10 @@ const ItemInfo = () => {
   };
 
   const isItemName = itemName.length >= 2 && itemName.length <= 25;
-  const isItemDetail = itemDetail.length >= 2 && itemDetail.length <= 100;
+  const isItemType = itemType.length >= 2 && itemType.length <= 100;
   const isItemDesc = itemDesc.length >= 2 && itemDesc.length <= 30;
 
-  const validate = isItemName && isItemDetail && isItemDesc;
+  const validate = isItemName && isItemType && isItemDesc;
 
   const handleChange = (e) => {
     const newItem = {
@@ -82,23 +85,24 @@ const ItemInfo = () => {
     const formData = new FormData();
 
     for (let i = 0; i < files.length; i++) {
-      formData.append("files", files[i]);
+      formData.append("file", files[i]);
     }
 
-    const data = { itemName, itemDetail, itemDesc };
-
-    formData.append("data", JSON.stringify(data));
+    formData.append("itemName", itemName);
+    formData.append("itemDesc", itemDesc);
+    formData.append("itemType", itemType);
 
     try {
       await axios
-        .put("http://localhost:5000/items/:itemId", formData, {
+        .put(`http://localhost:5000/items/${itemId}`, formData, {
           headers: {
-            "content-type": "multipart/form-data",
+            // "content-type": "multipart/form-data",
             Authentication: `${sessionStorage.getItem("accessToken")}`,
           },
         })
         .then((res) => {
           console.log("response:", res.data);
+          alert("수정되었습니다.");
           navigate("/");
         });
     } catch (err) {
@@ -109,13 +113,14 @@ const ItemInfo = () => {
   const handleDelete = async (e) => {
     try {
       await axios
-        .delete("http://localhost:5000/items/:itemId", {
+        .delete(`http://localhost:5000/items/${itemId}`, {
           headers: {
             Authentication: `${sessionStorage.getItem("accessToken")}`,
           },
         })
         .then((res) => {
           console.log("삭제되었습니다.");
+          alert("삭제되었습니다.");
           navigate("/");
         });
     } catch (err) {
@@ -138,7 +143,10 @@ const ItemInfo = () => {
         />
       ) : null}
       <StyledPreview>
-        <StyledImage src={itemImage} alt="미리보기 이미지" />
+        <StyledImage
+          src={itemImage || "/assets/images/default.jpg"}
+          alt="미리보기 이미지"
+        />
       </StyledPreview>
       <StyledLabel htmlFor="itemName">상품명</StyledLabel>
       {isEdit ? (
@@ -152,17 +160,17 @@ const ItemInfo = () => {
       ) : (
         <StyledP>{itemName}</StyledP>
       )}
-      <StyledLabel htmlFor="itemDetail">상품소개</StyledLabel>
+      <StyledLabel htmlFor="itemType">상품소개</StyledLabel>
       {isEdit ? (
         <StyledInput
           onChange={handleChange}
-          name="itemDetail"
-          id="itemDetail"
+          name="itemType"
+          id="itemType"
           type="text"
-          value={itemDetail}
+          value={itemType}
         />
       ) : (
-        <StyledP>{itemDetail}</StyledP>
+        <StyledP>{itemType}</StyledP>
       )}
       <StyledLabel htmlFor="itemDesc">한 마디</StyledLabel>
       {isEdit ? (
@@ -191,13 +199,12 @@ const ItemInfo = () => {
           </>
         )}
 
-        {isMyItem ? (
+        {editable ? (
           <>
             <StyledBtn
               type="button"
               onClick={() => {
                 setIsEdit(!isEdit);
-                setItem(initialValue[0]);
               }}
             >
               {isEdit ? "취소" : "편집"}

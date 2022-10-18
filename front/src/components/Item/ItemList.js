@@ -35,4 +35,5 @@ export default ItemList;
 
 const ItemListBlock = styled.div`
   display: flex;
+  flex-wrap: wrap;
 `;

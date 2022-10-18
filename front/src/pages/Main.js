@@ -21,7 +21,7 @@ const Main = (props) => {
           <button>검색</button>
         </Search>
 
-        <StyledBtn onClick={() => navigate("/item")}>상품 생성</StyledBtn>
+        <StyledBtn onClick={() => navigate("/items")}>상품 생성</StyledBtn>
 
         <ItemList></ItemList>
       </MainBlock>

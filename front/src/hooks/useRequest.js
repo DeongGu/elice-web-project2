@@ -1,10 +1,11 @@
-import * as Api from '../api';
+import * as Api from "../api";
 
-import { useContext, useState } from 'react';
+import { useContext, useState } from "react";
 
-import UserCheckContext from '../context/UserCheckContext';
+import UserCheckContext from "../context/UserCheckContext";
+import axios from "axios";
 
-export default function useRequest(method, endpoint, params = '', form = {}) {
+export default function useRequest(method, endpoint, params = "", form = {}) {
   const userCheck = useContext(UserCheckContext);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -13,17 +14,17 @@ export default function useRequest(method, endpoint, params = '', form = {}) {
     try {
       setIsLoading(true);
 
-      if (method === 'get') {
+      if (method === "get") {
         await Api.get(endpoint, params);
         return;
       }
 
-      if (method === 'delete') {
+      if (method === "delete") {
         await Api.delete(endpoint, params);
         return;
       }
 
-      if (method === 'put') {
+      if (method === "put") {
         await Api.put(endpoint, form);
         return;
       }
@@ -31,21 +32,20 @@ export default function useRequest(method, endpoint, params = '', form = {}) {
       const response = await Api[method](endpoint, form);
       const fetchedData = await response.data;
 
-      if (fetchedData['Authentication']) {
-        const accessToken = fetchedData['Authentication'];
-        const userId = fetchedData['userId'];
+      if (fetchedData["Authentication"]) {
+        const accessToken = fetchedData["Authentication"];
 
-        sessionStorage.setItem('accessToken', accessToken);
+        sessionStorage.setItem("accessToken", accessToken);
 
-        const response = await Api.get('users', `${userId}`);
-        const userData = response.data[0];
+        const response = await Api.get("users");
+        const userData = response.data;
 
         userCheck.setUser(userData);
 
-        console.log('sessionStorage에 AccessToken 저장');
+        console.log("sessionStorage에 AccessToken 저장");
       }
 
-      console.log(method, endpoint + ' 성공');
+      console.log(method, endpoint + " 성공");
     } catch (err) {
       console.log(err.message);
     } finally {
