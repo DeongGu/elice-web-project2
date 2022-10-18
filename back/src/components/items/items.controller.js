@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import { SECRET_KEY } from "../../config/env.config";
 import { Op } from "sequelize";
 const Item = db.item;
+const Dibs = db.dibs;
 
 export const createItem = async (req, res, next) => {
   try {
@@ -50,6 +51,15 @@ export const findItem = async (req, res, next) => {
       where: {
         itemId: searchId,
       },
+      include: [
+        {
+          model: Dibs,
+          as: "dibs",
+          where: currentUserId ? { userId: currentUserId } : {},
+          attributes: ["dibsId"],
+          required: false,
+        },
+      ],
     });
 
     if (foundItem.userId === currentUserId) {
@@ -64,6 +74,10 @@ export const findItem = async (req, res, next) => {
 
 export const findItems = async (req, res, next) => {
   try {
+    const currentUserId = jwt.verify(
+      req.headers.authentication,
+      SECRET_KEY
+    ).userId;
     const { status, search, limit, offset } = req.query;
     const foundItem = await Item.findAll({
       raw: true,
@@ -81,6 +95,16 @@ export const findItems = async (req, res, next) => {
             : null,
         ],
       },
+      include: [
+        {
+          model: Dibs,
+          as: "dibs",
+          where: currentUserId ? { userId: currentUserId } : {},
+          attributes: ["dibsId"],
+          required: false,
+          limit: 1,
+        },
+      ],
       order: [["updatedAt", "DESC"]],
       limit: Number(!limit ? 10 : limit),
       offset: Number(!offset ? 0 : offset),

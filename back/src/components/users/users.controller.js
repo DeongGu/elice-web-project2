@@ -91,7 +91,6 @@ export const findUser = async (req, res, next) => {
 
     if (!searchId && currentUserId) {
       searchId = currentUserId;
-      editable = true;
     }
 
     const foundUser = await User.findOne({
@@ -101,6 +100,10 @@ export const findUser = async (req, res, next) => {
         userId: searchId,
       },
     });
+
+    if (foundUser) {
+      foundUser["editable"] = true;
+    }
 
     res.status(200).send({ ...foundUser, editable });
   } catch (err) {
