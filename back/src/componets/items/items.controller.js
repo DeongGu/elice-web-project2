@@ -64,18 +64,18 @@ export const findItem = async (req, res, next) => {
 
 export const findItems = async (req, res, next) => {
   try {
-    const { status, seach, limit, offset } = req.query;
+    const { status, search, limit, offset } = req.query;
     const foundItem = await Item.findAll({
       raw: true,
       where: {
         [Op.and]: [
           status ? { status: status } : null,
-          seach
+          search
             ? {
                 [Op.or]: [
-                  { itemName: { [Op.like]: `%${seach}%` } },
-                  { itemType: { [Op.substring]: `${seach}` } },
-                  { itemDesc: { [Op.like]: `%${seach}%` } },
+                  { itemName: { [Op.like]: `%${search}%` } },
+                  { itemType: { [Op.substring]: `${search}` } },
+                  { itemDesc: { [Op.like]: `%${search}%` } },
                 ],
               }
             : null,
