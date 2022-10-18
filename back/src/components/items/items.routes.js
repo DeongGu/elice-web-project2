@@ -18,7 +18,7 @@ router.post("/items", uploadS3.array("file"), controller.createItem);
 // 조회
 router.get("/items/:itemId", controller.findItem);
 
-// 목록조회 (검색포함 예정)
+// 목록조회 (검색포함)
 router.get("/items", controller.findItems);
 
 // 수정
