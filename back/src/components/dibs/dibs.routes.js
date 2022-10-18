@@ -1,5 +1,4 @@
 import express from "express";
-import { uploadS3 } from "../../middlewares/uploadS3";
 import * as controller from "./dibs.controller";
 
 const router = express.Router();
@@ -13,12 +12,12 @@ router.use((req, res, next) => {
 });
 
 // 찜하기
-router.post("/dibss", controller.createDibs);
+router.post("/dibs/:itemId", controller.createDibs);
 
 // 목록조회 (검색포함)
-router.get("/dibss", controller.findDibss);
+router.get("/dibs", controller.findDibs);
 
 // 찜취소(삭제)
-router.delete("/dibss/:dibsId", controller.deleteDibs);
+router.delete("/dibs/:dibsId", controller.deleteDibs);
 
 export default router;
