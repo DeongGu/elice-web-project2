@@ -3,11 +3,12 @@ module.exports = (sequelize, DataTypes) => {
   const delivery = sequelize.define(
     "delivery",
     {
-      id: {
+      deliveryId: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         allowNull: false,
         primaryKey: true,
+        field: "id",
       },
       status: {
         type: DataTypes.ENUM("yet_unknown", "known", "on_preparing", "sended"),
@@ -28,9 +29,8 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
   delivery.associate = function (models) {
-    // associations can be defined here
     delivery.belongsTo(models.order, {
-      foreignKey: "order_id",
+      foreignKey: "orderId",
     });
   };
   return delivery;

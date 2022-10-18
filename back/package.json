@@ -13,11 +13,14 @@
     "express-validation": "^4.1.0",
     "http-status": "^1.5.3",
     "jsonwebtoken": "^8.5.1",
+    "method-override": "^3.0.0",
     "multer": "^1.4.2",
     "multer-s3": "^2.9.0",
     "mysql2": "^2.1.0",
+    "path": "^0.12.7",
     "pm2": "^5.2.0",
-    "sequelize": "^6.25.1"
+    "sequelize": "^6.25.1",
+    "uuid": "^9.0.0"
   },
   "scripts": {
     "db": "docker-compose up -d",

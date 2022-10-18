@@ -3,11 +3,12 @@ module.exports = (sequelize, DataTypes) => {
   const address = sequelize.define(
     "address",
     {
-      id: {
+      addrId: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         allowNull: false,
         primaryKey: true,
+        field: "id",
       },
       addrName: {
         type: DataTypes.STRING,
@@ -44,7 +45,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
         field: "addr_message",
       },
-      user_id: {
+      userId: {
         type: DataTypes.UUID,
       },
     },
@@ -59,7 +60,7 @@ module.exports = (sequelize, DataTypes) => {
   address.associate = function (models) {
     // associations can be defined here
     address.belongsTo(models.user, {
-      foreignKey: "user_id",
+      foreignKey: "userId",
     });
   };
   return address;
