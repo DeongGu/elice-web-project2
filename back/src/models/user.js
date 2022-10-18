@@ -34,6 +34,7 @@ module.exports = (sequelize, DataTypes) => {
       role: {
         type: DataTypes.STRING,
         allowNull: true,
+        defaultValue: "user",
       },
       username: {
         type: DataTypes.STRING,
@@ -73,10 +74,6 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   user.associate = function (models) {
-    user.hasMany(models.address, {
-      foreignKey: "userId",
-      as: "address",
-    });
     user.hasMany(models.item, {
       foreignKey: "userId",
       as: "item",
