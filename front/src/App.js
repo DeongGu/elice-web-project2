@@ -24,7 +24,6 @@ function App() {
           <Routes>
             <Route path="/" element={<Main />} exact></Route>
             <Route path="/users" element={<UserInfo />} />
-            <Route path="/item/:itemId/edit" element={<ItemEdit />}></Route>
             <Route path="/items/:itemId" element={<ItemPage />}></Route>
             <Route path="/items" element={<ItemCreate />}></Route>
             <Route path="/prolog" element={<Prolog />}></Route>
