@@ -13,7 +13,11 @@ const Main = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/items");
+        const response = await axios.get("http://localhost:5000/items", {
+          headers: {
+            Authentication: `${sessionStorage.getItem("accessToken")}`,
+          },
+        });
         setItemList(response.data);
       } catch (err) {
         console.log(err);
@@ -29,7 +33,11 @@ const Main = (props) => {
   const handleSearch = async () => {
     try {
       await axios
-        .get(`http://localhost:5000/items?search=${search}`)
+        .get(`http://localhost:5000/items?search=${search}`, {
+          headers: {
+            Authentication: `${sessionStorage.getItem("accessToken")}`,
+          },
+        })
         .then((res) => {
           setItemList(res.data);
         });

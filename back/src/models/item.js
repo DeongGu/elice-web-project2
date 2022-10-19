@@ -44,6 +44,10 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
   item.associate = function (models) {
+    item.hasMany(models.dibs, {
+      foreignKey: "itemId",
+      as: "dibs",
+    });
     item.belongsTo(models.user, {
       foreignKey: "userId",
     });
