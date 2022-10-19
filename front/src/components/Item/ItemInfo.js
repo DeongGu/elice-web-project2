@@ -21,6 +21,7 @@ const ItemInfo = () => {
     itemDesc: "",
     userId: "",
     editable: false,
+    status: "inStock",
   });
 
   const [isEdit, setIsEdit] = useState(false);
@@ -45,7 +46,7 @@ const ItemInfo = () => {
     fetchData();
   }, []);
 
-  const { itemImage, itemName, itemType, itemDesc, editable } = item;
+  const { itemImage, itemName, itemType, itemDesc, editable, status } = item;
 
   const encodeFile = async (fileBlob) => {
     const reader = new FileReader();
@@ -65,9 +66,9 @@ const ItemInfo = () => {
     }
   };
 
-  const isItemName = itemName.length >= 2 && itemName.length <= 25;
-  const isItemType = itemType.length >= 2 && itemType.length <= 100;
-  const isItemDesc = itemDesc.length >= 2 && itemDesc.length <= 30;
+  const isItemName = itemName.length >= 0 && itemName.length <= 25;
+  const isItemType = itemType.length >= 0 && itemType.length <= 100;
+  const isItemDesc = itemDesc.length >= 0 && itemDesc.length <= 30;
 
   const validate = isItemName && isItemType && isItemDesc;
 
@@ -91,6 +92,7 @@ const ItemInfo = () => {
     formData.append("itemName", itemName);
     formData.append("itemDesc", itemDesc);
     formData.append("itemType", itemType);
+    formData.append("status", status);
 
     try {
       await axios
@@ -103,7 +105,8 @@ const ItemInfo = () => {
         .then((res) => {
           console.log("response:", res.data);
           alert("수정되었습니다.");
-          navigate("/");
+          setIsEdit(false);
+          navigate(`/items/${itemId}`);
         });
     } catch (err) {
       console.log(err);
@@ -148,6 +151,68 @@ const ItemInfo = () => {
           alt="미리보기 이미지"
         />
       </StyledPreview>
+
+      <StyledStatusBlock>
+        {isEdit ? (
+          <>
+            <label>
+              <input
+                type="radio"
+                onChange={handleChange}
+                name="status"
+                id="inStock"
+                value="inStock"
+              ></input>
+              거래가능
+            </label>
+            <label>
+              <input
+                type="radio"
+                onChange={handleChange}
+                name="status"
+                id="onTrading"
+                value="onTrading"
+              ></input>
+              거래중
+            </label>
+            <label>
+              <input
+                type="radio"
+                onChange={handleChange}
+                name="status"
+                id="outOfStock"
+                value="outOfStock"
+              ></input>
+              거래완료
+            </label>
+          </>
+        ) : (
+          <>
+            {status === "inStock" ? (
+              <StyledStatus style={{ backgroundColor: "rgba(0, 0, 0, 0.1)" }}>
+                거래가능
+              </StyledStatus>
+            ) : (
+              <StyledStatus>거래가능</StyledStatus>
+            )}
+            {status === "onTrading" ? (
+              <StyledStatus style={{ backgroundColor: "rgba(0, 0, 0, 0.1)" }}>
+                거래중
+              </StyledStatus>
+            ) : (
+              <StyledStatus>거래중</StyledStatus>
+            )}
+            {status === "outOfStock" ? (
+              <StyledStatus style={{ backgroundColor: "rgba(0, 0, 0, 0.1)" }}>
+                거래완료
+              </StyledStatus>
+            ) : (
+              <StyledStatus>거래완료</StyledStatus>
+            )}
+          </>
+        )}
+      </StyledStatusBlock>
+
       <StyledLabel htmlFor="itemName">상품명</StyledLabel>
       {isEdit ? (
         <StyledInput
@@ -273,4 +338,18 @@ const StyledLabel = styled.label`
 const StyledP = styled.p`
   margin: 10px 20px;
   height: 30px;
+`;
+
+const StyledStatusBlock = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+const StyledStatus = styled.p`
+  margin: 5px 20px 20px 20px;
+  width: 80px;
+  height: 40px;
+  border: 1px solid black;
+  line-height: 40px;
+  text-align: center;
 `;
