@@ -50,7 +50,6 @@ export const login = async (req, res, next) => {
     const token = jwt.sign(
       {
         userId: foundUser.userId,
-        nickname: foundUser.nickname,
         email: foundUser.email,
       },
       SECRET_KEY,
@@ -82,30 +81,29 @@ export const logout = async (req, res, next) => {
 
 export const findUser = async (req, res, next) => {
   try {
+    // 로그인여부 확인(미들웨어 적용예정)
+    if (!req.headers.authentication) {
+      return res.status(401).send({ message: "로그인 하지 않은 상태입니다." });
+    }
     const currentUserId = jwt.verify(
       req.headers.authentication,
       SECRET_KEY
     ).userId;
-    let searchId = req.params.userId;
-    let editable = false;
+    // ----------
 
-    if (!searchId && currentUserId) {
-      searchId = currentUserId;
-    }
+    let searchId = req.params.userId;
 
     const foundUser = await User.findOne({
       raw: true,
-      attributes: { exclude: "password" },
-      where: {
-        userId: searchId,
-      },
+      attributes: searchId
+        ? { exclude: ["email", "password", "phoneNumber", "username"] }
+        : { exclude: "password" },
+      where: searchId ? { userId: searchId } : { userId: currentUserId },
     });
 
-    if (foundUser) {
-      foundUser["editable"] = true;
-    }
+    foundUser["editable"] = foundUser ? true : false;
 
-    res.status(200).send({ ...foundUser, editable });
+    res.status(200).send(foundUser);
   } catch (err) {
     next(err);
   }
@@ -113,10 +111,15 @@ export const findUser = async (req, res, next) => {
 
 export const updateUser = async (req, res, next) => {
   try {
+    // 로그인여부 확인(미들웨어 적용예정)
+    if (!req.headers.authentication) {
+      return res.status(401).send({ message: "로그인 하지 않은 상태입니다." });
+    }
     const currentUserId = jwt.verify(
       req.headers.authentication,
       SECRET_KEY
     ).userId;
+    // ----------
 
     let chgUserInfo = { ...req.body };
 
@@ -137,10 +140,16 @@ export const updateUser = async (req, res, next) => {
 
 export const deleteUser = async (req, res, next) => {
   try {
+    // 로그인여부 확인(미들웨어 적용예정)
+    if (!req.headers.authentication) {
+      return res.status(401).send({ message: "로그인 하지 않은 상태입니다." });
+    }
     const currentUserId = jwt.verify(
       req.headers.authentication,
       SECRET_KEY
     ).userId;
+    // ----------
+
     const foundUser = await User.destroy({
       where: { userId: currentUserId },
     });

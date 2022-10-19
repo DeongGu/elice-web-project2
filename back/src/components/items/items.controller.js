@@ -7,10 +7,15 @@ const Dibs = db.dibs;
 
 export const createItem = async (req, res, next) => {
   try {
+    // 로그인여부 확인(미들웨어 적용예정)
+    if (!req.headers.authentication) {
+      return res.status(401).send({ message: "로그인 하지 않은 상태입니다." });
+    }
     const currentUserId = jwt.verify(
       req.headers.authentication,
       SECRET_KEY
     ).userId;
+    // ----------
 
     let createInfo = { ...req.body, userId: currentUserId };
 
@@ -39,12 +44,11 @@ export const createItem = async (req, res, next) => {
 
 export const findItem = async (req, res, next) => {
   try {
-    const currentUserId = jwt.verify(
-      req.headers.authentication,
-      SECRET_KEY
-    ).userId;
     let searchId = req.params.itemId;
-    let editable = false;
+    let currentUserId = null;
+    if (req.headers.authentication) {
+      currentUserId = jwt.verify(req.headers.authentication, SECRET_KEY).userId;
+    }
 
     const foundItem = await Item.findOne({
       raw: true,
@@ -52,21 +56,25 @@ export const findItem = async (req, res, next) => {
         itemId: searchId,
       },
       include: [
-        {
-          model: Dibs,
-          as: "dibs",
-          where: currentUserId ? { userId: currentUserId } : {},
-          attributes: ["dibsId"],
-          required: false,
-        },
+        currentUserId
+          ? {
+              model: Dibs,
+              as: "dibs",
+              where: { userId: currentUserId },
+              attributes: ["dibsId"],
+              required: false,
+            }
+          : {},
       ],
     });
 
-    if (foundItem.userId === currentUserId) {
+    let editable = false;
+    if (currentUserId && foundItem.userId === currentUserId) {
       editable = true;
     }
+    foundItem["editable"] = editable;
 
-    res.status(200).send({ ...foundItem, editable });
+    res.status(200).send(foundItem);
   } catch (err) {
     next(err);
   }
@@ -74,12 +82,13 @@ export const findItem = async (req, res, next) => {
 
 export const findItems = async (req, res, next) => {
   try {
-    const currentUserId = jwt.verify(
-      req.headers.authentication,
-      SECRET_KEY
-    ).userId;
+    let currentUserId = null;
+    if (req.headers.authentication) {
+      currentUserId = jwt.verify(req.headers.authentication, SECRET_KEY).userId;
+    }
+    console.log(currentUserId);
     const { status, search, limit, offset } = req.query;
-    const foundItem = await Item.findAll({
+    const foundItems = await Item.findAll({
       raw: true,
       where: {
         [Op.and]: [
@@ -96,20 +105,21 @@ export const findItems = async (req, res, next) => {
         ],
       },
       include: [
-        {
-          model: Dibs,
-          as: "dibs",
-          where: currentUserId ? { userId: currentUserId } : {},
-          attributes: ["dibsId"],
-          required: false,
-          limit: 1,
-        },
+        currentUserId
+          ? {
+              model: Dibs,
+              as: "dibs",
+              where: { userId: currentUserId },
+              attributes: ["dibsId"],
+              required: false,
+            }
+          : {},
       ],
       order: [["updatedAt", "DESC"]],
       limit: Number(!limit ? 10 : limit),
       offset: Number(!offset ? 0 : offset),
     });
-    res.status(200).send(foundItem);
+    res.status(200).send(foundItems);
   } catch (err) {
     next(err);
   }
@@ -117,13 +127,34 @@ export const findItems = async (req, res, next) => {
 
 export const updateItem = async (req, res, next) => {
   try {
+    // 로그인여부 확인(미들웨어 적용예정)
+    if (!req.headers.authentication) {
+      return res.status(401).send({ message: "로그인 하지 않은 상태입니다." });
+    }
     const currentUserId = jwt.verify(
       req.headers.authentication,
       SECRET_KEY
     ).userId;
+    // ----------
+
+    // 본인이 올린 상품인지 확인
     let targetItemId = req.params.itemId;
 
-    const updateInfo = { ...req.body, userId: currentUserId };
+    const foundItem = await Item.findOne({
+      raw: true,
+      where: {
+        itemId: targetItemId,
+      },
+    });
+
+    if (foundItem?.userId !== currentUserId) {
+      return res
+        .status(401)
+        .send({ message: "You do not have permission to update" });
+    }
+    // ----------
+
+    const updateInfo = req.body;
 
     if (req.files && req.files.length > 0) {
       let urls = new Array();
@@ -152,10 +183,17 @@ export const updateItem = async (req, res, next) => {
 
 export const deleteItem = async (req, res, next) => {
   try {
+    // 로그인여부 확인(미들웨어 적용예정)
+    if (!req.headers.authentication) {
+      return res.status(401).send({ message: "로그인 하지 않은 상태입니다." });
+    }
     const currentUserId = jwt.verify(
       req.headers.authentication,
       SECRET_KEY
     ).userId;
+    // ----------
+
+    // 본인이 올린 상품인지 확인
     let targetItemId = req.params.itemId;
 
     const foundItem = await Item.findOne({
@@ -165,11 +203,12 @@ export const deleteItem = async (req, res, next) => {
       },
     });
 
-    if (foundItem.userId !== currentUserId) {
+    if (foundItem?.userId !== currentUserId) {
       return res
         .status(401)
         .send({ message: "You do not have permission to delete" });
     }
+    // ----------
 
     const deletedItem = await Item.destroy({
       where: { itemId: targetItemId },
