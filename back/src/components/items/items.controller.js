@@ -55,17 +55,13 @@ export const findItem = async (req, res, next) => {
       where: {
         itemId: searchId,
       },
-      include: [
-        currentUserId
-          ? {
-              model: Dibs,
-              as: "dibs",
-              where: { userId: currentUserId },
-              attributes: ["dibsId"],
-              required: false,
-            }
-          : {},
-      ],
+      include: {
+        model: Dibs,
+        as: "dibs",
+        where: currentUserId ? { userId: currentUserId } : { userId: "admin" },
+        attributes: ["dibsId"],
+        required: false,
+      },
     });
 
     let editable = false;
@@ -104,17 +100,13 @@ export const findItems = async (req, res, next) => {
             : null,
         ],
       },
-      include: [
-        currentUserId
-          ? {
-              model: Dibs,
-              as: "dibs",
-              where: { userId: currentUserId },
-              attributes: ["dibsId"],
-              required: false,
-            }
-          : {},
-      ],
+      include: {
+        model: Dibs,
+        as: "dibs",
+        where: currentUserId ? { userId: currentUserId } : { userId: "admin" },
+        attributes: ["dibsId"],
+        required: false,
+      },
       order: [["updatedAt", "DESC"]],
       limit: Number(!limit ? 1000 : limit),
       offset: Number(!offset ? 0 : offset),
