@@ -122,6 +122,17 @@ $ yarn db
 
 <br>
 
+## (참고) DB를 초기화하고 싶다면
+
+- docker 컨테이너 삭제
+  ![08](/_doc/img/08.png)
+
+- `_db\mysql\data` 폴더 삭제 후
+
+- 다시 6-1부터 실행
+
+<br>
+
 ## 7. Docker 정상실행 확인 <br>
 
 ![01](/_doc/img/01.png)
