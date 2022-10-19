@@ -13,7 +13,7 @@ const Item = ({ item }) => {
       key={useId}
     >
       {item.itemImage ? (
-        <StyledImg src={item.itemImage} alt="상품" />
+        <StyledImg src={item.itemImage[0]} alt="상품" />
       ) : (
         <StyledImg src={"assets/images/default.jpg"} alt="상품" />
       )}
@@ -30,7 +30,22 @@ export default Item;
 const ItemBlock = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  height: 380px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  padding: 10px;
+  box-sizing: border-box;
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+  &:active {
+    position: relative;
+    top: 2px;
+  }
 `;
 const StyledImg = styled.img`
   width: 300px;
+  height: 300px;
+  object-fit: cover;
 `;

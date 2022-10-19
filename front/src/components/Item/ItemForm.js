@@ -18,6 +18,7 @@ const ItemForm = () => {
     itemName: "",
     itemType: "",
     itemDesc: "",
+    openChat: "",
   };
 
   const [item, setItem] = useState(initialValues);
@@ -41,13 +42,13 @@ const ItemForm = () => {
     }
   };
 
-  const { itemImage, itemName, itemType, itemDesc } = item;
+  const { itemImage, itemName, itemType, itemDesc, openChat } = item;
 
-  const isItemName = itemName.length >= 2 && itemName.length <= 25;
+  const isItemName = itemName.length >= 2 && itemName.length <= 30;
   const isItemDetail = itemType.length >= 2 && itemType.length <= 100;
   const isItemDesc = itemDesc.length >= 2 && itemDesc.length <= 30;
-
-  const validate = isItemName && isItemDetail && isItemDesc;
+  const isOpenChat = openChat.length >= 2;
+  const validate = isItemName && isItemDetail && isItemDesc && isOpenChat;
 
   const handleChange = (e) => {
     const newItem = {
@@ -71,6 +72,7 @@ const ItemForm = () => {
     formData.append("itemName", itemName);
     formData.append("itemDesc", itemDesc);
     formData.append("itemType", itemType);
+    formData.append("openChat", openChat);
 
     try {
       axios
@@ -124,6 +126,7 @@ const ItemForm = () => {
         id="itemType"
         type="text"
         value={itemType}
+        placeholder="바지, 상의"
       />
       <StyledLabel htmlFor="itemDesc">한 마디</StyledLabel>
       <StyledInput
@@ -132,6 +135,17 @@ const ItemForm = () => {
         name="itemDesc"
         id="itemDesc"
         value={itemDesc}
+        placeholder="예시) 나의 추억이었고, 즐거움이었습니다."
+      />
+
+      <StyledLabel htmlFor="openChat">오픈카톡방 주소</StyledLabel>
+      <StyledInput
+        type="text"
+        onChange={handleChange}
+        name="openChat"
+        id="openChat"
+        value={openChat}
+        placeholder="필수 입력 사항입니다."
       />
 
       <ButtonBlock>
@@ -156,20 +170,21 @@ const StyledForm = styled.form`
   margin: 20px auto;
   border: 1px solid black;
   width: 500px;
-  height: 800px;
-  box-sizing: content-box;
+  height: 850px;
+  box-sizing: border-box;
 `;
 
 const StyledImage = styled.img`
-  max-width: 490px;
-  max-height: 300px;
+  width: 490px;
+  height: 300px;
+  object-fit: contain;
 `;
 
 const StyledPreview = styled.div`
   display: flex;
   justify-content: center;
 
-  margin-bottom: 50px;
+  margin-bottom: 20px;
 `;
 const StyledInput = styled.input`
   margin: 10px 20px;

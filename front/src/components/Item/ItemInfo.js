@@ -7,13 +7,6 @@ const ItemInfo = () => {
   const navigate = useNavigate();
   const { itemId } = useParams();
 
-  useEffect(() => {
-    if (!sessionStorage.getItem("accessToken")) {
-      navigate("/");
-      alert("로그인부탁드려요^^");
-    }
-  }, []);
-
   const [item, setItem] = useState({
     itemImage: "/assets/images/default.jpg",
     itemName: "",
@@ -22,6 +15,8 @@ const ItemInfo = () => {
     userId: "",
     editable: false,
     status: "inStock",
+    openChat: "",
+    dibsId: "",
   });
 
   const [isEdit, setIsEdit] = useState(false);
@@ -46,7 +41,16 @@ const ItemInfo = () => {
     fetchData();
   }, []);
 
-  const { itemImage, itemName, itemType, itemDesc, editable, status } = item;
+  const {
+    itemImage,
+    itemName,
+    itemType,
+    itemDesc,
+    editable,
+    status,
+    openChat,
+    dibsId,
+  } = item;
 
   const encodeFile = async (fileBlob) => {
     const reader = new FileReader();
@@ -69,8 +73,8 @@ const ItemInfo = () => {
   const isItemName = itemName.length >= 0 && itemName.length <= 25;
   const isItemType = itemType.length >= 0 && itemType.length <= 100;
   const isItemDesc = itemDesc.length >= 0 && itemDesc.length <= 30;
-
-  const validate = isItemName && isItemType && isItemDesc;
+  const isOpenChat = openChat >= 0;
+  const validate = isItemName && isItemType && isItemDesc && isOpenChat;
 
   const handleChange = (e) => {
     const newItem = {
@@ -93,6 +97,7 @@ const ItemInfo = () => {
     formData.append("itemDesc", itemDesc);
     formData.append("itemType", itemType);
     formData.append("status", status);
+    formData.append("openChat", openChat);
 
     try {
       await axios
@@ -131,6 +136,24 @@ const ItemInfo = () => {
     }
   };
 
+  const [slide, setSlide] = useState(0);
+
+  const preSlide = () => {
+    if (slide === 0) {
+      setSlide(itemImage.length - 1);
+    } else {
+      setSlide(slide - 1);
+    }
+  };
+
+  const nextSlide = () => {
+    if (slide >= itemImage.length - 1) {
+      setSlide(0);
+    } else {
+      setSlide(slide + 1);
+    }
+  };
+
   return (
     <StyledForm onSubmit={handleSubmit}>
       <StyledLabel htmlFor="itemImage">상품 이미지</StyledLabel>
@@ -146,43 +169,59 @@ const ItemInfo = () => {
         />
       ) : null}
       <StyledPreview>
-        <StyledImage
-          src={itemImage || "/assets/images/default.jpg"}
-          alt="미리보기 이미지"
-        />
+        <SlideBlock>
+          {Array.isArray(itemImage) ? (
+            <StyledImage src={itemImage[slide]} alt="미리보기 이미지" />
+          ) : itemImage ? (
+            <StyledImage src={itemImage} alt="미리보기 이미지" />
+          ) : (
+            <StyledImage
+              src={"/assets/images/default.jpg"}
+              alt="미리보기 이미지"
+            />
+          )}
+        </SlideBlock>
+        <SlideButtonBlock>
+          <SlideButton onClick={preSlide} type="button">
+            {"<"}
+          </SlideButton>
+          <SlideButton onClick={nextSlide} type="button">
+            {">"}
+          </SlideButton>
+        </SlideButtonBlock>
       </StyledPreview>
 
       <StyledStatusBlock>
         {isEdit ? (
           <>
             <label>
-              <input
+              <StyledRadio
                 type="radio"
                 onChange={handleChange}
                 name="status"
                 id="inStock"
                 value="inStock"
-              ></input>
+              ></StyledRadio>
               거래가능
             </label>
             <label>
-              <input
+              <StyledRadio
                 type="radio"
                 onChange={handleChange}
                 name="status"
                 id="onTrading"
                 value="onTrading"
-              ></input>
+              ></StyledRadio>
               거래중
             </label>
             <label>
-              <input
+              <StyledRadio
                 type="radio"
                 onChange={handleChange}
                 name="status"
                 id="outOfStock"
                 value="outOfStock"
-              ></input>
+              ></StyledRadio>
               거래완료
             </label>
           </>
@@ -249,6 +288,18 @@ const ItemInfo = () => {
       ) : (
         <StyledP>{itemDesc}</StyledP>
       )}
+      <StyledLabel htmlFor="openChat">오픈카톡방 주소</StyledLabel>
+      {isEdit ? (
+        <StyledInput
+          type="text"
+          onChange={handleChange}
+          name="openChat"
+          id="openChat"
+          value={openChat}
+        />
+      ) : (
+        <StyledP>{openChat}</StyledP>
+      )}
       <ButtonBlock>
         {isEdit ? (
           <>
@@ -260,7 +311,6 @@ const ItemInfo = () => {
         ) : (
           <>
             <StyledBtn type="button">찜하기</StyledBtn>
-            <StyledBtn type="button">배송메시지</StyledBtn>
           </>
         )}
 
@@ -289,20 +339,23 @@ const StyledForm = styled.form`
   margin: 20px auto;
   border: 1px solid black;
   width: 500px;
-  height: 800px;
-  box-sizing: content-box;
+  height: 1000px;
+  box-sizing: border-box;
 `;
 
 const StyledImage = styled.img`
-  max-width: 490px;
-  max-height: 300px;
+  margin-top: 20px;
+  width: 490px;
+  height: 300px;
+  object-fit: contain;
 `;
 
 const StyledPreview = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
 
-  margin-bottom: 50px;
+  margin-bottom: 30px;
 `;
 const StyledInput = styled.input`
   margin: 10px 20px;
@@ -332,7 +385,7 @@ const ButtonBlock = styled.div`
 `;
 
 const StyledLabel = styled.label`
-  margin: 10px 0 0 20px;
+  margin: 20px 0 0 20px;
 `;
 
 const StyledP = styled.p`
@@ -352,4 +405,31 @@ const StyledStatus = styled.p`
   border: 1px solid black;
   line-height: 40px;
   text-align: center;
+`;
+
+const StyledRadio = styled.input`
+  margin: 5px 5px 10px 20px;
+`;
+
+const SlideButtonBlock = styled.div`
+  display: flex;
+  width: 100px;
+  justify-content: space-between;
+  margin: 20px auto 0 auto;
+`;
+
+const SlideButton = styled.button`
+  width: 40px;
+  height: 40px;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+`;
+
+const SlideBlock = styled.div`
+  display: flex;
+  margin: 0 auto;
 `;

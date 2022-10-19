@@ -59,7 +59,7 @@ const SlideBanner = () => {
     return () => {
       clearInterval(timer);
     };
-  }, []);
+  }, [slideList.length]);
 
   return (
     <Wrapper>
