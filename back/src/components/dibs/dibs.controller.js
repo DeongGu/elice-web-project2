@@ -59,7 +59,7 @@ export const findDibs = async (req, res, next) => {
         },
       ],
       order: [["updatedAt", "DESC"]],
-      limit: Number(!limit ? 10 : limit),
+      limit: Number(!limit ? 1000 : limit),
       offset: Number(!offset ? 0 : offset),
     });
     res.status(200).send(foundDibs);
