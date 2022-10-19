@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import styled, { keyframes, css } from 'styled-components';
 
 import useSlide from '../hooks/useSlide.js';
-import useDivideSection from '../hooks/useDividedSection.js';
+import useDivideSection from '../hooks/useDivideSection.js';
 
 import Slide from '../components/UI/Slide.js';
 import ProfileCard from '../components/About/ProfileCard.js';
@@ -55,7 +55,7 @@ const teamMembers = [
 
 export default function About() {
   const { count, setCount, startInterval, leftBtnHandler, rightBtnHandler } =
-    useSlide(5000, 1, teamMembers);
+    useSlide(5000, 1, teamMembers.length);
   const { currentSection, scrollEventHandler } = useDivideSection(2);
 
   useEffect(() => {
@@ -66,10 +66,6 @@ export default function About() {
 
     return () => window.removeEventListener('scroll', scrollEventHandler);
   }, []);
-
-  useEffect(() => {
-    console.log(currentSection, count);
-  }, [currentSection, count]);
 
   const slideProps = {
     count,
@@ -100,7 +96,6 @@ export default function About() {
         </TitleBackground>
       </TitleSection>
       <ReasonSection
-        height={'300vh'}
         focusOn={currentSection < 5 && currentSection > 1}
         focusOut={!(currentSection < 5 && currentSection > 1)}
       >
@@ -330,6 +325,8 @@ const StartBtn = styled.div`
 `;
 
 const ReasonSection = styled(Section)`
+  height: 300vh;
+
   ${({ focusOn }) =>
     focusOn &&
     css`
