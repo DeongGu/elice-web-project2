@@ -1,6 +1,3 @@
-import { useContext } from 'react';
-import { UserContext } from '../../App';
-import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import useForm from '../../hooks/useForm';
@@ -12,7 +9,7 @@ import BreakLine from '../UI/BreakLine';
 
 import logoImage from '../../assets/imgs/Vring-logo.png';
 
-import { DELETE_USER, LOGIN_USER } from '../../api/Request';
+import { LOGIN_USER } from '../../api/Request';
 
 const inputData = [
   {
@@ -32,33 +29,14 @@ const initialState = {
   password: '',
 };
 
-export default function DeleteForm() {
-  const { form, onChangeHandler } = useForm(initialState);
-  const userContext = useContext(UserContext);
-  const { requestHandler: deleteUserHandler } = useRequest(DELETE_USER);
-  const { requestHandler: checkUserHandler } = useRequest(LOGIN_USER, form);
-
-  const navigate = useNavigate();
+export default function LoginForm() {
+  const { form, setForm, onChangeHandler } = useForm(initialState);
+  const { requestHandler } = useRequest(LOGIN_USER, form);
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
-
-    try {
-      const { error } = await checkUserHandler();
-
-      if (error) {
-        return;
-      }
-
-      await deleteUserHandler();
-
-      navigate('/');
-
-      sessionStorage.clear();
-      userContext.setUser(null);
-    } catch (err) {
-      console.log(err.message);
-    }
+    await requestHandler();
+    setForm(initialState);
   };
 
   const inputProps = { form, inputData, onChangeHandler };
@@ -67,9 +45,9 @@ export default function DeleteForm() {
     <>
       <ModalBackground />
       <Form onSubmit={onSubmitHandler}>
-        <Title>정말 삭제하시나요?</Title>
+        <Title>어서오세요!</Title>
         <InputList {...inputProps} />
-        <Button disabled={!(form.email && form.password)}>삭제</Button>
+        <Button disabeld={!(form.email && form.password)}>로그인</Button>
         <BreakLine />
         <Logo src={logoImage} />
       </Form>

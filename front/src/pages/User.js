@@ -1,12 +1,19 @@
+import { useContext } from 'react';
 import styled from 'styled-components';
+
+import { UserContext } from '../App';
 
 import UserInfo from '../components/User/UserInfo';
 
 export default function User() {
+  const userContext = useContext(UserContext);
+
   return (
-    <Container>
-      <UserInfo />;
-    </Container>
+    !userContext.isLoading && (
+      <Container>
+        <UserInfo />
+      </Container>
+    )
   );
 }
 

@@ -19,10 +19,14 @@ export default function useValidation(setForm, setFormIsValid, TIME = 300) {
     }
 
     timerRef.current = setTimeout(() => {
-      setFormIsValid((prevState) => ({
-        ...prevState,
-        [id]: Validate[id].test(value),
-      }));
+      setFormIsValid((prevState) =>
+        !Validate[id]
+          ? { ...prevState }
+          : {
+              ...prevState,
+              [id]: Validate[id].test(value),
+            }
+      );
     }, TIME);
   });
 

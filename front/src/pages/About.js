@@ -1,5 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect, useContext } from 'react';
 import styled, { keyframes, css } from 'styled-components';
+
+import GeneralContext from '../context/GeneralContext.js';
 
 import useSlide from '../hooks/useSlide.js';
 import useDivideSection from '../hooks/useDivideSection.js';
@@ -54,6 +56,8 @@ const teamMembers = [
 ];
 
 export default function About() {
+  const generalContext = useContext(GeneralContext);
+
   const { count, setCount, startInterval, leftBtnHandler, rightBtnHandler } =
     useSlide(5000, 1, teamMembers.length);
   const { currentSection, scrollEventHandler } = useDivideSection(2);
@@ -92,7 +96,9 @@ export default function About() {
             하세요.
           </Title>
           <Text>환경을 위한, 의류 교환 서비스</Text>
-          <StartBtn>시작하기</StartBtn>
+          <StartBtn onClick={generalContext.registerFormHandler}>
+            시작하기
+          </StartBtn>
         </TitleBackground>
       </TitleSection>
       <ReasonSection
@@ -114,7 +120,7 @@ export default function About() {
         </LeftSide>
         <RightSide>
           <SubContainer>
-            <Reason focusOn={currentSection === 2}>구구절절한 설명1</Reason>
+            <Reason focusOn={currentSection === 2}>설명1</Reason>
           </SubContainer>
           <SubContainer image={ReasonImage} reversed={true}>
             <Reason focusOn={currentSection === 3}>구구절절한 설명2</Reason>
@@ -137,7 +143,9 @@ export default function About() {
             있는 서비스입니다.
           </AboutText>
           <AboutText>지금 바로 회원가입해서 서비스를 이용해보세요!</AboutText>
-          <AboutStartBtn>지금 바로 시작하기</AboutStartBtn>
+          <AboutStartBtn onClick={generalContext.registerFormHandler}>
+            지금 바로 시작하기
+          </AboutStartBtn>
           <BreakLine />
           <Logo src={LogoImage}></Logo>
         </AboutDescription>
@@ -314,7 +322,8 @@ const Text = styled.div`
   margin-bottom: 3rem;
 `;
 
-const StartBtn = styled.div`
+const StartBtn = styled.button`
+  cursor: pointer;
   padding: 4px 16px;
   font-size: 1.25rem;
   font-family: 'elice-bold';
