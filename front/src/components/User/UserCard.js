@@ -2,24 +2,22 @@ import styled from 'styled-components';
 
 import BreakLine from '../UI/BreakLine';
 import Gender from '../UI/Gender';
-import ProfileStacks from './ProfileStacks';
 
-export default function ProfileCard({ teamMember }) {
+export default function UserCard({ teamMember }) {
   return (
     <>
-      <SlideCard>
-        <ProfileImage src={Gender[teamMember.gender]} />
+      <UserCardStyle>
+        {/* <ProfileImage src={Gender[teamMember.gender]} />
         <ProfileName>{teamMember.name}</ProfileName>
         <ProfilePos>{teamMember.pos}</ProfilePos>
-        <ProfileDescription>{teamMember.description}</ProfileDescription>
+        <ProfileDescription>{teamMember.description}</ProfileDescription> */}
         <BreakLine />
-        <ProfileStacks icons={teamMember.stacks} />
-      </SlideCard>
+      </UserCardStyle>
     </>
   );
 }
 
-const SlideCard = styled.div`
+const UserCardStyle = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
