@@ -14,11 +14,7 @@ const Main = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/items", {
-          headers: {
-            Authentication: `${sessionStorage.getItem("accessToken")}`,
-          },
-        });
+        const response = await axios.get("http://localhost:5000/items");
         setItemList(response.data);
         setInitialList(response.data);
       } catch (err) {
@@ -29,11 +25,28 @@ const Main = (props) => {
     fetchData();
   }, []);
 
-  const [selected, setSelected] = useState("itemName");
   const [search, setSearch] = useState("");
   const [checked, setChecked] = useState(false);
 
-  const handleSearch = async () => {
+  const enterSearch = async (e) => {
+    if (e.key === "Enter") {
+      try {
+        await axios
+          .get(`http://localhost:5000/items?search=${search}`, {
+            headers: {
+              Authentication: `${sessionStorage.getItem("accessToken")}`,
+            },
+          })
+          .then((res) => {
+            setItemList(res.data);
+          });
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
+
+  const handleSearch = async (e) => {
     try {
       await axios
         .get(`http://localhost:5000/items?search=${search}`, {
@@ -47,9 +60,6 @@ const Main = (props) => {
     } catch (err) {
       console.log(err);
     }
-  };
-  const handleSelect = (e) => {
-    setSelected(e.target.value);
   };
 
   const handleChange = (e) => {
@@ -68,22 +78,25 @@ const Main = (props) => {
   return (
     <>
       <SearchBlock>
-        <select onChange={handleSelect}>
-          <option value="all">통합검색</option>
-          <option value="itemName">상품명</option>
-          <option value="itemType">상품타입</option>
-          <option value="itemDesc">한마디</option>
-        </select>
         <input
           type={"text"}
           placeholder="검색하세요"
           onChange={handleChange}
           value={search}
+          onKeyDown={enterSearch}
         ></input>
         <button type="button" onClick={handleSearch}>
           검색
         </button>
       </SearchBlock>
+      <>
+        <>정렬 카테고리</>
+        <input type="checkbox" value={"상의"}></input>
+        <input type="checkbox"></input>
+        <input type="checkbox"></input>
+        <input type="checkbox"></input>
+        <input type="checkbox"></input>
+      </>
 
       <SlideBanner></SlideBanner>
       <ItemBlock>
@@ -93,7 +106,7 @@ const Main = (props) => {
               type="checkbox"
               checked={checked}
               onChange={() => {
-                setChecked(!checked);
+                setChecked((preState) => !preState);
               }}
             ></input>
             거래가능만 보기
@@ -124,10 +137,12 @@ const StyledBtn = styled.button`
   cursor: pointer;
   border-radius: 15px;
   border: none;
-  background-color: rgba(23, 255, 256, 0.7);
+  font-size: 20px;
+  color: white;
+  background-color: rgb(119, 187, 63);
 
   &:hover {
-    background-color: rgba(23, 255, 256, 0.3);
+    background-color: rgba(119, 187, 63, 0.3);
   }
 `;
 
@@ -137,16 +152,10 @@ const SearchBlock = styled.div`
 
   margin: 30px;
 
-  & select {
-    height: 60px;
-    width: 150px;
-    font-size: 25px;
-  }
-
   input {
     margin-left: 10px;
     height: 54px;
-    width: 500px;
+    width: 600px;
     font-size: 25px;
   }
 

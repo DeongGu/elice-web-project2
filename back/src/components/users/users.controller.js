@@ -154,6 +154,7 @@ export const deleteUser = async (req, res, next) => {
     const foundUser = await User.destroy({
       where: { userId: currentUserId },
     });
+
     if (foundUser) {
       res.status(200).send({ message: "User is deleted" });
     }
@@ -161,4 +162,3 @@ export const deleteUser = async (req, res, next) => {
     next(err);
   }
 };
-8;

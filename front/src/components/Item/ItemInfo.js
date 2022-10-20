@@ -16,29 +16,47 @@ const ItemInfo = () => {
     editable: false,
     status: "inStock",
     openChat: "",
-    dibsId: "",
+    itemCategory: "기타",
   });
 
   const [isEdit, setIsEdit] = useState(false);
+  const [tempValue, setTempValue] = useState({});
+  const [checkedDibs, setCheckedDibs] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:5000/items/${itemId}`,
-          {
-            headers: {
-              Authentication: `${sessionStorage.getItem("accessToken")}`,
-            },
-          }
-        );
-        setItem(response.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
+    if (!sessionStorage.getItem("accessToken")) {
+      const fetchData = async () => {
+        try {
+          const response = await axios.get(
+            `http://localhost:5000/items/${itemId}`
+          );
+          setItem(response.data);
+        } catch (err) {
+          console.log(err);
+        }
+      };
 
-    fetchData();
+      fetchData();
+    } else {
+      const fetchData = async () => {
+        try {
+          const response = await axios.get(
+            `http://localhost:5000/items/${itemId}`,
+            {
+              headers: {
+                Authentication: `${sessionStorage.getItem("accessToken")}`,
+              },
+            }
+          );
+          setItem(response.data);
+          setTempValue(response.data);
+        } catch (err) {
+          console.log(err);
+        }
+      };
+
+      fetchData();
+    }
   }, []);
 
   const {
@@ -49,7 +67,7 @@ const ItemInfo = () => {
     editable,
     status,
     openChat,
-    dibsId,
+    itemCategory,
   } = item;
 
   const encodeFile = async (fileBlob) => {
@@ -70,10 +88,10 @@ const ItemInfo = () => {
     }
   };
 
-  const isItemName = itemName.length >= 0 && itemName.length <= 25;
-  const isItemType = itemType.length >= 0 && itemType.length <= 100;
-  const isItemDesc = itemDesc.length >= 0 && itemDesc.length <= 30;
-  const isOpenChat = openChat >= 0;
+  const isItemName = itemName?.length >= 0 && itemName?.length <= 25;
+  const isItemType = itemType?.length >= 0 && itemType?.length <= 100;
+  const isItemDesc = itemDesc?.length >= 0 && itemDesc?.length <= 30;
+  const isOpenChat = openChat?.length >= 0;
   const validate = isItemName && isItemType && isItemDesc && isOpenChat;
 
   const handleChange = (e) => {
@@ -98,12 +116,12 @@ const ItemInfo = () => {
     formData.append("itemType", itemType);
     formData.append("status", status);
     formData.append("openChat", openChat);
+    formData.append("itemCategory", itemCategory);
 
     try {
       await axios
         .put(`http://localhost:5000/items/${itemId}`, formData, {
           headers: {
-            // "content-type": "multipart/form-data",
             Authentication: `${sessionStorage.getItem("accessToken")}`,
           },
         })
@@ -140,17 +158,44 @@ const ItemInfo = () => {
 
   const preSlide = () => {
     if (slide === 0) {
-      setSlide(itemImage.length - 1);
+      setSlide(itemImage?.length - 1);
     } else {
       setSlide(slide - 1);
     }
   };
 
   const nextSlide = () => {
-    if (slide >= itemImage.length - 1) {
+    if (slide >= itemImage?.length - 1) {
       setSlide(0);
     } else {
       setSlide(slide + 1);
+    }
+  };
+
+  const handleDibs = async () => {
+    try {
+      if (!sessionStorage.getItem("accessToken")) {
+        alert("로그인을 하세요");
+      } else if (item["dibs.dibsId"]) {
+        await axios.delete(
+          `http://localhost:5000/dibs/${item["dibs.dibsId"]}`,
+          {
+            headers: {
+              Authentication: `${sessionStorage.getItem("accessToken")}`,
+            },
+          }
+        );
+        setCheckedDibs((preState) => !preState);
+      } else {
+        await axios.post(`http://localhost:5000/dibs/${itemId}`, {
+          headers: {
+            Authentication: `${sessionStorage.getItem("accessToken")}`,
+          },
+        });
+        setCheckedDibs((preState) => !preState);
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -201,6 +246,7 @@ const ItemInfo = () => {
                 name="status"
                 id="inStock"
                 value="inStock"
+                checked={status === "inStock"}
               ></StyledRadio>
               거래가능
             </label>
@@ -211,6 +257,7 @@ const ItemInfo = () => {
                 name="status"
                 id="onTrading"
                 value="onTrading"
+                checked={status === "onTrading"}
               ></StyledRadio>
               거래중
             </label>
@@ -221,6 +268,7 @@ const ItemInfo = () => {
                 name="status"
                 id="outOfStock"
                 value="outOfStock"
+                checked={status === "outOfStock"}
               ></StyledRadio>
               거래완료
             </label>
@@ -264,6 +312,72 @@ const ItemInfo = () => {
       ) : (
         <StyledP>{itemName}</StyledP>
       )}
+      {isEdit ? (
+        <Styledfieldset>
+          <StyledLegend>상품카테고리</StyledLegend>
+          <StyledLabel>
+            <input
+              onChange={handleChange}
+              type="radio"
+              value="상의"
+              name="itemCategory"
+              checked={itemCategory === "상의"}
+            />
+            상의
+          </StyledLabel>
+          <StyledLabel>
+            <input
+              onChange={handleChange}
+              type="radio"
+              value="하의"
+              name="itemCategory"
+              checked={itemCategory === "하의"}
+            />
+            하의
+          </StyledLabel>
+          <StyledLabel>
+            <input
+              onChange={handleChange}
+              type="radio"
+              value="아우터"
+              name="itemCategory"
+              checked={itemCategory === "아우터"}
+            />
+            아우터
+          </StyledLabel>
+          <StyledLabel>
+            <input
+              onChange={handleChange}
+              type="radio"
+              value="모자"
+              name="itemCategory"
+              checked={itemCategory === "모자"}
+            />
+            모자
+          </StyledLabel>
+          <StyledLabel>
+            <input
+              onChange={handleChange}
+              type="radio"
+              value="기타"
+              name="itemCategory"
+              checked={itemCategory === "기타"}
+            />
+            기타
+          </StyledLabel>
+        </Styledfieldset>
+      ) : itemCategory ? (
+        <StyledLabel>
+          {"상품카테고리"}
+          <StyledP>{itemCategory}</StyledP>
+        </StyledLabel>
+      ) : (
+        <StyledLabel>
+          {"상품카테고리"}
+          <StyledP>{"기타"}</StyledP>
+        </StyledLabel>
+      )}
+
       <StyledLabel htmlFor="itemType">상품타입</StyledLabel>
       {isEdit ? (
         <StyledInput
@@ -310,7 +424,10 @@ const ItemInfo = () => {
           </>
         ) : (
           <>
-            <StyledBtn type="button">찜하기</StyledBtn>
+            <StyledBtn type="button" onClick={handleDibs}>
+              찜하기
+            </StyledBtn>
+            {checkedDibs ? "❤️❤️" : null}
           </>
         )}
 
@@ -319,7 +436,8 @@ const ItemInfo = () => {
             <StyledBtn
               type="button"
               onClick={() => {
-                setIsEdit(!isEdit);
+                setIsEdit((preState) => !preState);
+                setItem(tempValue);
               }}
             >
               {isEdit ? "취소" : "편집"}
@@ -339,14 +457,14 @@ const StyledForm = styled.form`
   margin: 20px auto;
   border: 1px solid black;
   width: 500px;
-  height: 1000px;
+  height: 1100px;
   box-sizing: border-box;
 `;
 
 const StyledImage = styled.img`
   margin-top: 20px;
   width: 490px;
-  height: 300px;
+  height: 290px;
   object-fit: contain;
 `;
 
@@ -359,19 +477,22 @@ const StyledPreview = styled.div`
 `;
 const StyledInput = styled.input`
   margin: 10px 20px;
-  height: 30px;
+  height: 50px;
 `;
 
 const StyledBtn = styled.button`
   width: 100px;
   height: 50px;
   margin: 30px auto;
-  background-color: rgb(83, 151, 223);
+  background-color: rgb(119, 187, 63);
   border: none;
   cursor: pointer;
+  color: white;
+  border-radius: 20px;
+  font-size: 20px;
 
   &:hover {
-    background-color: rgba(83, 151, 223, 0.5);
+    background-color: rgba(119, 187, 63, 0.5);
   }
 
   &:active {
@@ -385,7 +506,11 @@ const ButtonBlock = styled.div`
 `;
 
 const StyledLabel = styled.label`
-  margin: 20px 0 0 20px;
+  margin-top: 10px;
+  font-weight: bold;
+  & + & {
+    margin: 5px;
+  }
 `;
 
 const StyledP = styled.p`
@@ -432,4 +557,17 @@ const SlideButton = styled.button`
 const SlideBlock = styled.div`
   display: flex;
   margin: 0 auto;
+`;
+
+const Styledfieldset = styled.fieldset`
+  border: 1px solid black;
+  margin: 10px auto;
+  width: 460px;
+  padding-bottom: 13px;
+  box-sizing: border-box;
+  cursor: pointer;
+`;
+
+const StyledLegend = styled.legend`
+  margin: 10px 0;
 `;

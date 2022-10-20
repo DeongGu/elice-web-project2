@@ -37,12 +37,12 @@ export const findDibs = async (req, res, next) => {
     const { status, search, limit, offset } = req.query;
     const foundDibs = await Dibs.findAll({
       raw: true,
+      where: { userId: currentUserId },
       include: [
         {
           model: Item,
           where: {
             [Op.and]: [
-              { userId: currentUserId },
               status ? { status: status } : null,
               search
                 ? {

@@ -99,9 +99,8 @@ const SlideBanner = () => {
 export default SlideBanner;
 
 const Wrapper = styled.div`
-  width: 500px;
+  width: 900px;
   margin: 10px auto;
-  height: 400px;
   overflow: hidden;
 `;
 
@@ -111,7 +110,7 @@ const SlideBlock = styled.div`
 `;
 
 const StyledImg = styled.img`
-  width: 500px;
+  width: 900px;
 `;
 
 const ButtonBlock = styled.div`

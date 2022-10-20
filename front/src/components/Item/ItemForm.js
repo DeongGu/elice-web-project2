@@ -8,21 +8,21 @@ const ItemForm = () => {
 
   useEffect(() => {
     if (!sessionStorage.getItem("accessToken")) {
-      navigate("/");
       alert("로그인부탁드려요^^");
+      navigate("/");
     }
   }, []);
 
   const initialValues = {
     itemImage: "/assets/images/default.jpg",
     itemName: "",
+    itemCategory: "기타",
     itemType: "",
     itemDesc: "",
     openChat: "",
   };
 
   const [item, setItem] = useState(initialValues);
-  // const [createSuccess, setCreateSucess] = useState(false);
 
   const encodeFile = async (fileBlob) => {
     const reader = new FileReader();
@@ -42,13 +42,17 @@ const ItemForm = () => {
     }
   };
 
-  const { itemImage, itemName, itemType, itemDesc, openChat } = item;
+  const { itemImage, itemName, itemType, itemDesc, openChat, itemCategory } =
+    item;
 
-  const isItemName = itemName.length >= 2 && itemName.length <= 30;
-  const isItemDetail = itemType.length >= 2 && itemType.length <= 100;
-  const isItemDesc = itemDesc.length >= 2 && itemDesc.length <= 30;
-  const isOpenChat = openChat.length >= 2;
-  const validate = isItemName && isItemDetail && isItemDesc && isOpenChat;
+  const isItemName = itemName?.length >= 2 && itemName?.length <= 30;
+  const isItemDetail = itemType?.length >= 2 && itemType?.length <= 100;
+  const isItemDesc = itemDesc?.length >= 2 && itemDesc?.length <= 30;
+  const isOpenChat = openChat?.length >= 2;
+  const isItemCategory = itemCategory;
+
+  const validate =
+    isItemName && isItemDetail && isItemDesc && isOpenChat && isItemCategory;
 
   const handleChange = (e) => {
     const newItem = {
@@ -73,12 +77,12 @@ const ItemForm = () => {
     formData.append("itemDesc", itemDesc);
     formData.append("itemType", itemType);
     formData.append("openChat", openChat);
+    formData.append("itemCategory", itemCategory);
 
     try {
       axios
         .post("http://localhost:5000/items", formData, {
           headers: {
-            // "content-Type": "multipart/form-data",
             Authentication: `${sessionStorage.getItem("accessToken")}`,
           },
         })
@@ -119,6 +123,61 @@ const ItemForm = () => {
         type="text"
         value={itemName}
       />
+
+      <Styledfieldset>
+        <StyledLegend>상품카테고리</StyledLegend>
+        <StyledLabel>
+          <input
+            onChange={handleChange}
+            type="radio"
+            value="상의"
+            name="itemCategory"
+            checked={itemCategory === "상의"}
+          />
+          상의
+        </StyledLabel>
+        <StyledLabel>
+          <input
+            onChange={handleChange}
+            type="radio"
+            value="하의"
+            name="itemCategory"
+            checked={itemCategory === "하의"}
+          />
+          하의
+        </StyledLabel>
+        <StyledLabel>
+          <input
+            onChange={handleChange}
+            type="radio"
+            value="아우터"
+            name="itemCategory"
+            checked={itemCategory === "아우터"}
+          />
+          아우터
+        </StyledLabel>
+        <StyledLabel>
+          <input
+            onChange={handleChange}
+            type="radio"
+            value="모자"
+            name="itemCategory"
+            checked={itemCategory === "모자"}
+          />
+          모자
+        </StyledLabel>
+        <StyledLabel>
+          <input
+            onChange={handleChange}
+            type="radio"
+            value="기타"
+            name="itemCategory"
+            checked={itemCategory === "기타"}
+          />
+          기타
+        </StyledLabel>
+      </Styledfieldset>
+
       <StyledLabel htmlFor="itemType">상품타입</StyledLabel>
       <StyledInput
         onChange={handleChange}
@@ -170,13 +229,13 @@ const StyledForm = styled.form`
   margin: 20px auto;
   border: 1px solid black;
   width: 500px;
-  height: 850px;
+  height: 1000px;
   box-sizing: border-box;
 `;
 
 const StyledImage = styled.img`
   width: 490px;
-  height: 300px;
+  height: 290px;
   object-fit: contain;
 `;
 
@@ -188,19 +247,22 @@ const StyledPreview = styled.div`
 `;
 const StyledInput = styled.input`
   margin: 10px 20px;
-  height: 30px;
+  height: 50px;
 `;
 
 const StyledBtn = styled.button`
   width: 200px;
   height: 50px;
   margin: 30px auto;
-  background-color: rgb(83, 151, 223);
+  background-color: rgb(119, 187, 63);
+  color: white;
+  border-radius: 20px;
   border: none;
   cursor: pointer;
+  font-size: 20px;
 
   &:hover {
-    background-color: rgba(83, 151, 223, 0.5);
+    background-color: rgba(119, 187, 63, 0.5);
   }
 
   &:active {
@@ -214,5 +276,22 @@ const ButtonBlock = styled.div`
 `;
 
 const StyledLabel = styled.label`
-  margin: 10px 0 0 20px;
+  margin-top: 10px;
+  & + & {
+    margin: 5px;
+  }
+  cursor: pointer;
+`;
+
+const Styledfieldset = styled.fieldset`
+  border: 1px solid black;
+  margin: 10px auto;
+  width: 460px;
+  padding-bottom: 13px;
+  box-sizing: border-box;
+  cursor: pointer;
+`;
+
+const StyledLegend = styled.legend`
+  margin: 10px 0;
 `;

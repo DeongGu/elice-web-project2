@@ -18,9 +18,11 @@ const Item = ({ item }) => {
         <StyledImg src={"assets/images/default.jpg"} alt="상품" />
       )}
       <p>
-        상품명 : <span>{item.itemName}</span>
+        <b>상품명</b> : <span>{item.itemName}</span>
       </p>
-      <p>한마디: {item.itemDesc}</p>
+      <p>
+        <b>한마디</b>: {item.itemDesc}
+      </p>
     </ItemBlock>
   );
 };
@@ -36,6 +38,7 @@ const ItemBlock = styled.div`
   cursor: pointer;
   padding: 10px;
   box-sizing: border-box;
+  border-radius: 20px;
   &:hover {
     background-color: rgba(0, 0, 0, 0.2);
   }
