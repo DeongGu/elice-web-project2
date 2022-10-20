@@ -5,7 +5,7 @@ const data = [
   { name: "패션산업", value: 10 },
   { name: "나머지", value: 90 },
 ];
-const COLORS = ["#0088FE", "#c8c8c8"];
+const COLORS = ["#77bb3f", "#dcdcdc"];
 
 const DonutChartSecond = () => {
   const renderCustomizedLabel = ({ x, y, value, index }) => {
@@ -23,7 +23,7 @@ const DonutChartSecond = () => {
   };
 
   return (
-    <PieChart width={400} height={400}>
+    <PieChart width={300} height={400}>
       <Pie
         data={data}
         cx={120}
