@@ -1,42 +1,51 @@
-import styled from 'styled-components';
+import { useContext } from "react";
+import styled from "styled-components";
 
-import useForm from '../../hooks/useForm';
-import useRequest from '../../hooks/useRequest';
+import useForm from "../../hooks/useForm";
+import useRequest from "../../hooks/useRequest";
 
-import InputList from './InputList';
-import ModalBackground from '../UI/ModalBackground';
-import BreakLine from '../UI/BreakLine';
+import GeneralContext from "../../context/GeneralContext";
 
-import logoImage from '../../assets/imgs/Vring-logo.png';
+import InputList from "./InputList";
+import ModalBackground from "../UI/ModalBackground";
+import BreakLine from "../UI/BreakLine";
 
-import { LOGIN_USER } from '../../api/Request';
+import logoImage from "../../assets/imgs/Vring-logo.png";
+
+import { LOGIN_USER } from "../../api/Request";
 
 const inputData = [
   {
-    type: 'email',
-    name: 'email',
-    description: '이메일',
+    type: "email",
+    name: "email",
+    description: "이메일",
   },
   {
-    type: 'password',
-    name: 'password',
-    description: '비밀번호',
+    type: "password",
+    name: "password",
+    description: "비밀번호",
   },
 ];
 
 const initialState = {
-  email: '',
-  password: '',
+  email: "",
+  password: "",
 };
 
 export default function LoginForm() {
+  const generalContext = useContext(GeneralContext);
   const { form, setForm, onChangeHandler } = useForm(initialState);
-  const { requestHandler } = useRequest(LOGIN_USER, form);
+  const { requestHandler, error } = useRequest(LOGIN_USER, form);
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
     await requestHandler();
     setForm(initialState);
+  };
+
+  const changeFormHandler = () => {
+    generalContext.disableFormHandler();
+    generalContext.registerFormHandler();
   };
 
   const inputProps = { form, inputData, onChangeHandler };
@@ -47,8 +56,12 @@ export default function LoginForm() {
       <Form onSubmit={onSubmitHandler}>
         <Title>어서오세요!</Title>
         <InputList {...inputProps} />
-        <Button disabeld={!(form.email && form.password)}>로그인</Button>
+        {error && <ErrorMsg>{error}</ErrorMsg>}
+        <Button disabled={!(form.email && form.password)}>로그인</Button>
         <BreakLine />
+        <Text onClick={changeFormHandler}>
+          <TextColor>아이디</TextColor>가 없으신가요?
+        </Text>
         <Logo src={logoImage} />
       </Form>
     </>
@@ -76,16 +89,36 @@ const Title = styled.h2`
   margin-bottom: 1rem;
 `;
 
+const Text = styled.button`
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  margin-top: 1rem;
+  font-size: 1rem;
+  font-family: elice-bold;
+`;
+
+const ErrorMsg = styled.div`
+  font-size: 1rem;
+  color: red;
+`;
+
+const TextColor = styled.span`
+  color: #77bb3f;
+  font-family: elice-bold;
+`;
+
 const Button = styled.button`
   cursor: pointer;
   margin-top: 2rem;
   width: 50%;
   height: 3rem;
-  background-color: ${({ disabled }) => (disabled ? 'lightgray' : '#77bb3f')};
+  background-color: ${({ disabled }) => (disabled ? "lightgray" : "#77bb3f")};
   color: white;
   border: none;
   border-radius: 20px;
   font-size: 1.25rem;
+  font-family: elice-bold;
 `;
 
 const Logo = styled.img`

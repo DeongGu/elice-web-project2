@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export default function InputList({ inputData, onChangeHandler, form }) {
   return inputData.map((data, index) => {
@@ -30,4 +30,6 @@ const Input = styled.input`
   height: 2.5rem;
   border: lightgray 1px solid;
   border-radius: 20px;
+  box-shadow: 0 1px 4px 0 rgba(34, 34, 34, 0.1) inset;
+  padding-left: 12px;
 `;

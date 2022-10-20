@@ -1,42 +1,45 @@
-import { useContext } from 'react';
-import { UserContext } from '../../App';
-import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
+import { useContext } from "react";
+import { UserContext } from "../../App";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
 
-import useForm from '../../hooks/useForm';
-import useRequest from '../../hooks/useRequest';
+import useForm from "../../hooks/useForm";
+import useRequest from "../../hooks/useRequest";
 
-import InputList from './InputList';
-import ModalBackground from '../UI/ModalBackground';
-import BreakLine from '../UI/BreakLine';
+import InputList from "./InputList";
+import ModalBackground from "../UI/ModalBackground";
+import BreakLine from "../UI/BreakLine";
 
-import logoImage from '../../assets/imgs/Vring-logo.png';
+import logoImage from "../../assets/imgs/Vring-logo.png";
 
-import { DELETE_USER, LOGIN_USER } from '../../api/Request';
+import { DELETE_USER, LOGIN_USER } from "../../api/Request";
 
 const inputData = [
   {
-    type: 'email',
-    name: 'email',
-    description: '이메일',
+    type: "email",
+    name: "email",
+    description: "이메일",
   },
   {
-    type: 'password',
-    name: 'password',
-    description: '비밀번호',
+    type: "password",
+    name: "password",
+    description: "비밀번호",
   },
 ];
 
 const initialState = {
-  email: '',
-  password: '',
+  email: "",
+  password: "",
 };
 
 export default function DeleteForm() {
   const { form, onChangeHandler } = useForm(initialState);
   const userContext = useContext(UserContext);
   const { requestHandler: deleteUserHandler } = useRequest(DELETE_USER);
-  const { requestHandler: checkUserHandler } = useRequest(LOGIN_USER, form);
+  const { requestHandler: checkUserHandler, error } = useRequest(
+    LOGIN_USER,
+    form
+  );
 
   const navigate = useNavigate();
 
@@ -44,15 +47,15 @@ export default function DeleteForm() {
     event.preventDefault();
 
     try {
-      const { error } = await checkUserHandler();
+      const { getUserError } = await checkUserHandler();
 
-      if (error) {
+      if (getUserError) {
         return;
       }
 
       await deleteUserHandler();
 
-      navigate('/');
+      navigate("/");
 
       sessionStorage.clear();
       userContext.setUser(null);
@@ -69,6 +72,7 @@ export default function DeleteForm() {
       <Form onSubmit={onSubmitHandler}>
         <Title>정말 삭제하시나요?</Title>
         <InputList {...inputProps} />
+        {error && <ErrorMsg>{error}</ErrorMsg>}
         <Button disabled={!(form.email && form.password)}>삭제</Button>
         <BreakLine />
         <Logo src={logoImage} />
@@ -98,12 +102,17 @@ const Title = styled.h2`
   margin-bottom: 1rem;
 `;
 
+const ErrorMsg = styled.div`
+  font-size: 1rem;
+  color: red;
+`;
+
 const Button = styled.button`
   cursor: pointer;
   margin-top: 2rem;
   width: 50%;
   height: 3rem;
-  background-color: ${({ disabled }) => (disabled ? 'lightgray' : '#77bb3f')};
+  background-color: ${({ disabled }) => (disabled ? "lightgray" : "#77bb3f")};
   color: white;
   border: none;
   border-radius: 20px;

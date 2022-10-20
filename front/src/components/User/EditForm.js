@@ -1,43 +1,42 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
-import { useNavigate } from 'react-router-dom';
-import { useContext } from 'react';
+import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
 
-import useForm from '../../hooks/useForm';
-import useRequest from '../../hooks/useRequest';
-import useValidation from '../../hooks/useValidation';
+import useForm from "../../hooks/useForm";
+import useRequest from "../../hooks/useRequest";
+import useValidation from "../../hooks/useValidation";
 
-import InputList from './InputList';
-
-import { EDIT_USER, LOGIN_USER } from '../../api/Request';
-import ModalBackground from '../UI/ModalBackground';
-import BreakLine from '../UI/BreakLine';
-import logoImage from '../../assets/imgs/Vring-logo.png';
-import { UserContext } from '../../App';
-import ValidateInputList from './ValidateInputList';
+import { EDIT_USER, LOGIN_USER } from "../../api/Request";
+import ModalBackground from "../UI/ModalBackground";
+import BreakLine from "../UI/BreakLine";
+import logoImage from "../../assets/imgs/Vring-logo.png";
+import { UserContext } from "../../App";
+import ValidateInputList from "./ValidateInputList";
 
 const inputData = [
   {
-    type: 'password',
-    name: 'currentPassword',
-    description: '현재 비밀번호',
+    type: "password",
+    name: "currentPassword",
+    description: "현재 비밀번호",
   },
   {
-    type: 'password',
-    name: 'password',
-    description: '새 비밀번호',
+    type: "password",
+    name: "password",
+    description: "새 비밀번호",
+    alert: "6자 이상, 영문 및 숫자 조합이어야 합니다.",
   },
   {
-    type: 'password',
-    name: 'confirmNewPassword',
-    description: '새 비밀번호 확인',
+    type: "password",
+    name: "confirmNewPassword",
+    description: "새 비밀번호 확인",
   },
 ];
 
 const initialState = {
-  currentPassword: '',
-  password: '',
-  confirmNewPassword: '',
+  currentPassword: "",
+  password: "",
+  confirmNewPassword: "",
 };
 
 export default function EditForm() {
@@ -48,7 +47,7 @@ export default function EditForm() {
   const { form, setForm, formIsValid, setFormIsValid } = useForm(initialState);
   const { validateHandler } = useValidation(setForm, setFormIsValid);
 
-  const { requestHandler: checkHandler } = useRequest(LOGIN_USER, {
+  const { requestHandler: checkHandler, error } = useRequest(LOGIN_USER, {
     email: userContext.user.email,
     password: form.currentPassword,
   });
@@ -61,15 +60,15 @@ export default function EditForm() {
     event.preventDefault();
 
     try {
-      const { error } = await checkHandler();
+      const { getUserError } = await checkHandler();
 
-      if (error) {
+      if (getUserError) {
         return;
       }
 
       await editHandler();
 
-      navigate('/');
+      navigate("/");
 
       sessionStorage.clear();
       userContext.setUser(null);
@@ -86,6 +85,7 @@ export default function EditForm() {
       <Form onSubmit={onSubmitHandler}>
         <Title>비밀번호 수정</Title>
         <ValidateInputList {...inputProps} />
+        {error && <ErrorMsg>{error}</ErrorMsg>}
         <Button
           disabled={
             !(
@@ -127,12 +127,17 @@ const Title = styled.h2`
   margin-bottom: 1rem;
 `;
 
+const ErrorMsg = styled.div`
+  font-size: 1rem;
+  color: red;
+`;
+
 const Button = styled.button`
   cursor: pointer;
   margin-top: 2rem;
   width: 50%;
   height: 3rem;
-  background-color: ${({ disabled }) => (disabled ? 'lightgray' : '#77bb3f')};
+  background-color: ${({ disabled }) => (disabled ? "lightgray" : "#77bb3f")};
   color: white;
   border: none;
   border-radius: 20px;

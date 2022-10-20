@@ -1,15 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
-import * as Api from '../api/api';
-
-import { CHECK_USER } from '../api/Request';
+import * as Api from "../api/api";
 
 export default function useFetch(request) {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const getData = async () => {
-    if (request === CHECK_USER && !sessionStorage.getItem('accessToken')) {
+    if (!sessionStorage.getItem("accessToken")) {
       setIsLoading(false);
       return;
     }

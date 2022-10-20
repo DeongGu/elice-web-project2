@@ -5,7 +5,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import useFetch from "./hooks/useFetch";
 
 import Header from "./components/UI/Header";
-
 import { GeneralContextProvider } from "./context/GeneralContext";
 
 import { CHECK_USER } from "./api/Request";
@@ -25,7 +24,7 @@ function App() {
 
   const logoutHandler = () => {
     setUser(null);
-    sessionStorage.setItem("accessToken", null);
+    sessionStorage.clear();
   };
 
   return (
