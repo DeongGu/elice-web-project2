@@ -101,7 +101,8 @@ export const findUser = async (req, res, next) => {
       where: searchId ? { userId: searchId } : { userId: currentUserId },
     });
 
-    foundUser["editable"] = foundUser ? true : false;
+    foundUser["editable"] =
+      foundUser && foundUser.id === currentUserId ? true : false;
 
     res.status(200).send(foundUser);
   } catch (err) {
@@ -127,10 +128,10 @@ export const updateUser = async (req, res, next) => {
       chgUserInfo["profileImage"] = req.file.location;
     }
 
-    const foundUser = await User.update(chgUserInfo, {
+    const updetedResult = await User.update(chgUserInfo, {
       where: { userId: currentUserId },
     });
-    if (foundUser) {
+    if (updetedResult) {
       res.status(200).send({ message: "User pofile is updated" });
     }
   } catch (err) {

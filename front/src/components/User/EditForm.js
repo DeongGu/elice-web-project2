@@ -1,48 +1,145 @@
+import styled from 'styled-components';
+
+import { useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 
 import useForm from '../../hooks/useForm';
 import useRequest from '../../hooks/useRequest';
+import useValidation from '../../hooks/useValidation';
 
 import InputList from './InputList';
 
-import UserCheckContext from '../../context/UserCheckContext';
+import { EDIT_USER, LOGIN_USER } from '../../api/Request';
+import ModalBackground from '../UI/ModalBackground';
+import BreakLine from '../UI/BreakLine';
+import logoImage from '../../assets/imgs/Vring-logo.png';
+import { UserContext } from '../../App';
+import ValidateInputList from './ValidateInputList';
 
 const inputData = [
   {
-    type: 'email',
-    name: 'email',
-    description: '이메일',
-  },
-  {
-    type: 'text',
-    name: 'nickname',
-    description: '별명',
+    type: 'password',
+    name: 'currentPassword',
+    description: '현재 비밀번호',
   },
   {
     type: 'password',
     name: 'password',
-    description: '비밀번호',
+    description: '새 비밀번호',
+  },
+  {
+    type: 'password',
+    name: 'confirmNewPassword',
+    description: '새 비밀번호 확인',
   },
 ];
 
-export default function EditForm() {
-  const userCheck = useContext(UserCheckContext);
-  const initialState = { ...userCheck.user };
+const initialState = {
+  currentPassword: '',
+  password: '',
+  confirmNewPassword: '',
+};
 
-  const { form, onChangeHandler } = useForm(initialState);
-  const { requestHandler, isLoading } = useRequest('get', 'users', form);
+export default function EditForm() {
+  const userContext = useContext(UserContext);
+
+  const navigate = useNavigate();
+
+  const { form, setForm, formIsValid, setFormIsValid } = useForm(initialState);
+  const { validateHandler } = useValidation(setForm, setFormIsValid);
+
+  const { requestHandler: checkHandler } = useRequest(LOGIN_USER, {
+    email: userContext.user.email,
+    password: form.currentPassword,
+  });
+
+  const { requestHandler: editHandler } = useRequest(EDIT_USER, {
+    password: form.password,
+  });
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
-    await requestHandler();
+
+    try {
+      const { error } = await checkHandler();
+
+      if (error) {
+        return;
+      }
+
+      await editHandler();
+
+      navigate('/');
+
+      sessionStorage.clear();
+      userContext.setUser(null);
+    } catch (err) {
+      console.log(err.message);
+    }
   };
 
-  const inputProps = { form, inputData, onChangeHandler };
+  const inputProps = { inputData, form, formIsValid, validateHandler };
 
   return (
-    <form onSubmit={onSubmitHandler}>
-      <InputList {...inputProps} />
-      <button>수정</button>
-    </form>
+    <>
+      <ModalBackground />
+      <Form onSubmit={onSubmitHandler}>
+        <Title>비밀번호 수정</Title>
+        <ValidateInputList {...inputProps} />
+        <Button
+          disabled={
+            !(
+              form.currentPassword &&
+              form.password &&
+              form.confirmNewPassword
+            ) ||
+            form.password !== form.confirmNewPassword ||
+            !formIsValid.password
+          }
+        >
+          수정
+        </Button>
+        <BreakLine />
+        <Logo src={logoImage} />
+      </Form>
+    </>
   );
 }
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  z-index: 20;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 25rem;
+  height: 50rem;
+  background-color: white;
+  border: lightgray 1px solid;
+  border-radius: 20px;
+`;
+
+const Title = styled.h2`
+  margin-bottom: 1rem;
+`;
+
+const Button = styled.button`
+  cursor: pointer;
+  margin-top: 2rem;
+  width: 50%;
+  height: 3rem;
+  background-color: ${({ disabled }) => (disabled ? 'lightgray' : '#77bb3f')};
+  color: white;
+  border: none;
+  border-radius: 20px;
+  font-size: 1.25rem;
+`;
+
+const Logo = styled.img`
+  align-self: center;
+  width: 6rem;
+`;

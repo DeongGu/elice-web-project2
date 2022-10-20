@@ -34,6 +34,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.ENUM("inStock", "onTrading", "outOfStock"),
         defaultValue: "inStock",
       },
+      openChat: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        field: "open_chat",
+      },
     },
     {
       charset: "utf8mb4",

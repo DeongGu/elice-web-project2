@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback } from 'react';
 
 export default function useSlide(TIME = 1000, startNum = 1, endNum = 2) {
   const start = startNum - 1;

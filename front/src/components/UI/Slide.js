@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export default function Slide({
   children,
@@ -57,7 +57,7 @@ const SlideNumber = styled.button`
   border: gray 1px solid;
   border-radius: 50%;
   background-color: ${({ count, index }) =>
-    count === index ? "gray" : "transparent"};
+    count === index ? 'gray' : 'transparent'};
 `;
 
 const SlideButton = styled.button`

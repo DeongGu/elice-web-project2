@@ -1,7 +1,15 @@
+import styled from 'styled-components';
+
 import useForm from '../../hooks/useForm';
 import useRequest from '../../hooks/useRequest';
 
 import InputList from './InputList';
+import ModalBackground from '../UI/ModalBackground';
+import BreakLine from '../UI/BreakLine';
+
+import logoImage from '../../assets/imgs/Vring-logo.png';
+
+import { LOGIN_USER } from '../../api/Request';
 
 const inputData = [
   {
@@ -23,12 +31,7 @@ const initialState = {
 
 export default function LoginForm() {
   const { form, setForm, onChangeHandler } = useForm(initialState);
-  const { requestHandler, isLoading } = useRequest(
-    'post',
-    'users/login',
-    '',
-    form
-  );
+  const { requestHandler } = useRequest(LOGIN_USER, form);
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
@@ -39,9 +42,53 @@ export default function LoginForm() {
   const inputProps = { form, inputData, onChangeHandler };
 
   return (
-    <form onSubmit={onSubmitHandler}>
-      <InputList {...inputProps} />
-      <button>로그인</button>
-    </form>
+    <>
+      <ModalBackground />
+      <Form onSubmit={onSubmitHandler}>
+        <Title>어서오세요!</Title>
+        <InputList {...inputProps} />
+        <Button disabeld={!(form.email && form.password)}>로그인</Button>
+        <BreakLine />
+        <Logo src={logoImage} />
+      </Form>
+    </>
   );
 }
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  z-index: 20;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 25rem;
+  height: 50rem;
+  background-color: white;
+  border: lightgray 1px solid;
+  border-radius: 20px;
+`;
+
+const Title = styled.h2`
+  margin-bottom: 1rem;
+`;
+
+const Button = styled.button`
+  cursor: pointer;
+  margin-top: 2rem;
+  width: 50%;
+  height: 3rem;
+  background-color: ${({ disabled }) => (disabled ? 'lightgray' : '#77bb3f')};
+  color: white;
+  border: none;
+  border-radius: 20px;
+  font-size: 1.25rem;
+`;
+
+const Logo = styled.img`
+  align-self: center;
+  width: 6rem;
+`;

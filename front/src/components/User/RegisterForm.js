@@ -1,8 +1,16 @@
+import styled from 'styled-components';
+
 import useForm from '../../hooks/useForm';
 import useRequest from '../../hooks/useRequest';
 import useValidation from '../../hooks/useValidation';
 
 import ValidateInputList from './ValidateInputList';
+import ModalBackground from '../UI/ModalBackground';
+import BreakLine from '../UI/BreakLine';
+
+import logoImage from '../../assets/imgs/Vring-logo.png';
+
+import { REGISTER_USER } from '../../api/Request';
 
 const inputData = [
   {
@@ -37,7 +45,7 @@ const initialState = {
 export default function RegisterForm() {
   const { form, setForm, formIsValid, setFormIsValid } = useForm(initialState);
   const { validateHandler } = useValidation(setForm, setFormIsValid);
-  const { requestHandler } = useRequest('post', 'users', '', form);
+  const { requestHandler } = useRequest(REGISTER_USER, '', form);
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
@@ -54,9 +62,65 @@ export default function RegisterForm() {
   };
 
   return (
-    <form onSubmit={onSubmitHandler}>
-      <ValidateInputList {...inputProps} />
-      <button>회원가입</button>
-    </form>
+    <>
+      <ModalBackground />
+      <Form onSubmit={onSubmitHandler}>
+        <Title>환영합니다!</Title>
+        <ValidateInputList {...inputProps} />
+        <Button
+          disabled={
+            !(
+              form.email &&
+              form.password &&
+              form.confirmPwd &&
+              form.nickname
+            ) ||
+            !(formIsValid.email && formIsValid.password && formIsValid.nickname)
+          }
+        >
+          회원가입
+        </Button>
+        <BreakLine />
+        <Logo src={logoImage} />
+      </Form>
+    </>
   );
 }
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  z-index: 20;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 25rem;
+  height: 50rem;
+  background-color: white;
+  border: lightgray 1px solid;
+  border-radius: 20px;
+`;
+
+const Title = styled.h2`
+  margin-bottom: 1rem;
+`;
+
+const Button = styled.button`
+  cursor: pointer;
+  margin-top: 2rem;
+  width: 50%;
+  height: 3rem;
+  background-color: #77bb3f;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  font-size: 1.25rem;
+`;
+
+const Logo = styled.img`
+  align-self: center;
+  width: 6rem;
+`;
