@@ -96,7 +96,7 @@ export const findUser = async (req, res, next) => {
     const foundUser = await User.findOne({
       raw: true,
       attributes: searchId
-        ? { exclude: ["email", "password", "phoneNumber", "username"] }
+        ? { exclude: ["email", "password"] }
         : { exclude: "password" },
       where: searchId ? { userId: searchId } : { userId: currentUserId },
     });

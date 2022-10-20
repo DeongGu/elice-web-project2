@@ -6,9 +6,6 @@ const userSchema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().required(),
   nickname: Joi.string().required(),
-  role: Joi.string(),
-  name: Joi.string().required(),
-  phoneNumber: Joi.string(),
   profileImage: Joi.string(),
   userDesc: Joi.string(),
 });
