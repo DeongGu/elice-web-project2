@@ -133,7 +133,7 @@ const UserBottom = styled.div`
   width: 100%;
   height: 50%;
   display: flex;
-  flex-directin: row;
+  flex-direction: row;
   justify-content: flex-start;
   align-items: center;
   margin-left: 1rem;

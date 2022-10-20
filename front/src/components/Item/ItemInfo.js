@@ -499,6 +499,10 @@ const StyledBtn = styled.button`
     position: relative;
     top: 2px;
   }
+
+  &:disabled {
+    background-color: rgba(119, 187, 63, 0.2);
+  }
 `;
 
 const ButtonBlock = styled.div`
