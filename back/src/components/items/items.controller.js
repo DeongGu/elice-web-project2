@@ -95,6 +95,7 @@ export const findItems = async (req, res, next) => {
                   { itemName: { [Op.like]: `%${search}%` } },
                   { itemType: { [Op.substring]: `${search}` } },
                   { itemDesc: { [Op.like]: `%${search}%` } },
+                  { itemCategory: { [Op.like]: `%${search}%` } },
                 ],
               }
             : null,

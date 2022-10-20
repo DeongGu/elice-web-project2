@@ -7,10 +7,15 @@ const Item = db.item;
 
 export const createDibs = async (req, res, next) => {
   try {
+    // 로그인여부 확인(미들웨어 적용예정)
+    if (!req.headers.authentication) {
+      return res.status(401).send({ message: "로그인 하지 않은 상태입니다." });
+    }
     const currentUserId = jwt.verify(
       req.headers.authentication,
       SECRET_KEY
     ).userId;
+    // ----------
 
     let createInfo = { itemId: req.params.itemId, userId: currentUserId };
 
@@ -29,10 +34,15 @@ export const createDibs = async (req, res, next) => {
 
 export const findDibs = async (req, res, next) => {
   try {
+    // 로그인여부 확인(미들웨어 적용예정)
+    if (!req.headers.authentication) {
+      return res.status(401).send({ message: "로그인 하지 않은 상태입니다." });
+    }
     const currentUserId = jwt.verify(
       req.headers.authentication,
       SECRET_KEY
     ).userId;
+    // ----------
 
     const { status, search, limit, offset } = req.query;
     const foundDibs = await Dibs.findAll({
@@ -50,6 +60,7 @@ export const findDibs = async (req, res, next) => {
                       { itemName: { [Op.like]: `%${search}%` } },
                       { itemType: { [Op.substring]: `${search}` } },
                       { itemDesc: { [Op.like]: `%${search}%` } },
+                      { itemCategory: { [Op.like]: `%${search}%` } },
                     ],
                   }
                 : null,
@@ -70,10 +81,15 @@ export const findDibs = async (req, res, next) => {
 
 export const deleteDibs = async (req, res, next) => {
   try {
+    // 로그인여부 확인(미들웨어 적용예정)
+    if (!req.headers.authentication) {
+      return res.status(401).send({ message: "로그인 하지 않은 상태입니다." });
+    }
     const currentUserId = jwt.verify(
       req.headers.authentication,
       SECRET_KEY
     ).userId;
+    // ----------
     let targetDibsId = req.params.dibsId;
 
     const foundDibs = await Dibs.findOne({

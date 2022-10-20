@@ -19,10 +19,12 @@ module.exports = (sequelize, DataTypes) => {
       password: {
         type: DataTypes.STRING,
         set(value) {
-          if (value.length >= 1 && value.length <= 20) {
+          if (value.length >= 6) {
             this.setDataValue("password", bcrypt.hashSync(value, 10));
           } else {
-            throw new Error("Your password should be between 1-20 characters!");
+            throw new Error(
+              "Your password should be at least 6 characters long!"
+            );
           }
         },
         allowNull: false,
@@ -30,15 +32,6 @@ module.exports = (sequelize, DataTypes) => {
       nickname: {
         type: DataTypes.STRING,
         allowNull: false,
-      },
-      username: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      phoneNumber: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        field: "phone_number",
       },
       profileImage: {
         type: DataTypes.STRING,

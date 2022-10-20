@@ -15,6 +15,11 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         field: "item_name",
       },
+      itemCategory: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        field: "item_category",
+      },
       itemType: {
         type: DataTypes.JSON,
         allowNull: true,
