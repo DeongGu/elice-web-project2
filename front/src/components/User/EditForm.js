@@ -7,8 +7,6 @@ import useForm from '../../hooks/useForm';
 import useRequest from '../../hooks/useRequest';
 import useValidation from '../../hooks/useValidation';
 
-import InputList from './InputList';
-
 import { EDIT_USER, LOGIN_USER } from '../../api/Request';
 import ModalBackground from '../UI/ModalBackground';
 import BreakLine from '../UI/BreakLine';
@@ -26,6 +24,7 @@ const inputData = [
     type: 'password',
     name: 'password',
     description: '새 비밀번호',
+    alert: '6자 이상, 영문 및 숫자 조합이어야 합니다.',
   },
   {
     type: 'password',
@@ -48,7 +47,7 @@ export default function EditForm() {
   const { form, setForm, formIsValid, setFormIsValid } = useForm(initialState);
   const { validateHandler } = useValidation(setForm, setFormIsValid);
 
-  const { requestHandler: checkHandler } = useRequest(LOGIN_USER, {
+  const { requestHandler: checkHandler, error } = useRequest(LOGIN_USER, {
     email: userContext.user.email,
     password: form.currentPassword,
   });
@@ -61,9 +60,9 @@ export default function EditForm() {
     event.preventDefault();
 
     try {
-      const { error } = await checkHandler();
+      const { getUserError } = await checkHandler();
 
-      if (error) {
+      if (getUserError) {
         return;
       }
 
@@ -86,6 +85,7 @@ export default function EditForm() {
       <Form onSubmit={onSubmitHandler}>
         <Title>비밀번호 수정</Title>
         <ValidateInputList {...inputProps} />
+        {error && <ErrorMsg>{error}</ErrorMsg>}
         <Button
           disabled={
             !(
@@ -125,6 +125,11 @@ const Form = styled.form`
 
 const Title = styled.h2`
   margin-bottom: 1rem;
+`;
+
+const ErrorMsg = styled.div`
+  font-size: 1rem;
+  color: red;
 `;
 
 const Button = styled.button`

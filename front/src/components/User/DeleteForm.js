@@ -36,7 +36,10 @@ export default function DeleteForm() {
   const { form, onChangeHandler } = useForm(initialState);
   const userContext = useContext(UserContext);
   const { requestHandler: deleteUserHandler } = useRequest(DELETE_USER);
-  const { requestHandler: checkUserHandler } = useRequest(LOGIN_USER, form);
+  const { requestHandler: checkUserHandler, error } = useRequest(
+    LOGIN_USER,
+    form
+  );
 
   const navigate = useNavigate();
 
@@ -44,9 +47,9 @@ export default function DeleteForm() {
     event.preventDefault();
 
     try {
-      const { error } = await checkUserHandler();
+      const { getUserError } = await checkUserHandler();
 
-      if (error) {
+      if (getUserError) {
         return;
       }
 
@@ -69,6 +72,7 @@ export default function DeleteForm() {
       <Form onSubmit={onSubmitHandler}>
         <Title>정말 삭제하시나요?</Title>
         <InputList {...inputProps} />
+        {error && <ErrorMsg>{error}</ErrorMsg>}
         <Button disabled={!(form.email && form.password)}>삭제</Button>
         <BreakLine />
         <Logo src={logoImage} />
@@ -96,6 +100,11 @@ const Form = styled.form`
 
 const Title = styled.h2`
   margin-bottom: 1rem;
+`;
+
+const ErrorMsg = styled.div`
+  font-size: 1rem;
+  color: red;
 `;
 
 const Button = styled.button`

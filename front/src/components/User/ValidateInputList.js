@@ -18,11 +18,8 @@ export default function ValidateInputList({
           value={form[data.name]}
           onChange={validateHandler}
         />
-        {formIsValid[data.name] && (
-          <SuccessMsg>이렇게 제출하셔도 좋습니다.</SuccessMsg>
-        )}
         {!formIsValid[data.name] && form[data.name] && Validate[data.name] && (
-          <ErrorMsg>~~식으로 적어주세요.</ErrorMsg>
+          <ErrorMsg>{data.alert}</ErrorMsg>
         )}
       </Container>
     );
@@ -43,8 +40,10 @@ const Input = styled.input`
   height: 2.5rem;
   border: lightgray 1px solid;
   border-radius: 20px;
+  box-shadow: 0 1px 4px 0 rgba(34, 34, 34, 0.1) inset;
+  padding-left: 12px;
 `;
 
-const SuccessMsg = styled.div``;
-
-const ErrorMsg = styled.div``;
+const ErrorMsg = styled.div`
+  font-size: 0.9rem;
+`;

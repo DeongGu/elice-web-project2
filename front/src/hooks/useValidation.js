@@ -2,7 +2,7 @@ import { useCallback, useRef } from 'react';
 
 import { Validate } from '../components/User/Validate';
 
-export default function useValidation(setForm, setFormIsValid, TIME = 300) {
+export default function useValidation(setForm, setFormIsValid, TIME = 200) {
   const timerRef = useRef();
 
   const validateHandler = useCallback((event) => {

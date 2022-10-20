@@ -33,12 +33,14 @@ export default function useRequest(request, params = '', form = {}) {
         userContext.setUser({ ...userData });
       }
 
-      console.log(request[0], request[1]);
       generalContext.disableFormHandler();
       return data;
     } catch (err) {
-      console.log(err.message);
-      setError(err);
+      setError('해당 요청을 실패했습니다. 다시 한번 확인해주세요.');
+      console.log(err.response.data.message);
+      if (err.response.data.message === 'Email already exists.') {
+        setError('중복된 이메일이 있습니다.');
+      }
     } finally {
       setIsLoading(false);
     }

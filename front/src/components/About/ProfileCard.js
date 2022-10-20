@@ -31,7 +31,7 @@ const SlideCard = styled.div`
 const ProfileImage = styled.img`
   width: 5rem;
   height: 5rem;
-  border: gray 1rem solid;
+  border: gray 0.25rem solid;
   border-radius: 50%;
 `;
 

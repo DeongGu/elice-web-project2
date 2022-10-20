@@ -1,10 +1,13 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { UserContext } from '../../App';
 import GeneralContext from '../../context/GeneralContext';
 
 import useRequest from '../../hooks/useRequest';
+
+import { Validate } from './Validate';
 
 import BreakLine from '../UI/BreakLine';
 import Gender from '../UI/Gender';
@@ -18,76 +21,134 @@ export default function UserCard() {
   const userContext = useContext(UserContext);
   const generalContext = useContext(GeneralContext);
 
-  const initialState = userContext.user.nickname;
+  const navigate = useNavigate();
+
+  const initialState = userContext.user?.nickname;
 
   const [nickname, setNickname] = useState(initialState);
+  const [formData, setFormData] = useState(null);
+  const [error, setError] = useState('');
+  const [tempEditValue, setTempEditValue] = useState(initialState);
   const [editMode, setEditMode] = useState(false);
 
-  const { requestHandler } = useRequest(EDIT_USER, { nickname });
+  const { requestHandler: formDataHandler } = useRequest(EDIT_USER, formData);
+  const { requestHandler: nicknameHandler } = useRequest(EDIT_USER, {
+    nickname,
+  });
 
-  const submitHandler = () => {
-    setEditMode(false);
-    requestHandler();
-  };
+  const submitHandler = async (e) => {
+    e.preventDefault();
 
-  const ProfileEditBtnCheck = () => {
-    if (editMode) {
-      return (
-        <ButtonWrapper>
-          <Button onClick={submitHandler}>확인</Button>
-          <Button onClick={() => setEditMode(false)}>취소</Button>
-        </ButtonWrapper>
-      );
+    if (!Validate['nickname'].test(nickname)) {
+      setError('4 ~ 16자, 영문, 한글 혹은 숫자여야 합니다.');
+      return;
     }
+
+    const formData = new FormData();
+    formData.append('file', e.target.fileInput.files[0]);
+    formData.append('nickname', nickname);
+
+    setFormData(formData);
+    setEditMode(false);
+    setTempEditValue(nickname);
+    setError('');
+
+    await formDataHandler();
+    await nicknameHandler();
   };
+
+  const toggleHandler = () => {
+    setError('');
+    setEditMode((prevState) => !prevState);
+    setNickname(tempEditValue);
+  };
+
+  useEffect(() => {
+    if (!userContext.user) {
+      navigate('/');
+    }
+  }, [userContext.user]);
 
   return (
-    <>
-      <UserCardStyle>
-        <UserCardLeft>
-          <div>
-            <ProfileImage
-              src={userContext.user.profileImage || Gender['male']}
-            />
-            <EditButton
-              src={EditIconImage}
-              onClick={() => setEditMode((prevState) => !prevState)}
-            />
-          </div>
-          {!editMode && <ProfileName>{nickname}</ProfileName>}
-          {editMode && (
-            <ProfileEditName
-              value={nickname}
-              onChange={(event) => setNickname(event.target.value)}
-            />
-          )}
-          <ProfileEmail>{userContext.user.email}</ProfileEmail>
-          <ProfileEditBtnCheck />
-          <BreakLine />
-        </UserCardLeft>
-        <UserCardRight>
-          <FavoriteSection>
-            찜한 상품
-            <FavoriteSectionBottom>
-              <BreakLine />
-              <Button>더보기</Button>
-            </FavoriteSectionBottom>
-          </FavoriteSection>
-          <SecuritySection>
-            <LockIcon src={LockIconImage} />
-            <EditSection>보안</EditSection>
-          </SecuritySection>
-          <ButtonWrapper>
-            <PasswordEditButton onClick={generalContext.editFormHandler}>
-              비밀번호 수정
-            </PasswordEditButton>
-            <DeleteIdButton onClick={generalContext.deleteFormHandler}>
-              회원 탈퇴하기
-            </DeleteIdButton>
-          </ButtonWrapper>
-        </UserCardRight>
-      </UserCardStyle>
-    </>
+    userContext.user && (
+      <>
+        <UserCardStyle onSubmit={submitHandler}>
+          <UserCardLeft>
+            <div>
+              {!editMode && (
+                <>
+                  <ProfileImage
+                    src={userContext.user.profileImage || Gender['male']}
+                  />
+                  <EditButton
+                    type='button'
+                    src={EditIconImage}
+                    onClick={toggleHandler}
+                  />
+                </>
+              )}
+              {editMode && (
+                <>
+                  <ProfileImageLabel htmlFor='fileInput'>
+                    <ProfileLabelText>이미지 변경</ProfileLabelText>
+                  </ProfileImageLabel>
+                  <ProfileImageInput
+                    id='fileInput'
+                    type='file'
+                    name='fileInput'
+                  />
+                </>
+              )}
+            </div>
+            {error && <ErrorMsg>{error}</ErrorMsg>}
+            {!editMode && <ProfileName>{nickname}</ProfileName>}
+            {editMode && (
+              <ProfileEditName
+                value={nickname}
+                onChange={(event) => setNickname(event.target.value)}
+              />
+            )}
+            <ProfileEmail>{userContext.user.email}</ProfileEmail>
+            {editMode && (
+              <ButtonWrapper>
+                <Button>확인</Button>
+                <Button type='button' onClick={toggleHandler}>
+                  취소
+                </Button>
+              </ButtonWrapper>
+            )}
+            <BreakLine />
+          </UserCardLeft>
+          <UserCardRight>
+            <FavoriteSection>
+              찜한 상품
+              <FavoriteSectionBottom>
+                <BreakLine />
+                <Button>더보기</Button>
+              </FavoriteSectionBottom>
+            </FavoriteSection>
+            <SecuritySection>
+              <LockIcon src={LockIconImage} />
+              <EditSection>보안</EditSection>
+            </SecuritySection>
+            <ButtonWrapper>
+              <PasswordEditButton
+                type='button'
+                onClick={generalContext.editFormHandler}
+              >
+                비밀번호 수정
+              </PasswordEditButton>
+              <DeleteIdButton
+                type='button'
+                onClick={generalContext.deleteFormHandler}
+              >
+                회원 탈퇴하기
+              </DeleteIdButton>
+            </ButtonWrapper>
+          </UserCardRight>
+        </UserCardStyle>
+      </>
+    )
   );
 }
 
@@ -98,7 +159,12 @@ const ButtonWrapper = styled.div`
   width: 75%;
 `;
 
-const UserCardStyle = styled.div`
+const ErrorMsg = styled.div`
+  font-size: 1rem;
+  color: red;
+`;
+
+const UserCardStyle = styled.form`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -129,11 +195,34 @@ const UserCardRight = styled(UserCardLeft)`
 `;
 
 const ProfileImage = styled.img`
-  width: 5rem;
-  height: 5rem;
-  border: gray 1rem solid;
+  width: 8rem;
+  height: 8rem;
+  border: gray 0.25rem solid;
   border-radius: 50%;
   margin-left: 32px;
+`;
+
+const ProfileImageLabel = styled.label`
+  display: inline-block;
+  cursor: pointer;
+  width: 8rem;
+  height: 8rem;
+  border: gray 0.25rem solid;
+  border-radius: 50%;
+  background-color: #77bb3f;
+  margin-bottom: 6px;
+`;
+
+const ProfileLabelText = styled.span`
+  display: inline-block;
+  margin-top: 3rem;
+  font-size: 1rem;
+  padding: 4px 12px;
+  color: white;
+`;
+
+const ProfileImageInput = styled.input`
+  display: none;
 `;
 
 const ProfileName = styled.div`

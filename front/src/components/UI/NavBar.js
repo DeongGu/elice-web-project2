@@ -18,7 +18,7 @@ export default function NavBar() {
       return (
         <>
           <CreateButton>상품 등록</CreateButton>
-          <UserIcon profileImage={userContext.user.profileImage} />
+          <UserIcon />
         </>
       );
     }

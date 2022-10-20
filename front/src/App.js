@@ -22,7 +22,7 @@ function App() {
 
   const logoutHandler = () => {
     setUser(null);
-    sessionStorage.setItem('accessToken', null);
+    sessionStorage.clear();
   };
 
   return (
