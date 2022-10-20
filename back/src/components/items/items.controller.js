@@ -2,20 +2,22 @@ import db from "../../models";
 import jwt from "jsonwebtoken";
 import { SECRET_KEY } from "../../config/env.config";
 import { Op } from "sequelize";
+import {
+  authorizationError,
+  clientSideError,
+  notFoundError,
+  internalServerError,
+} from "../../middlewares/errorHandler";
+import { apiSuccess, creationSuccess } from "../../middlewares/successHandler";
 const Item = db.item;
 const Dibs = db.dibs;
 
 export const createItem = async (req, res, next) => {
   try {
-    // 로그인여부 확인(미들웨어 적용예정)
-    if (!req.headers.authentication) {
-      return res.status(401).send({ message: "로그인 하지 않은 상태입니다." });
-    }
     const currentUserId = jwt.verify(
       req.headers.authentication,
       SECRET_KEY
     ).userId;
-    // ----------
 
     let createInfo = { ...req.body, userId: currentUserId };
 
@@ -35,7 +37,7 @@ export const createItem = async (req, res, next) => {
     const createResult = await Item.create(createInfo);
 
     if (createResult) {
-      res.status(201).json({ message: "Item created successfully!" });
+      res.send(creationSuccess(null, "Item created successfully"));
     }
   } catch (err) {
     next(err);
@@ -46,6 +48,7 @@ export const findItem = async (req, res, next) => {
   try {
     let searchId = req.params.itemId;
     let currentUserId = null;
+
     if (req.headers.authentication) {
       currentUserId = jwt.verify(req.headers.authentication, SECRET_KEY).userId;
     }
@@ -64,13 +67,19 @@ export const findItem = async (req, res, next) => {
       },
     });
 
+    if (!foundItem) {
+      throw new notFoundError("Item information is not found");
+    }
+
     let editable = false;
+
     if (currentUserId && foundItem.userId === currentUserId) {
       editable = true;
     }
+
     foundItem["editable"] = editable;
 
-    res.status(200).send(foundItem);
+    res.send(apiSuccess(foundItem, "Item information found"));
   } catch (err) {
     next(err);
   }
@@ -79,10 +88,11 @@ export const findItem = async (req, res, next) => {
 export const findItems = async (req, res, next) => {
   try {
     let currentUserId = null;
+
     if (req.headers.authentication) {
       currentUserId = jwt.verify(req.headers.authentication, SECRET_KEY).userId;
     }
-    console.log(currentUserId);
+
     const { status, search, limit, offset } = req.query;
     const foundItems = await Item.findAll({
       raw: true,
@@ -111,7 +121,8 @@ export const findItems = async (req, res, next) => {
       limit: Number(!limit ? 1000 : limit),
       offset: Number(!offset ? 0 : offset),
     });
-    res.status(200).send(foundItems);
+
+    res.send(apiSuccess(foundItems, "Item search results"));
   } catch (err) {
     next(err);
   }
@@ -119,35 +130,11 @@ export const findItems = async (req, res, next) => {
 
 export const updateItem = async (req, res, next) => {
   try {
-    // 로그인여부 확인(미들웨어 적용예정)
-    if (!req.headers.authentication) {
-      return res.status(401).send({ message: "로그인 하지 않은 상태입니다." });
-    }
-    const currentUserId = jwt.verify(
-      req.headers.authentication,
-      SECRET_KEY
-    ).userId;
-    // ----------
-
-    // 본인이 올린 상품인지 확인
+    console.log({ body: req.body });
     let targetItemId = req.params.itemId;
-
-    const foundItem = await Item.findOne({
-      raw: true,
-      where: {
-        itemId: targetItemId,
-      },
-    });
-
-    if (foundItem?.userId !== currentUserId) {
-      return res
-        .status(401)
-        .send({ message: "You do not have permission to update" });
-    }
-    // ----------
-
+    console.log("--1--");
     const updateInfo = req.body;
-
+    console.log("--2--");
     if (req.files && req.files.length > 0) {
       let urls = new Array();
       req.files.map((file) => {
@@ -155,18 +142,18 @@ export const updateItem = async (req, res, next) => {
       });
       updateInfo["itemImage"] = urls;
     }
-
+    console.log("--3--");
     if (updateInfo.itemType) {
       const itemType = updateInfo.itemType?.split(",");
       updateInfo["itemType"] = itemType;
     }
-
+    console.log("--4--");
     const updatedItem = await Item.update(updateInfo, {
       where: { itemId: targetItemId },
     });
-
+    console.log("--5--");
     if (updatedItem) {
-      res.status(200).send({ message: "Item is updated" });
+      res.send(apiSuccess(null, "Item information updated"));
     }
   } catch (err) {
     next(err);
@@ -175,17 +162,11 @@ export const updateItem = async (req, res, next) => {
 
 export const deleteItem = async (req, res, next) => {
   try {
-    // 로그인여부 확인(미들웨어 적용예정)
-    if (!req.headers.authentication) {
-      return res.status(401).send({ message: "로그인 하지 않은 상태입니다." });
-    }
     const currentUserId = jwt.verify(
       req.headers.authentication,
       SECRET_KEY
     ).userId;
-    // ----------
 
-    // 본인이 올린 상품인지 확인
     let targetItemId = req.params.itemId;
 
     const foundItem = await Item.findOne({
@@ -196,18 +177,15 @@ export const deleteItem = async (req, res, next) => {
     });
 
     if (foundItem?.userId !== currentUserId) {
-      return res
-        .status(401)
-        .send({ message: "You do not have permission to delete" });
+      throw new authorizationError("Unauthorized");
     }
-    // ----------
 
     const deletedItem = await Item.destroy({
       where: { itemId: targetItemId },
     });
 
     if (deletedItem) {
-      res.status(200).send({ message: "Item is deleted" });
+      res.send(apiSuccess(null, "Item information delted"));
     }
   } catch (err) {
     next(err);

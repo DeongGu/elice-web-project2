@@ -1,4 +1,6 @@
-export function globalErrorHandler(error, req, res, next) {
-  console.log(error.code, error.message);
-  res.send({ httpStatus: error.code, message: error.message });
-}
+const globalErrorHandler = async (err, req, res, next) => {
+  console.log(err.code, err.message);
+  return res.status(err.code).send({ message: err.message });
+};
+
+export default globalErrorHandler;

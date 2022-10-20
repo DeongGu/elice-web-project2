@@ -1,6 +1,12 @@
 import db from "../../models";
 import jwt from "jsonwebtoken";
 import { SECRET_KEY } from "../../config/env.config";
+import {
+  clientSideError,
+  notFoundError,
+  authorizationError,
+} from "../../middlewares/errorHandler";
+import { apiSuccess, creationSuccess } from "../../middlewares/successHandler";
 
 const User = db.user;
 
@@ -13,13 +19,13 @@ export const register = async (req, res, next) => {
     });
 
     if (existingUser) {
-      return res.status(400).send({ message: "Email already exists." });
+      throw new clientSideError("Email already exists");
     }
 
     const createResult = await User.create(req.body);
 
     if (createResult) {
-      res.status(201).json({ message: "User registered successfully!" });
+      res.send(creationSuccess(null, "User registered successfully"));
     }
   } catch (err) {
     next(err);
@@ -35,16 +41,13 @@ export const login = async (req, res, next) => {
     });
 
     if (!foundUser) {
-      return res.status(404).send({ message: "User Not found." });
+      throw new notFoundError("User not found");
     }
 
     const passwordMatch = await foundUser.isValidPassword(req.body.password);
 
     if (!passwordMatch) {
-      return res.status(401).send({
-        accessToken: null,
-        message: "Invalid Password!",
-      });
+      throw new authorizationError("Invalid password");
     }
 
     const token = jwt.sign(
@@ -58,12 +61,17 @@ export const login = async (req, res, next) => {
       }
     );
 
-    res.status(200).send({
-      userId: foundUser.userId,
-      nickname: foundUser.nickname,
-      email: foundUser.email,
-      Authentication: token,
-    });
+    res.send(
+      apiSuccess(
+        {
+          userId: foundUser.userId,
+          nickname: foundUser.nickname,
+          email: foundUser.email,
+          Authentication: token,
+        },
+        "Successfully Logged in"
+      )
+    );
   } catch (err) {
     next(err);
   }
@@ -72,8 +80,7 @@ export const login = async (req, res, next) => {
 export const logout = async (req, res, next) => {
   try {
     req.logout();
-
-    res.send({ message: "Successfully logged out." });
+    res.send(apiSuccess(null, "Successfully logged out"));
   } catch (err) {
     next(err);
   }
@@ -81,15 +88,10 @@ export const logout = async (req, res, next) => {
 
 export const findUser = async (req, res, next) => {
   try {
-    // 로그인여부 확인(미들웨어 적용예정)
-    if (!req.headers.authentication) {
-      return res.status(401).send({ message: "로그인 하지 않은 상태입니다." });
-    }
     const currentUserId = jwt.verify(
       req.headers.authentication,
       SECRET_KEY
     ).userId;
-    // ----------
 
     let searchId = req.params.userId;
 
@@ -101,10 +103,14 @@ export const findUser = async (req, res, next) => {
       where: searchId ? { userId: searchId } : { userId: currentUserId },
     });
 
+    if (!foundUser) {
+      throw new notFoundError("User information not found");
+    }
+
     foundUser["editable"] =
       foundUser && foundUser.id === currentUserId ? true : false;
 
-    res.status(200).send(foundUser);
+    res.send(apiSuccess(foundUser));
   } catch (err) {
     next(err);
   }
@@ -112,15 +118,10 @@ export const findUser = async (req, res, next) => {
 
 export const updateUser = async (req, res, next) => {
   try {
-    // 로그인여부 확인(미들웨어 적용예정)
-    if (!req.headers.authentication) {
-      return res.status(401).send({ message: "로그인 하지 않은 상태입니다." });
-    }
     const currentUserId = jwt.verify(
       req.headers.authentication,
       SECRET_KEY
     ).userId;
-    // ----------
 
     let chgUserInfo = { ...req.body };
 
@@ -128,11 +129,12 @@ export const updateUser = async (req, res, next) => {
       chgUserInfo["profileImage"] = req.file.location;
     }
 
-    const updetedResult = await User.update(chgUserInfo, {
+    const updatedResult = await User.update(chgUserInfo, {
       where: { userId: currentUserId },
     });
-    if (updetedResult) {
-      res.status(200).send({ message: "User pofile is updated" });
+
+    if (updatedResult) {
+      res.send(apiSuccess(null, "User profile is updated"));
     }
   } catch (err) {
     next(err);
@@ -141,22 +143,17 @@ export const updateUser = async (req, res, next) => {
 
 export const deleteUser = async (req, res, next) => {
   try {
-    // 로그인여부 확인(미들웨어 적용예정)
-    if (!req.headers.authentication) {
-      return res.status(401).send({ message: "로그인 하지 않은 상태입니다." });
-    }
     const currentUserId = jwt.verify(
       req.headers.authentication,
       SECRET_KEY
     ).userId;
-    // ----------
 
     const foundUser = await User.destroy({
       where: { userId: currentUserId },
     });
 
     if (foundUser) {
-      res.status(200).send({ message: "User is deleted" });
+      res.send(apiSuccess(null, "User information deleted"));
     }
   } catch (err) {
     next(err);

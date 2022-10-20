@@ -2,6 +2,9 @@ import db from "../../models";
 import jwt from "jsonwebtoken";
 import { SECRET_KEY } from "../../config/env.config";
 import { Op } from "sequelize";
+import { authorizationError } from "../../middlewares/errorHandler";
+import { apiSuccess, creationSuccess } from "../../middlewares/successHandler";
+
 const Dibs = db.dibs;
 const Item = db.item;
 
@@ -17,10 +20,7 @@ export const createDibs = async (req, res, next) => {
     const createResult = await Dibs.create(createInfo);
 
     if (createResult) {
-      res.status(201).json({
-        message: "Dibs created successfully!",
-        result: createResult,
-      });
+      res.send(creationSuccess(createResult, "Dibs created successfully"));
     }
   } catch (err) {
     next(err);
@@ -62,7 +62,7 @@ export const findDibs = async (req, res, next) => {
       limit: Number(!limit ? 1000 : limit),
       offset: Number(!offset ? 0 : offset),
     });
-    res.status(200).send(foundDibs);
+    res.send(apiSuccess(foundDibs, "Dibs search results"));
   } catch (err) {
     next(err);
   }
@@ -84,9 +84,11 @@ export const deleteDibs = async (req, res, next) => {
     });
 
     if (foundDibs.userId !== currentUserId) {
-      return res
-        .status(401)
-        .send({ message: "You do not have permission to delete" });
+      try {
+        throw new authorizationError("Unauthorized");
+      } catch (err) {
+        next(err);
+      }
     }
 
     const deletedDibs = await Dibs.destroy({
@@ -94,7 +96,7 @@ export const deleteDibs = async (req, res, next) => {
     });
 
     if (deletedDibs) {
-      res.status(200).send({ message: "Dibs is deleted" });
+      res.send(apiSuccess(null, "Dibs deleted"));
     }
   } catch (err) {
     next(err);

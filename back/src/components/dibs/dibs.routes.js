@@ -1,5 +1,6 @@
 import express from "express";
 import * as controller from "./dibs.controller";
+import authMiddleware from "../../middlewares/authMiddleware";
 
 const router = express.Router();
 
@@ -12,12 +13,12 @@ router.use((req, res, next) => {
 });
 
 // 찜하기
-router.post("/dibs/:itemId", controller.createDibs);
+router.post("/dibs/:itemId", authMiddleware, controller.createDibs);
 
 // 목록조회 (검색포함)
-router.get("/dibs", controller.findDibs);
+router.get("/dibs", authMiddleware, controller.findDibs);
 
 // 찜취소(삭제)
-router.delete("/dibs/:dibsId", controller.deleteDibs);
+router.delete("/dibs/:dibsId", authMiddleware, controller.deleteDibs);
 
 export default router;
