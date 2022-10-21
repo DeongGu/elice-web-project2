@@ -23,6 +23,7 @@ import DonutChartSecond from '../components/About/Chart/DonutChartSecond.js';
 import DonutChartThird from '../components/About/Chart/DonutChartThird.js';
 import StackedChart from '../components/About/Chart/StackedChart.js';
 import AboutForm from '../components/About/AboutForm.js';
+import Footer from '../components/UI/Footer.js';
 
 const teamMembers = [
   {
@@ -37,7 +38,7 @@ const teamMembers = [
     gender: 'male',
     pos: '프론트엔드',
     description: '끝까지 열심히 하겠습니다.',
-    stacks: ['html', 'css', 'js', 'react', 'node'],
+    stacks: ['html', 'css', 'js', 'react', 'node', 'python'],
   },
   {
     name: '이태의',
@@ -51,7 +52,7 @@ const teamMembers = [
     gender: 'male',
     pos: '프론트엔드',
     description: '부족한 게 많지만 열심히 하겠습니다!',
-    stacks: ['html', 'css', 'js', 'python', 'react'],
+    stacks: ['html', 'css', 'js', 'react'],
   },
   {
     name: '진시하',
@@ -294,7 +295,6 @@ export default function About() {
             </Slide>
           </TeamSubSection>
         </TeamSection>
-        <Footer></Footer>
       </Container>
     </>
   );
@@ -358,7 +358,7 @@ const FadeInDown = keyframes`
 `;
 
 const Container = styled.div`
-  height: 590vh;
+  height: 570vh;
   display: flex;
   flex-direction: column;
 `;
@@ -643,9 +643,4 @@ const TeamSubSection = styled(Section)`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-`;
-
-const Footer = styled.div`
-  height: 20vh;
-  background-color: lightgray;
 `;

@@ -11,12 +11,11 @@ export default function UserInfo() {
 }
 
 const UserInfoStyle = styled.div`
-  height: 80%;
+  height: 70vh;
   width: 60%;
   display: flex;
   flex-direction: row;
   align-items: center;
-  border: gray 1rem solid;
+  border: gray 1px solid;
   border-radius: 20px;
-  outline: lightgray 1rem solid;
 `;
