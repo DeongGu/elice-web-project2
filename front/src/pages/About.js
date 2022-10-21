@@ -23,6 +23,7 @@ import DonutChartSecond from '../components/About/Chart/DonutChartSecond.js';
 import DonutChartThird from '../components/About/Chart/DonutChartThird.js';
 import StackedChart from '../components/About/Chart/StackedChart.js';
 import AboutForm from '../components/About/AboutForm.js';
+import Footer from '../components/UI/Footer.js';
 
 const teamMembers = [
   {
@@ -37,7 +38,7 @@ const teamMembers = [
     gender: 'male',
     pos: '프론트엔드',
     description: '끝까지 열심히 하겠습니다.',
-    stacks: ['html', 'css', 'js', 'react', 'node'],
+    stacks: ['html', 'css', 'js', 'react', 'node', 'python'],
   },
   {
     name: '이태의',
@@ -51,7 +52,7 @@ const teamMembers = [
     gender: 'male',
     pos: '프론트엔드',
     description: '부족한 게 많지만 열심히 하겠습니다!',
-    stacks: ['html', 'css', 'js', 'python', 'react'],
+    stacks: ['html', 'css', 'js', 'react'],
   },
   {
     name: '진시하',
@@ -288,9 +289,11 @@ export default function About() {
           focusOn={currentSection === 6}
           focusOut={currentSection !== 6}
         >
-          <Slide {...slideProps}>
-            <ProfileCard teamMember={teamMembers[count]} />
-          </Slide>
+          <TeamSubSection>
+            <Slide {...slideProps}>
+              <ProfileCard teamMember={teamMembers[count]} />
+            </Slide>
+          </TeamSubSection>
         </TeamSection>
       </Container>
     </>
@@ -355,7 +358,7 @@ const FadeInDown = keyframes`
 `;
 
 const Container = styled.div`
-  height: 590vh;
+  height: 570vh;
   display: flex;
   flex-direction: column;
 `;
@@ -614,6 +617,7 @@ const Logo = styled.img`
 `;
 
 const TeamSection = styled(Section)`
+  height: 80vh;
   background-image: url(${TeamImage});
   background-size: 30%;
   background-position: 10% 90%;
@@ -630,4 +634,13 @@ const TeamSection = styled(Section)`
     css`
       animation: ${FadeOut} 0.5s forwards;
     `}
+`;
+
+const TeamSubSection = styled(Section)`
+  height: 80%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 `;
