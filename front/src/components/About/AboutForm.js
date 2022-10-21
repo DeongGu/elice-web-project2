@@ -1,6 +1,6 @@
-import ModalBackground from "../UI/ModalBackground";
+import ModalBackground from '../UI/ModalBackground';
 
-import styled from "styled-components";
+import styled, { keyframes } from 'styled-components';
 
 export default function AboutForm() {
   return (
@@ -9,8 +9,8 @@ export default function AboutForm() {
 
       <Form>
         <Reason>
-          <text className="title">
-            <strong>Do Vring</strong>
+          <text className='title'>
+            <Strong>Do Vring</Strong>
           </text>
           <br />
           <br />
@@ -37,12 +37,25 @@ export default function AboutForm() {
             이를 위해 <strong>‘자원 순환’</strong>에 초점을 맞춰 ‘의류 및 패션
             용품의 재사용’을 할 수 있도록 <br />
             <strong>‘중고 의류 교환 서비스’</strong>가 탄생했습니다!
+            <br /> <br />
+            전부 읽으셨다면 <strong>검은 배경</strong>을 눌러서 창을 꺼주세요!
           </p>
         </Reason>
       </Form>
     </>
   );
 }
+
+const FadeInUp = keyframes`
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 100%, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translateZ(1);
+  }
+`;
 
 const Form = styled.form`
   display: flex;
@@ -60,6 +73,7 @@ const Form = styled.form`
   background-color: white;
   border: lightgray 1px solid;
   border-radius: 20px;
+  animation: ${FadeInUp} 1s;
 `;
 
 const Reason = styled.div`
@@ -89,4 +103,9 @@ const Reason = styled.div`
   .title {
     font-size: 3rem;
   }
+`;
+
+const Strong = styled.span`
+  font-family: elice-bold;
+  color: #77bb3f;
 `;

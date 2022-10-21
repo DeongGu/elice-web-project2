@@ -63,5 +63,19 @@ export default function useDivideSection(divide = 2) {
     setCurrentSection(1);
   };
 
-  return { currentSection, scrollEventHandler };
+  const sections = {
+    firstSection,
+    secondSection,
+    thirdSection,
+    fourthSection,
+    fifthSection,
+  };
+
+  return {
+    currentSection,
+    scrollEventHandler,
+    sections,
+    innerHeight,
+    subSection,
+  };
 }

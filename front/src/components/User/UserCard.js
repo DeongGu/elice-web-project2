@@ -1,3 +1,5 @@
+import * as Api from '../../api/api';
+
 import { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -30,14 +32,12 @@ export default function UserCard() {
   };
 
   const [form, setForm] = useState(initialState);
-  const [formData, setFormData] = useState(null);
   const [error, setError] = useState('');
   const [tempEditValue, setTempEditValue] = useState(initialState);
   const [editMode, setEditMode] = useState(false);
 
-  const { requestHandler: formDataHandler } = useRequest(EDIT_USER, formData);
   const { requestHandler: formHandler } = useRequest(EDIT_USER, form);
-  const { data: dibData, isLoading } = useRequest(CHECK_DIBS);
+  const { data: dibData, isLoading } = useFetch(CHECK_DIBS);
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -54,15 +54,17 @@ export default function UserCard() {
       }
     }
 
-    const formData = new FormData();
-    formData.append('file', e.target.fileInput.files[0]);
+    const image = e.target.fileInput.files[0];
 
-    setFormData(formData);
+    const formData = new FormData();
+    formData.append('file', image);
+
+    Api.put('users', formData);
+
     setEditMode(false);
     setTempEditValue(form);
     setError('');
 
-    await formDataHandler();
     await formHandler();
   };
 
@@ -80,7 +82,14 @@ export default function UserCard() {
   };
 
   const Dibs = () => {
-    console.log(dibData);
+    return dibData.map((dib, index) => (
+      <div key={'dibs' + index}>
+        <ProductImage
+          src={dib['item.itemImage'] || '/assets/images/default.png'}
+          onClick={() => navigate(`/items/${dib.itemId}`)}
+        />
+      </div>
+    ));
   };
 
   useEffect(() => {
@@ -152,11 +161,7 @@ export default function UserCard() {
           <UserCardRight>
             <FavoriteSection>
               찜한 상품
-              {!isLoading && <Dibs />}
-              <FavoriteSectionBottom>
-                <BreakLine />
-                <Button>더보기</Button>
-              </FavoriteSectionBottom>
+              <FavoriteSectionTop>{!isLoading && <Dibs />}</FavoriteSectionTop>
             </FavoriteSection>
             <SecuritySection>
               <LockIcon src={LockIconImage} />
@@ -290,10 +295,23 @@ const ProfileEmail = styled.div`
 `;
 
 const FavoriteSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
   font-size: 1.25rem;
   font-family: elice-bold;
   width: 100%;
   height: 100%;
+  align-items: center;
+  justify-content: center;
+`;
+
+const FavoriteSectionTop = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
 `;
 
 const FavoriteSectionBottom = styled.div`
@@ -345,4 +363,14 @@ const PasswordEditButton = styled(Button)`
 
 const DeleteIdButton = styled(PasswordEditButton)`
   margin-left: 2rem;
+`;
+
+const ProductImage = styled.img`
+  width: 5rem;
+  height: 5rem;
+  cursor: pointer;
+`;
+
+const ProductName = styled.div`
+  font-size: 0.9rem;
 `;
