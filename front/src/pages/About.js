@@ -1,4 +1,4 @@
-import { useEffect, useContext, useState } from 'react';
+import { useEffect, useContext } from 'react';
 import styled, { keyframes, css } from 'styled-components';
 
 import GeneralContext from '../context/GeneralContext.js';
@@ -23,7 +23,6 @@ import DonutChartSecond from '../components/About/Chart/DonutChartSecond.js';
 import DonutChartThird from '../components/About/Chart/DonutChartThird.js';
 import StackedChart from '../components/About/Chart/StackedChart.js';
 import AboutForm from '../components/About/AboutForm.js';
-import Footer from '../components/UI/Footer.js';
 
 const teamMembers = [
   {
@@ -76,6 +75,14 @@ export default function About() {
     subSection,
   } = useDivideSection(2);
 
+  const slideProps = {
+    count,
+    setCount,
+    slideData: teamMembers,
+    leftBtnHandler,
+    rightBtnHandler,
+  };
+
   useEffect(() => {
     startInterval();
 
@@ -84,14 +91,6 @@ export default function About() {
 
     return () => window.removeEventListener('scroll', scrollEventHandler);
   }, []);
-
-  const slideProps = {
-    count,
-    setCount,
-    slideData: teamMembers,
-    leftBtnHandler,
-    rightBtnHandler,
-  };
 
   return (
     <>
@@ -181,15 +180,15 @@ export default function About() {
           <RightSide>
             <SubContainer focusOut={currentSection !== 2}>
               <Reason focusOn={currentSection === 2}>
-                <text className='title'>
-                  <strong>환경</strong>과 <strong>패션 산업</strong>
-                </text>
+                <Text className='title'>
+                  <strong>환경</strong>과 <Negative>패션 산업</Negative>
+                </Text>
                 <br />
                 <br />
                 <br />
                 <p>
                   패션 산업이 환경에 미치는 영향은 매우 큽니다. <br />
-                  <br />전 세계에서 배출되는 온실가스의 <negative>10%</negative>
+                  <br />전 세계에서 배출되는 온실가스의 <Negative>10%</Negative>
                   가 패션 산업에서 기인합니다. UN에 따르면 이는 항공, 해상운송
                   산업의 탄소 배출량을 합한 것보다 많은 수치입니다.
                   <br />
@@ -197,9 +196,9 @@ export default function About() {
                 </p>
                 <br />
                 <p>
-                  인류가 배출하는 폐기용수의 <negative>20%</negative>가 패션
+                  인류가 배출하는 폐기용수의 <Negative>20%</Negative>가 패션
                   산업에서 나옵니다. <br />
-                  또한 바다에서 발견된 미세 플라스틱 <negative>35%</negative>의
+                  또한 바다에서 발견된 미세 플라스틱 <Negative>35%</Negative>의
                   1차 원인물질이 합성 섬유입니다. <sup>(EPRS2017)</sup>
                 </p>
                 <br />
@@ -219,9 +218,9 @@ export default function About() {
               reversed={true}
             >
               <Reason focusOn={currentSection === 3}>
-                <text className='title'>
+                <Text className='title'>
                   <strong>패션 산업</strong>과 <strong>국민 환경 인식</strong>
-                </text>
+                </Text>
                 <br />
                 <br />
                 <br />
@@ -239,9 +238,9 @@ export default function About() {
             </SubContainer>
             <SubContainer focusOut={currentSection !== 4}>
               <Reason focusOn={currentSection === 4}>
-                <text className='title'>
+                <Text className='title'>
                   <strong>문제점</strong>
-                </text>
+                </Text>
                 <br />
                 <br />
                 <br />
@@ -522,6 +521,11 @@ const SubContainer = styled.div`
     `}
 `;
 
+const Negative = styled.span`
+  color: #cd2e57;
+  font-weight: bold;
+`;
+
 const Reason = styled.div`
   p {
     font-size: 1.5rem;
@@ -540,10 +544,6 @@ const Reason = styled.div`
 
   strong {
     color: #77bb3f;
-  }
-
-  negative {
-    color: #cd2e57;
   }
 
   .title {
