@@ -1,48 +1,59 @@
 import db from "../../models";
-import jwt from "jsonwebtoken";
-import { SECRET_KEY } from "../../config/env.config";
 import { Op } from "sequelize";
+import {
+  notFoundError,
+  authorizationError,
+} from "../../middlewares/errorHandler";
+import { apiSuccess, creationSuccess } from "../../middlewares/successHandler";
 const Dibs = db.dibs;
 const Item = db.item;
+const User = db.user;
 
+// 찜하기
 export const createDibs = async (req, res, next) => {
   try {
-    // 로그인여부 확인(미들웨어 적용예정)
-    if (!req.headers.authentication) {
-      return res.status(401).send({ message: "로그인 하지 않은 상태입니다." });
-    }
-    const currentUserId = jwt.verify(
-      req.headers.authentication,
-      SECRET_KEY
-    ).userId;
-    // ----------
+    const currentUserId = req.currentUserId;
+    const targetItemId = req.params.itemId;
+    let createInfo = { itemId: targetItemId, userId: currentUserId };
 
-    let createInfo = { itemId: req.params.itemId, userId: currentUserId };
+    // const foundDibs = await Dibs.findOne({
+    //   raw: true,
+    //   include: {
+    //     [Op.and]: [
+    //       {
+    //         model: Item,
+    //         as: "item",
+    //         where: [{ itemId: createInfo.itemId }],
+    //         attributes: ["itemId"],
+    //         required: true,
+    //       },
+    //       {
+    //         model: User,
+    //         as: "user",
+    //         where: [{ userId: createInfo.userId }],
+    //         attributes: ["userId"],
+    //         required: true,
+    //       },
+    //     ],
+    //   },
+    // });
 
-    const createResult = await Dibs.create(createInfo);
+    // if (foundDibs) {
+    //   throw new authorizationError("Duplicate dibs is not allowed.");
+    // }
 
-    if (createResult) {
-      res.status(201).json({
-        message: "Dibs created successfully!",
-        result: createResult,
-      });
-    }
+    await Dibs.create(createInfo);
+
+    res.send(creationSuccess(null, "Dibs created successfully!"));
   } catch (err) {
     next(err);
   }
 };
 
+// 찜목록조회(검색포함)
 export const findDibs = async (req, res, next) => {
   try {
-    // 로그인여부 확인(미들웨어 적용예정)
-    if (!req.headers.authentication) {
-      return res.status(401).send({ message: "로그인 하지 않은 상태입니다." });
-    }
-    const currentUserId = jwt.verify(
-      req.headers.authentication,
-      SECRET_KEY
-    ).userId;
-    // ----------
+    const currentUserId = req.currentUserId;
 
     const { status, search, limit, offset } = req.query;
     const foundDibs = await Dibs.findAll({
@@ -73,23 +84,21 @@ export const findDibs = async (req, res, next) => {
       limit: Number(!limit ? 1000 : limit),
       offset: Number(!offset ? 0 : offset),
     });
-    res.status(200).send(foundDibs);
+
+    if (!foundDibs) {
+      throw new notFoundError("Dibs");
+    }
+
+    res.send(apiSuccess(foundDibs, "Dibs found successfully!"));
   } catch (err) {
     next(err);
   }
 };
 
+// 찜취소(삭제)
 export const deleteDibs = async (req, res, next) => {
   try {
-    // 로그인여부 확인(미들웨어 적용예정)
-    if (!req.headers.authentication) {
-      return res.status(401).send({ message: "로그인 하지 않은 상태입니다." });
-    }
-    const currentUserId = jwt.verify(
-      req.headers.authentication,
-      SECRET_KEY
-    ).userId;
-    // ----------
+    const currentUserId = req.currentUserId;
     let targetDibsId = req.params.dibsId;
 
     const foundDibs = await Dibs.findOne({
@@ -99,10 +108,12 @@ export const deleteDibs = async (req, res, next) => {
       },
     });
 
-    if (foundDibs.userId !== currentUserId) {
-      return res
-        .status(401)
-        .send({ message: "You do not have permission to delete" });
+    if (!foundDibs) {
+      throw new notFoundError("Dibs");
+    }
+
+    if (foundDibs?.userId !== currentUserId) {
+      throw new authorizationError("Unauthorized");
     }
 
     const deletedDibs = await Dibs.destroy({
@@ -110,7 +121,7 @@ export const deleteDibs = async (req, res, next) => {
     });
 
     if (deletedDibs) {
-      res.status(200).send({ message: "Dibs is deleted" });
+      res.send(apiSuccess(null, "Dibs canceled"));
     }
   } catch (err) {
     next(err);

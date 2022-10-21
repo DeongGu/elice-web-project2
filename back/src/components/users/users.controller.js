@@ -1,50 +1,46 @@
 import db from "../../models";
 import jwt from "jsonwebtoken";
 import { SECRET_KEY } from "../../config/env.config";
-
+import {
+  clientSideError,
+  notFoundError,
+  authorizationError,
+} from "../../middlewares/errorHandler";
+import { apiSuccess, creationSuccess } from "../../middlewares/successHandler";
 const User = db.user;
 
+// 회원가입
 export const register = async (req, res, next) => {
   try {
     const existingUser = await User.findOne({
-      where: {
-        email: req.body.email,
-      },
+      where: { email: req.body.email },
     });
 
     if (existingUser) {
-      return res.status(400).send({ message: "Email already exists." });
+      throw new clientSideError("Email already exists");
     }
 
-    const createResult = await User.create(req.body);
+    await User.create(req.body);
 
-    if (createResult) {
-      res.status(201).json({ message: "User registered successfully!" });
-    }
+    res.send(creationSuccess(null, "User registered successfully"));
   } catch (err) {
     next(err);
   }
 };
 
+// 로그인
 export const login = async (req, res, next) => {
   try {
     const foundUser = await User.findOne({
-      where: {
-        email: req.body.email,
-      },
+      where: { email: req.body.email },
     });
 
     if (!foundUser) {
-      return res.status(404).send({ message: "User Not found." });
+      throw new notFoundError("User");
     }
 
-    const passwordMatch = await foundUser.isValidPassword(req.body.password);
-
-    if (!passwordMatch) {
-      return res.status(401).send({
-        accessToken: null,
-        message: "Invalid Password!",
-      });
+    if (!(await foundUser.isValidPassword(req.body.password))) {
+      throw new authorizationError("Invalid password");
     }
 
     const token = jwt.sign(
@@ -58,105 +54,88 @@ export const login = async (req, res, next) => {
       }
     );
 
-    res.status(200).send({
-      userId: foundUser.userId,
-      nickname: foundUser.nickname,
-      email: foundUser.email,
-      Authentication: token,
-    });
+    res.send(
+      apiSuccess(
+        {
+          userId: foundUser.userId,
+          nickname: foundUser.nickname,
+          email: foundUser.email,
+          Authentication: token,
+        },
+        "Logged in successfully"
+      )
+    );
   } catch (err) {
     next(err);
   }
 };
 
+// 로그아웃
 export const logout = async (req, res, next) => {
   try {
     req.logout();
-
-    res.send({ message: "Successfully logged out." });
+    res.send(apiSuccess(null, "Logged out successfully"));
   } catch (err) {
     next(err);
   }
 };
 
+// 회원조회
 export const findUser = async (req, res, next) => {
   try {
-    // 로그인여부 확인(미들웨어 적용예정)
-    if (!req.headers.authentication) {
-      return res.status(401).send({ message: "로그인 하지 않은 상태입니다." });
-    }
-    const currentUserId = jwt.verify(
-      req.headers.authentication,
-      SECRET_KEY
-    ).userId;
-    // ----------
-
-    let searchId = req.params.userId;
+    const currentUserId = req.currentUserId;
+    const searchId = req.params?.userId;
 
     const foundUser = await User.findOne({
       raw: true,
-      attributes: searchId
-        ? { exclude: ["email", "password"] }
-        : { exclude: "password" },
-      where: searchId ? { userId: searchId } : { userId: currentUserId },
+      attributes: !searchId
+        ? { exclude: "password" }
+        : { exclude: ["email", "password"] },
+      where: !searchId ? { userId: currentUserId } : { userId: searchId },
     });
 
-    foundUser["editable"] =
-      foundUser && foundUser.id === currentUserId ? true : false;
+    if (!foundUser) {
+      throw new notFoundError("User");
+    }
 
-    res.status(200).send(foundUser);
+    foundUser["editable"] = foundUser?.userId === currentUserId;
+
+    res.send(apiSuccess(foundUser, "Found user successfully"));
   } catch (err) {
     next(err);
   }
 };
 
+// 회원수정
 export const updateUser = async (req, res, next) => {
   try {
-    // 로그인여부 확인(미들웨어 적용예정)
-    if (!req.headers.authentication) {
-      return res.status(401).send({ message: "로그인 하지 않은 상태입니다." });
-    }
-    const currentUserId = jwt.verify(
-      req.headers.authentication,
-      SECRET_KEY
-    ).userId;
-    // ----------
-
-    let chgUserInfo = { ...req.body };
-
+    const currentUserId = req.currentUserId;
     if (req.file) {
-      chgUserInfo["profileImage"] = req.file.location;
+      req.body.profileImage = req.file.location;
     }
 
-    const updetedResult = await User.update(chgUserInfo, {
+    const updatedResult = await User.update(req.body, {
       where: { userId: currentUserId },
     });
-    if (updetedResult) {
-      res.status(200).send({ message: "User pofile is updated" });
+    if (updatedResult) {
+      res.send(apiSuccess(null, "User profile is updated"));
     }
   } catch (err) {
     next(err);
   }
 };
 
+// 회원탈퇴
 export const deleteUser = async (req, res, next) => {
   try {
-    // 로그인여부 확인(미들웨어 적용예정)
-    if (!req.headers.authentication) {
-      return res.status(401).send({ message: "로그인 하지 않은 상태입니다." });
-    }
-    const currentUserId = jwt.verify(
-      req.headers.authentication,
-      SECRET_KEY
-    ).userId;
-    // ----------
+    const currentUserId = req.currentUserId;
 
     const foundUser = await User.destroy({
       where: { userId: currentUserId },
     });
 
     if (foundUser) {
-      res.status(200).send({ message: "User is deleted" });
+      res.send(apiSuccess(null, "User information deleted"));
     }
   } catch (err) {
     next(err);

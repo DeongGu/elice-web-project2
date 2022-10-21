@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
           if (value.length >= 6) {
             this.setDataValue("password", bcrypt.hashSync(value, 10));
           } else {
-            throw new Error("Your password should be at least 6 characters long!");
+            throw new Error("Password should be at least 6 characters long!");
           }
         },
         allowNull: false,
