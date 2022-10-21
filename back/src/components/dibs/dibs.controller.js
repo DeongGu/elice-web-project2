@@ -42,9 +42,13 @@ export const createDibs = async (req, res, next) => {
     //   throw new authorizationError("Duplicate dibs is not allowed.");
     // }
 
-    await Dibs.create(createInfo);
+    const createResult = await Dibs.create(createInfo);
 
-    res.send(creationSuccess(null, "Dibs created successfully!"));
+    console.log(createResult);
+
+    if (createResult) {
+      res.send(creationSuccess(createResult, "Dibs created successfully!"));
+    }
   } catch (err) {
     next(err);
   }
@@ -121,7 +125,7 @@ export const deleteDibs = async (req, res, next) => {
     });
 
     if (deletedDibs) {
-      res.send(apiSuccess(null, "Dibs canceled"));
+      res.send(apiSuccess(deletedDibs, "Dibs canceled"));
     }
   } catch (err) {
     next(err);

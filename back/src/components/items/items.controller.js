@@ -40,8 +40,10 @@ export const createItem = async (req, res, next) => {
 export const findItem = async (req, res, next) => {
   try {
     const searchId = req.params.itemId;
-    const decodedToken = jwt.verify(req.headers?.authentication, SECRET_KEY);
-    const currentUserId = decodedToken?.userId;
+    let currentUserId = null;
+    if (req.headers.authentication) {
+      currentUserId = jwt.verify(req.headers.authentication, SECRET_KEY).userId;
+    }
 
     const foundItem = await Item.findOne({
       raw: true,
@@ -72,8 +74,11 @@ export const findItem = async (req, res, next) => {
 // 상품목록조회(검색포함)
 export const findItems = async (req, res, next) => {
   try {
-    const decodedToken = jwt.verify(req.headers?.authentication, SECRET_KEY);
-    const currentUserId = decodedToken?.userId;
+    let currentUserId = null;
+    if (req.headers.authentication) {
+      currentUserId = jwt.verify(req.headers.authentication, SECRET_KEY).userId;
+    }
+
     const { status, search, limit, offset } = req.query;
     const foundItems = await Item.findAll({
       raw: true,
