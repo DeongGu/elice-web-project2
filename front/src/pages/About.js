@@ -10,13 +10,6 @@ import Slide from '../components/UI/Slide.js';
 import ProfileCard from '../components/About/ProfileCard.js';
 import BreakLine from '../components/UI/BreakLine.js';
 
-import LogoImage from '../assets/imgs/Vring-logo.png';
-import TitleImage from '../assets/imgs/about-images/undraw-dreamer.png';
-import TitleWave from '../assets/imgs/about-images/wave.png';
-import ReasonImage from '../assets/imgs/about-images/undraw_data.svg';
-import AboutImage from '../assets/imgs/about-images/undraw-connection.png';
-import TeamImage from '../assets/imgs/about-images/undraw-engineering_team.svg';
-
 import BarChartOne from '../components/About/Chart/BarChart.js';
 import DonutChartFirst from '../components/About/Chart/DonutChartFirst.js';
 import DonutChartSecond from '../components/About/Chart/DonutChartSecond.js';
@@ -214,7 +207,7 @@ export default function About() {
             </SubContainer>
             <SubContainer
               focusOut={currentSection !== 3}
-              image={ReasonImage}
+              image={'assets/images/about-images/undraw_data.svg'}
               reversed={true}
             >
               <Reason focusOn={currentSection === 3}>
@@ -281,7 +274,7 @@ export default function About() {
               지금 바로 시작하기
             </AboutStartBtn>
             <BreakLine />
-            <Logo src={LogoImage}></Logo>
+            <Logo src={'assets/images/Vring-logo.png'}></Logo>
           </AboutDescription>
         </AboutSection>
         <TeamSection
@@ -413,7 +406,7 @@ const Section = styled.section`
 const TitleSection = styled(Section)`
   height: 90vh;
   flex-direction: column;
-  background-image: url(${TitleWave});
+  background-image: url('assets/images/about-images/wave.png');
   background-position: 0 100%;
   background-size: 100% 20%;
   background-repeat: repeat-x;
@@ -432,7 +425,7 @@ const TitleBackground = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-image: url(${TitleImage});
+  background-image: url('assets/images/about-images/undraw-dreamer.png');
   background-repeat: no-repeat;
   background-position: 50% 0%;
   animation: ${FadeInUp} 1s;
@@ -575,7 +568,7 @@ const GraphWrap = styled.div`
 }`;
 
 const AboutSection = styled(Section)`
-  background-image: url(${AboutImage});
+  background-image: url('assets/images/about-images/undraw-connection.png');
   background-size: 60%;
   background-position: 50% 100%;
   background-repeat: no-repeat;
@@ -618,7 +611,7 @@ const Logo = styled.img`
 
 const TeamSection = styled(Section)`
   height: 80vh;
-  background-image: url(${TeamImage});
+  background-image: url(assets/images/about-images/undraw-engineering_team.svg);
   background-size: 30%;
   background-position: 10% 90%;
   background-repeat: no-repeat;

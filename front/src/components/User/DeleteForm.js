@@ -1,35 +1,33 @@
-import { useContext } from "react";
-import { UserContext } from "../../App";
-import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
+import { useContext } from 'react';
+import { UserContext } from '../../App';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 
-import useForm from "../../hooks/useForm";
-import useRequest from "../../hooks/useRequest";
+import useForm from '../../hooks/useForm';
+import useRequest from '../../hooks/useRequest';
 
-import InputList from "./InputList";
-import ModalBackground from "../UI/ModalBackground";
-import BreakLine from "../UI/BreakLine";
+import InputList from './InputList';
+import ModalBackground from '../UI/ModalBackground';
+import BreakLine from '../UI/BreakLine';
 
-import logoImage from "../../assets/imgs/Vring-logo.png";
-
-import { DELETE_USER, LOGIN_USER } from "../../api/Request";
+import { DELETE_USER, LOGIN_USER } from '../../api/Request';
 
 const inputData = [
   {
-    type: "email",
-    name: "email",
-    description: "이메일",
+    type: 'email',
+    name: 'email',
+    description: '이메일',
   },
   {
-    type: "password",
-    name: "password",
-    description: "비밀번호",
+    type: 'password',
+    name: 'password',
+    description: '비밀번호',
   },
 ];
 
 const initialState = {
-  email: "",
-  password: "",
+  email: '',
+  password: '',
 };
 
 export default function DeleteForm() {
@@ -55,7 +53,7 @@ export default function DeleteForm() {
 
       await deleteUserHandler();
 
-      navigate("/");
+      navigate('/');
 
       sessionStorage.clear();
       userContext.setUser(null);
@@ -75,7 +73,7 @@ export default function DeleteForm() {
         {error && <ErrorMsg>{error}</ErrorMsg>}
         <Button disabled={!(form.email && form.password)}>삭제</Button>
         <BreakLine />
-        <Logo src={logoImage} />
+        <Logo src={'assets/images/Vring-logo.png'} />
       </Form>
     </>
   );
@@ -112,7 +110,7 @@ const Button = styled.button`
   margin-top: 2rem;
   width: 50%;
   height: 3rem;
-  background-color: ${({ disabled }) => (disabled ? "lightgray" : "#77bb3f")};
+  background-color: ${({ disabled }) => (disabled ? 'lightgray' : '#77bb3f')};
   color: white;
   border: none;
   border-radius: 20px;

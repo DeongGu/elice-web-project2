@@ -15,9 +15,6 @@ import { Validate } from './Validate';
 import BreakLine from '../UI/BreakLine';
 import Gender from '../UI/Gender';
 
-import EditIconImage from '../../assets/imgs/EditIcon.png';
-import LockIconImage from '../../assets/imgs/LockIcon.png';
-
 import { CHECK_DIBS, EDIT_USER } from '../../api/Request';
 import useFetch from '../../hooks/useFetch';
 
@@ -130,9 +127,6 @@ export default function UserForm() {
   );
 }
 
-const Security = styled.div``;
-const Dibs = styled.div``;
-
 const UserFormStyle = styled.form`
   display: flex;
   flex-direction: column;
@@ -201,3 +195,6 @@ const ProductImage = styled.img`
   height: 5rem;
   cursor: pointer;
 `;
+
+const Security = styled.div``;
+const Dibs = styled.div``;

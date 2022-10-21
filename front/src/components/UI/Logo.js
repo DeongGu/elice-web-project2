@@ -1,9 +1,7 @@
 import styled from 'styled-components';
 
-import logo from '../../assets/imgs/Vring-logo.png';
-
 export default function Logo() {
-  return <LogoStyle className='logo' src={logo} />;
+  return <LogoStyle className='logo' src={'assets/images/Vring-logo.png'} />;
 }
 
 const LogoStyle = styled.img`
