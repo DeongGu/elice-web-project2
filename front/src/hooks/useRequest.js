@@ -30,7 +30,7 @@ export default function useRequest(request, params = '', form = {}) {
         sessionStorage.setItem('accessToken', accessToken);
 
         const userData = await Api[CHECK_USER[0]](CHECK_USER[1]);
-        userContext.setUser({ ...userData });
+        userContext.setUser(userData);
       }
 
       generalContext.disableFormHandler();
