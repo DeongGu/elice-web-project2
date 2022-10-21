@@ -90,7 +90,7 @@ const ItemForm = () => {
           },
         })
         .then((res) => {
-          console.log("response:", res.data);
+          console.log("response:", res);
           alert("상품 생성 성공");
           navigate("/");
         });
