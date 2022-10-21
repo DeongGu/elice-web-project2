@@ -1,6 +1,6 @@
-import ModalBackground from "../UI/ModalBackground";
+import ModalBackground from '../UI/ModalBackground';
 
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export default function AboutForm() {
   return (
@@ -9,8 +9,8 @@ export default function AboutForm() {
 
       <Form>
         <Reason>
-          <text className="title">
-            <strong>Do Vring</strong>
+          <text className='title'>
+            <Strong>Do Vring</Strong>
           </text>
           <br />
           <br />
@@ -89,4 +89,9 @@ const Reason = styled.div`
   .title {
     font-size: 3rem;
   }
+`;
+
+const Strong = styled.span`
+  font-family: elice-bold;
+  color: #77bb3f;
 `;

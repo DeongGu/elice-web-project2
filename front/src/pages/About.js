@@ -510,7 +510,7 @@ const Reason = styled.div`
 
 const Graph = styled.div`
   position: sticky;
-  top: 49.2vh;
+  top: 20vh;
 
   ${({ firstFocusOn }) =>
     firstFocusOn &&
