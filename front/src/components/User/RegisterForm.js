@@ -52,7 +52,11 @@ export default function RegisterForm() {
   const generalContext = useContext(GeneralContext);
   const { form, setForm, formIsValid, setFormIsValid } = useForm(initialState);
   const { validateHandler } = useValidation(setForm, setFormIsValid);
-  const { requestHandler, error } = useRequest(REGISTER_USER, "", form);
+  const { requestHandler, error } = useRequest(REGISTER_USER, "", {
+    email: form.email,
+    password: form.password,
+    nickname: form.nickname,
+  });
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();

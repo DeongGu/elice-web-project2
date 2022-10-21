@@ -18,19 +18,22 @@ export default function useRequest(request, params = "", form = {}) {
       setIsLoading(true);
 
       const {
-        data,
-        data: { Authentication: accessToken },
+        data: { data },
       } = await Api[request[0]](
         request[1],
         params || form,
         params && form && form
       );
 
+      const accessToken = data.Authentication;
+
       if (accessToken) {
         sessionStorage.setItem("accessToken", accessToken);
 
-        const { data: userData } = await Api[CHECK_USER[0]](CHECK_USER[1]);
-        userContext.setUser({ ...userData });
+        const {
+          data: { data: userData },
+        } = await Api[CHECK_USER[0]](CHECK_USER[1]);
+        userContext.setUser(userData);
       }
 
       generalContext.disableFormHandler();

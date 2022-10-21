@@ -233,7 +233,7 @@ const StyledForm = styled.form`
   border: 1rem solid gray;
   outline: 1rem solid lightgray;
   border-radius: 20px;
-  width: 600px;
+  width: 500px;
   height: 1000px;
   box-sizing: border-box;
 `;

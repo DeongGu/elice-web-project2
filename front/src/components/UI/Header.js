@@ -1,17 +1,16 @@
-import { useContext } from 'react';
+import { useContext } from "react";
 
-import { UserContext } from '../../App';
-import GeneralContext from '../../context/GeneralContext';
+import { UserContext } from "../../App";
+import GeneralContext from "../../context/GeneralContext";
 
-import NavBar from './NavBar';
-import Logo from './Logo';
-import LoginForm from '../User/LoginForm';
-import RegisterForm from '../User/RegisterForm';
-import DeleteForm from '../User/DeleteForm';
-import EditForm from '../User/EditForm';
-import UserForm from '../User/UserForm';
+import NavBar from "./NavBar";
+import Logo from "./Logo";
+import LoginForm from "../User/LoginForm";
+import RegisterForm from "../User/RegisterForm";
+import DeleteForm from "../User/DeleteForm";
+import EditForm from "../User/EditForm";
 
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export default function Header() {
   const userContext = useContext(UserContext);
@@ -26,8 +25,6 @@ export default function Header() {
       return <EditForm />;
     } else if (generalContext.showDeleteForm) {
       return <DeleteForm />;
-    } else if (generalContext.showUserForm) {
-      return <UserForm />;
     }
   };
 
