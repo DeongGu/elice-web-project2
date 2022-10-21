@@ -1,14 +1,16 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
 const GeneralContext = createContext({
   showRegisterForm: false,
   showLoginForm: false,
   showEditForm: false,
   showDeleteForm: false,
+  showAboutForm: false,
   registerFormHandler: () => {},
   loginFormHandler: () => {},
   editFormHandler: () => {},
   deleteFormHandler: () => {},
+  aboutFormHandler: () => {},
   disableFormHandler: () => {},
 });
 
@@ -17,6 +19,7 @@ export const GeneralContextProvider = ({ children }) => {
   const [showLoginForm, setShowLoginForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
   const [showDeleteForm, setShowDeleteForm] = useState(false);
+  const [showAboutForm, setShowAboutForm] = useState(false);
 
   const registerFormHandler = () => {
     setShowRegisterForm((prevState) => !prevState);
@@ -34,11 +37,18 @@ export const GeneralContextProvider = ({ children }) => {
     setShowDeleteForm((prevState) => !prevState);
   };
 
+  const aboutFormHandler = (currentSection) => {
+    if (window.pageYOffset > 500) {
+      setShowAboutForm((prevState) => !prevState);
+    }
+  };
+
   const disableFormHandler = () => {
     setShowLoginForm(false);
     setShowRegisterForm(false);
     setShowEditForm(false);
     setShowDeleteForm(false);
+    setShowAboutForm(false);
   };
 
   const contextValues = {
@@ -46,10 +56,12 @@ export const GeneralContextProvider = ({ children }) => {
     showRegisterForm,
     showEditForm,
     showDeleteForm,
+    showAboutForm,
     registerFormHandler,
     loginFormHandler,
     editFormHandler,
     deleteFormHandler,
+    aboutFormHandler,
     disableFormHandler,
   };
 
