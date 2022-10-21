@@ -15,7 +15,7 @@ const Item = ({ item }) => {
       {item.itemImage ? (
         <StyledImg src={item.itemImage[0]} alt="상품" />
       ) : (
-        <StyledImg src={"assets/images/default.jpg"} alt="상품" />
+        <StyledImg src={"assets/images/default.png"} alt="상품" />
       )}
       <p>
         <b>상품명</b> : <span>{item.itemName}</span>

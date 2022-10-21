@@ -10,7 +10,7 @@ const ItemInfo = () => {
   const { itemId } = useParams();
 
   const [item, setItem] = useState({
-    itemImage: "/assets/images/default.jpg",
+    itemImage: "/assets/images/default.png",
     itemName: "",
     itemType: "",
     itemDesc: "",
@@ -223,7 +223,7 @@ const ItemInfo = () => {
             <StyledImage src={itemImage} alt="미리보기 이미지" />
           ) : (
             <StyledImage
-              src={"/assets/images/default.jpg"}
+              src={"/assets/images/default.png"}
               alt="미리보기 이미지"
             />
           )}

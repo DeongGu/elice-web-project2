@@ -132,8 +132,8 @@ const Main = (props) => {
           <IndexBlock>
             <StyledLabel>
               <input
-                type="checkbox"
-                name="상의"
+                type="radio"
+                name="itemCategory"
                 value="상의"
                 checked={category.includes("상의")}
                 onChange={handleCategory}
@@ -142,8 +142,8 @@ const Main = (props) => {
             </StyledLabel>
             <StyledLabel>
               <input
-                type="checkbox"
-                name="하의"
+                type="radio"
+                name="itemCategory"
                 value="하의"
                 checked={category.includes("하의")}
                 onChange={handleCategory}
@@ -152,8 +152,8 @@ const Main = (props) => {
             </StyledLabel>
             <StyledLabel>
               <input
-                type="checkbox"
-                name="아우터"
+                type="radio"
+                name="itemCategory"
                 value="아우터"
                 checked={category.includes("아우터")}
                 onChange={handleCategory}
@@ -162,8 +162,8 @@ const Main = (props) => {
             </StyledLabel>
             <StyledLabel>
               <input
-                type="checkbox"
-                name="모자"
+                type="radio"
+                name="itemCategory"
                 value="모자"
                 checked={category.includes("모자")}
                 onChange={handleCategory}
@@ -172,8 +172,8 @@ const Main = (props) => {
             </StyledLabel>
             <StyledLabel>
               <input
-                type="checkbox"
-                name="기타"
+                type="radio"
+                name="itemCategory"
                 value="기타"
                 checked={category.includes("기타")}
                 onChange={handleCategory}

@@ -17,7 +17,7 @@ const ItemForm = () => {
   }, []);
 
   const initialValues = {
-    itemImage: "/assets/images/default.jpg",
+    itemImage: "/assets/images/default.png",
     itemName: "",
     itemCategory: "기타",
     itemType: "",
