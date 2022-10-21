@@ -1,24 +1,24 @@
-import { useEffect, useState } from "react";
-import styled from "styled-components";
-import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import { useNavigate, useParams } from 'react-router-dom';
+import axios from 'axios';
 
 const ItemInfo = () => {
   const portNum = 5000;
-  const url = "http://" + window.location.hostname + ":" + portNum + "/";
+  const url = 'http://' + window.location.hostname + ':' + portNum + '/';
   const navigate = useNavigate();
   const { itemId } = useParams();
 
   const [item, setItem] = useState({
-    itemImage: "/assets/images/default.png",
-    itemName: "",
-    itemType: "",
-    itemDesc: "",
-    userId: "",
+    itemImage: '/assets/images/default.png',
+    itemName: '',
+    itemType: '',
+    itemDesc: '',
+    userId: '',
     editable: false,
-    status: "inStock",
-    openChat: "",
-    itemCategory: "기타",
+    status: 'inStock',
+    openChat: '',
+    itemCategory: '기타',
   });
 
   const [isEdit, setIsEdit] = useState(false);
@@ -26,7 +26,7 @@ const ItemInfo = () => {
   const [checkedDibs, setCheckedDibs] = useState(false);
 
   useEffect(() => {
-    if (!sessionStorage.getItem("accessToken")) {
+    if (!sessionStorage.getItem('accessToken')) {
       const fetchData = async () => {
         try {
           const response = await axios.get(`${url}items/${itemId}`);
@@ -42,7 +42,7 @@ const ItemInfo = () => {
         try {
           const response = await axios.get(`${url}items/${itemId}`, {
             headers: {
-              Authentication: `${sessionStorage.getItem("accessToken")}`,
+              Authentication: `${sessionStorage.getItem('accessToken')}`,
             },
           });
           setItem(response.data);
@@ -105,26 +105,26 @@ const ItemInfo = () => {
     const formData = new FormData();
 
     for (let i = 0; i < files.length; i++) {
-      formData.append("file", files[i]);
+      formData.append('file', files[i]);
     }
 
-    formData.append("itemName", itemName);
-    formData.append("itemDesc", itemDesc);
-    formData.append("itemType", itemType);
-    formData.append("status", status);
-    formData.append("openChat", openChat);
-    formData.append("itemCategory", itemCategory);
+    formData.append('itemName', itemName);
+    formData.append('itemDesc', itemDesc);
+    formData.append('itemType', itemType);
+    formData.append('status', status);
+    formData.append('openChat', openChat);
+    formData.append('itemCategory', itemCategory);
 
     try {
       await axios
         .put(`${url}items/${itemId}`, formData, {
           headers: {
-            Authentication: `${sessionStorage.getItem("accessToken")}`,
+            Authentication: `${sessionStorage.getItem('accessToken')}`,
           },
         })
         .then((res) => {
-          console.log("response:", res.data);
-          alert("수정되었습니다.");
+          console.log('response:', res.data);
+          alert('수정되었습니다.');
           setIsEdit(false);
           navigate(`/items/${itemId}`);
         });
@@ -138,13 +138,13 @@ const ItemInfo = () => {
       await axios
         .delete(`${url}items/${itemId}`, {
           headers: {
-            Authentication: `${sessionStorage.getItem("accessToken")}`,
+            Authentication: `${sessionStorage.getItem('accessToken')}`,
           },
         })
         .then((res) => {
-          console.log("삭제되었습니다.");
-          alert("삭제되었습니다.");
-          navigate("/");
+          console.log('삭제되었습니다.');
+          alert('삭제되었습니다.');
+          navigate('/');
         });
     } catch (err) {
       console.log(err);
@@ -171,13 +171,13 @@ const ItemInfo = () => {
 
   const handleDibs = async () => {
     try {
-      if (!sessionStorage.getItem("accessToken")) {
-        alert("로그인을 하세요");
-      } else if (item["dibs.dibsId"]) {
+      if (!sessionStorage.getItem('accessToken')) {
+        alert('로그인을 하세요');
+      } else if (item['dibs.dibsId']) {
         await axios
-          .delete(`${url}dibs/${item["dibs.dibsId"]}`, {
+          .delete(`${url}dibs/${item['dibs.dibsId']}`, {
             headers: {
-              Authentication: `${sessionStorage.getItem("accessToken")}`,
+              Authentication: `${sessionStorage.getItem('accessToken')}`,
             },
           })
           .then((res) => {
@@ -186,11 +186,15 @@ const ItemInfo = () => {
           });
       } else {
         await axios
-          .post(`${url}dibs/${itemId}`, {
-            headers: {
-              Authentication: `${sessionStorage.getItem("accessToken")}`,
-            },
-          })
+          .post(
+            `${url}dibs/${itemId}`,
+            {},
+            {
+              headers: {
+                Authentication: `${sessionStorage.getItem('accessToken')}`,
+              },
+            }
+          )
           .then((res) => {
             console.log(res);
             setCheckedDibs((preState) => !preState);
@@ -203,37 +207,37 @@ const ItemInfo = () => {
 
   return (
     <StyledForm onSubmit={handleSubmit}>
-      <StyledLabel htmlFor="itemImage">상품 이미지</StyledLabel>
+      <StyledLabel htmlFor='itemImage'>상품 이미지</StyledLabel>
       {isEdit ? (
         <StyledInput
-          type="file"
-          name="itemImage"
+          type='file'
+          name='itemImage'
           onChange={(e) => {
             encodeFile(e.target.files[0]);
           }}
-          accept="image/*"
+          accept='image/*'
           multiple
         />
       ) : null}
       <StyledPreview>
         <SlideBlock>
           {Array.isArray(itemImage) ? (
-            <StyledImage src={itemImage[slide]} alt="미리보기 이미지" />
+            <StyledImage src={itemImage[slide]} alt='미리보기 이미지' />
           ) : itemImage ? (
-            <StyledImage src={itemImage} alt="미리보기 이미지" />
+            <StyledImage src={itemImage} alt='미리보기 이미지' />
           ) : (
             <StyledImage
-              src={"/assets/images/default.png"}
-              alt="미리보기 이미지"
+              src={'/assets/images/default.png'}
+              alt='미리보기 이미지'
             />
           )}
         </SlideBlock>
         <SlideButtonBlock>
-          <SlideButton onClick={preSlide} type="button">
-            {"<"}
+          <SlideButton onClick={preSlide} type='button'>
+            {'<'}
           </SlideButton>
-          <SlideButton onClick={nextSlide} type="button">
-            {">"}
+          <SlideButton onClick={nextSlide} type='button'>
+            {'>'}
           </SlideButton>
         </SlideButtonBlock>
       </StyledPreview>
@@ -243,56 +247,56 @@ const ItemInfo = () => {
           <>
             <label>
               <StyledRadio
-                type="radio"
+                type='radio'
                 onChange={handleChange}
-                name="status"
-                id="inStock"
-                value="inStock"
-                checked={status === "inStock"}
+                name='status'
+                id='inStock'
+                value='inStock'
+                checked={status === 'inStock'}
               ></StyledRadio>
               거래가능
             </label>
             <label>
               <StyledRadio
-                type="radio"
+                type='radio'
                 onChange={handleChange}
-                name="status"
-                id="onTrading"
-                value="onTrading"
-                checked={status === "onTrading"}
+                name='status'
+                id='onTrading'
+                value='onTrading'
+                checked={status === 'onTrading'}
               ></StyledRadio>
               거래중
             </label>
             <label>
               <StyledRadio
-                type="radio"
+                type='radio'
                 onChange={handleChange}
-                name="status"
-                id="outOfStock"
-                value="outOfStock"
-                checked={status === "outOfStock"}
+                name='status'
+                id='outOfStock'
+                value='outOfStock'
+                checked={status === 'outOfStock'}
               ></StyledRadio>
               거래완료
             </label>
           </>
         ) : (
           <>
-            {status === "inStock" ? (
-              <StyledStatus style={{ backgroundColor: "rgba(0, 0, 0, 0.1)" }}>
+            {status === 'inStock' ? (
+              <StyledStatus style={{ backgroundColor: 'rgba(0, 0, 0, 0.1)' }}>
                 거래가능
               </StyledStatus>
             ) : (
               <StyledStatus>거래가능</StyledStatus>
             )}
-            {status === "onTrading" ? (
-              <StyledStatus style={{ backgroundColor: "rgba(0, 0, 0, 0.1)" }}>
+            {status === 'onTrading' ? (
+              <StyledStatus style={{ backgroundColor: 'rgba(0, 0, 0, 0.1)' }}>
                 거래중
               </StyledStatus>
             ) : (
               <StyledStatus>거래중</StyledStatus>
             )}
-            {status === "outOfStock" ? (
-              <StyledStatus style={{ backgroundColor: "rgba(0, 0, 0, 0.1)" }}>
+            {status === 'outOfStock' ? (
+              <StyledStatus style={{ backgroundColor: 'rgba(0, 0, 0, 0.1)' }}>
                 거래완료
               </StyledStatus>
             ) : (
@@ -302,13 +306,13 @@ const ItemInfo = () => {
         )}
       </StyledStatusBlock>
 
-      <StyledLabel htmlFor="itemName">상품명</StyledLabel>
+      <StyledLabel htmlFor='itemName'>상품명</StyledLabel>
       {isEdit ? (
         <StyledInput
           onChange={handleChange}
-          name="itemName"
-          id="itemName"
-          type="text"
+          name='itemName'
+          id='itemName'
+          type='text'
           value={itemName}
         />
       ) : (
@@ -320,102 +324,102 @@ const ItemInfo = () => {
           <StyledLabel>
             <input
               onChange={handleChange}
-              type="radio"
-              value="상의"
-              name="itemCategory"
-              checked={itemCategory === "상의"}
+              type='radio'
+              value='상의'
+              name='itemCategory'
+              checked={itemCategory === '상의'}
             />
             상의
           </StyledLabel>
           <StyledLabel>
             <input
               onChange={handleChange}
-              type="radio"
-              value="하의"
-              name="itemCategory"
-              checked={itemCategory === "하의"}
+              type='radio'
+              value='하의'
+              name='itemCategory'
+              checked={itemCategory === '하의'}
             />
             하의
           </StyledLabel>
           <StyledLabel>
             <input
               onChange={handleChange}
-              type="radio"
-              value="아우터"
-              name="itemCategory"
-              checked={itemCategory === "아우터"}
+              type='radio'
+              value='아우터'
+              name='itemCategory'
+              checked={itemCategory === '아우터'}
             />
             아우터
           </StyledLabel>
           <StyledLabel>
             <input
               onChange={handleChange}
-              type="radio"
-              value="모자"
-              name="itemCategory"
-              checked={itemCategory === "모자"}
+              type='radio'
+              value='모자'
+              name='itemCategory'
+              checked={itemCategory === '모자'}
             />
             모자
           </StyledLabel>
           <StyledLabel>
             <input
               onChange={handleChange}
-              type="radio"
-              value="기타"
-              name="itemCategory"
-              checked={itemCategory === "기타"}
+              type='radio'
+              value='기타'
+              name='itemCategory'
+              checked={itemCategory === '기타'}
             />
             기타
           </StyledLabel>
         </Styledfieldset>
       ) : itemCategory ? (
         <StyledLabel>
-          {"상품카테고리"}
+          {'상품카테고리'}
           <StyledP>{itemCategory}</StyledP>
         </StyledLabel>
       ) : (
         <StyledLabel>
-          {"상품카테고리"}
-          <StyledP>{"기타"}</StyledP>
+          {'상품카테고리'}
+          <StyledP>{'기타'}</StyledP>
         </StyledLabel>
       )}
 
-      <StyledLabel htmlFor="itemType">상품타입</StyledLabel>
+      <StyledLabel htmlFor='itemType'>상품타입</StyledLabel>
       {isEdit ? (
         <StyledInput
           onChange={handleChange}
-          name="itemType"
-          id="itemType"
-          type="text"
+          name='itemType'
+          id='itemType'
+          type='text'
           value={itemType}
         />
       ) : (
         <StyledP>{itemType}</StyledP>
       )}
-      <StyledLabel htmlFor="itemDesc">한 마디</StyledLabel>
+      <StyledLabel htmlFor='itemDesc'>한 마디</StyledLabel>
       {isEdit ? (
         <StyledInput
-          type="text"
+          type='text'
           onChange={handleChange}
-          name="itemDesc"
-          id="itemDesc"
+          name='itemDesc'
+          id='itemDesc'
           value={itemDesc}
         />
       ) : (
         <StyledP>{itemDesc}</StyledP>
       )}
-      <StyledLabel htmlFor="openChat">오픈카톡방 주소</StyledLabel>
+      <StyledLabel htmlFor='openChat'>오픈카톡방 주소</StyledLabel>
       {isEdit ? (
         <StyledInput
-          type="text"
+          type='text'
           onChange={handleChange}
-          name="openChat"
-          id="openChat"
+          name='openChat'
+          id='openChat'
           value={openChat}
         />
       ) : (
         <StyledP>
-          <a href={openChat} target="_blank" rel="noreferrer">
+          <a href={openChat} target='_blank' rel='noreferrer'>
             {openChat}
           </a>
         </StyledP>
@@ -424,29 +428,29 @@ const ItemInfo = () => {
         {isEdit ? (
           <>
             <StyledBtn disabled={!validate}>완료</StyledBtn>
-            <StyledBtn type="button" onClick={handleDelete}>
+            <StyledBtn type='button' onClick={handleDelete}>
               삭제
             </StyledBtn>
           </>
         ) : (
           <>
-            <StyledBtn type="button" onClick={handleDibs}>
+            <StyledBtn type='button' onClick={handleDibs}>
               찜하기
             </StyledBtn>
-            {checkedDibs ? "❤️❤️" : null}
+            {checkedDibs ? '❤️❤️' : null}
           </>
         )}
 
         {editable ? (
           <>
             <StyledBtn
-              type="button"
+              type='button'
               onClick={() => {
                 setIsEdit((preState) => !preState);
                 setItem(tempValue);
               }}
             >
-              {isEdit ? "취소" : "편집"}
+              {isEdit ? '취소' : '편집'}
             </StyledBtn>
           </>
         ) : null}
