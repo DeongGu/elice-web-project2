@@ -373,5 +373,5 @@ const ProductImage = styled.img`
 `;
 
 const ProductName = styled.div`
-  font-size: 1rem;
+  font-size: 0.9rem;
 `;

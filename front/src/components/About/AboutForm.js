@@ -1,6 +1,6 @@
 import ModalBackground from '../UI/ModalBackground';
 
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 export default function AboutForm() {
   return (
@@ -44,6 +44,17 @@ export default function AboutForm() {
   );
 }
 
+const FadeInUp = keyframes`
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 100%, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translateZ(1);
+  }
+`;
+
 const Form = styled.form`
   display: flex;
   flex-direction: column;
@@ -60,6 +71,7 @@ const Form = styled.form`
   background-color: white;
   border: lightgray 1px solid;
   border-radius: 20px;
+  animation: ${FadeInUp} 1s;
 `;
 
 const Reason = styled.div`
