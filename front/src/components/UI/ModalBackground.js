@@ -6,7 +6,14 @@ import GeneralContext from '../../context/GeneralContext';
 export default function ModalBackground() {
   const generalContext = useContext(GeneralContext);
 
-  return <ModalStyle onClick={generalContext.disableFormHandler}></ModalStyle>;
+  return (
+    <ModalStyle
+      onClick={() => {
+        generalContext.disableFormHandler();
+        generalContext.disableUserFormHandler();
+      }}
+    ></ModalStyle>
+  );
 }
 
 const ModalStyle = styled.div`

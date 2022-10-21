@@ -1,6 +1,9 @@
+import FemaleImage from '../../assets/images/user-icons/undraw_female_avatar.svg';
+import MaleImage from '../../assets/images/user-icons/undraw_male_avatar.svg';
+
 const gender = {
-  female: 'assets/images/user-icons/undraw_female_avatar.svg',
-  male: 'assets/images/user-icons/undraw_male_avatar.svg',
+  female: FemaleImage,
+  male: MaleImage,
 };
 
 export default gender;

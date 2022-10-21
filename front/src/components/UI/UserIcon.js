@@ -1,14 +1,16 @@
 import { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import styled from 'styled-components';
 import { UserContext } from '../../App';
-import GeneralContext from '../../context/GeneralContext';
 
 import Gender from './Gender';
 
 export default function UserIcon() {
+  const navigate = useNavigate();
+
   const userContext = useContext(UserContext);
-  const generalContext = useContext(GeneralContext);
+
   const [userInfo, setUserInfo] = useState(false);
 
   return (
@@ -28,7 +30,7 @@ export default function UserIcon() {
               <UserDescription>
                 <UserName>{userContext.user.nickname}</UserName>
                 <UserEmail>{userContext.user.email}</UserEmail>
-                <GoToUserInfo onClick={generalContext.userFormHandler}>
+                <GoToUserInfo onClick={() => navigate('/users/profile')}>
                   계정 정보
                 </GoToUserInfo>
               </UserDescription>

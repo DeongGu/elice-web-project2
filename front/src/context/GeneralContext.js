@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useState } from 'react';
 
 const GeneralContext = createContext({
   showRegisterForm: false,
@@ -13,6 +13,7 @@ const GeneralContext = createContext({
   deleteFormHandler: () => {},
   disableFormHandler: () => {},
   userFormHandler: () => {},
+  disableUserFormHandler: () => {},
 });
 
 export const GeneralContextProvider = ({ children }) => {
@@ -49,6 +50,9 @@ export const GeneralContextProvider = ({ children }) => {
     setShowEditForm(false);
     setShowDeleteForm(false);
     setShowAboutForm(false);
+  };
+
+  const disableUserFormHandler = () => {
     setShowUserForm(false);
   };
 
@@ -65,6 +69,7 @@ export const GeneralContextProvider = ({ children }) => {
     deleteFormHandler,
     disableFormHandler,
     userFormHandler,
+    disableUserFormHandler,
   };
 
   return (

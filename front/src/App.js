@@ -16,6 +16,7 @@ import ItemCreate from './pages/ItemCreate';
 import ItemPage from './pages/ItemPage';
 import NotFound from './pages/NotFound';
 import Footer from './components/UI/Footer';
+import User from './pages/User';
 
 export const UserContext = createContext(null);
 
@@ -35,6 +36,7 @@ function App() {
           <Routes>
             <Route path='/' element={<Main />} exact></Route>
             <Route path='/about' element={<About />} />
+            <Route path='/users/profile' element={<User />} />
             <Route path='/items/:itemId' element={<ItemPage />}></Route>
             <Route path='/items' element={<ItemCreate />}></Route>
             <Route path='*' element={<NotFound />}></Route>
