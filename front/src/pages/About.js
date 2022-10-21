@@ -67,7 +67,13 @@ export default function About() {
 
   const { count, setCount, startInterval, leftBtnHandler, rightBtnHandler } =
     useSlide(5000, 1, teamMembers.length);
-  const { currentSection, scrollEventHandler } = useDivideSection(2);
+  const {
+    currentSection,
+    scrollEventHandler,
+    sections,
+    innerHeight,
+    subSection,
+  } = useDivideSection(2);
 
   useEffect(() => {
     startInterval();
@@ -91,12 +97,45 @@ export default function About() {
       {currentSection === 5 && generalContext.showAboutForm && <AboutForm />}
       <Container>
         <SubNav focusOn={currentSection !== 1}>
-          <NavBtn active={currentSection === 1}>시작</NavBtn>
-          <NavBtn active={currentSection < 5 && currentSection > 1}>
+          <NavBtn
+            onClick={() => window.scrollTo(0, 0)}
+            active={currentSection === 1}
+          >
+            시작
+          </NavBtn>
+          <NavBtn
+            onClick={() =>
+              window.scrollTo(
+                0,
+                sections.firstSection - innerHeight / subSection
+              )
+            }
+            active={currentSection < 5 && currentSection > 1}
+          >
             이유
           </NavBtn>
-          <NavBtn active={currentSection === 5}>소개</NavBtn>
-          <NavBtn active={currentSection === 6}>팀원</NavBtn>
+          <NavBtn
+            onClick={() =>
+              window.scrollTo(
+                0,
+                sections.fourthSection - innerHeight / subSection
+              )
+            }
+            active={currentSection === 5}
+          >
+            소개
+          </NavBtn>
+          <NavBtn
+            onClick={() =>
+              window.scrollTo(
+                0,
+                sections.fifthSection - innerHeight / subSection
+              )
+            }
+            active={currentSection === 6}
+          >
+            팀원
+          </NavBtn>
         </SubNav>
         <TitleSection focusOut={currentSection !== 1}>
           <TitleBackground>
@@ -322,6 +361,7 @@ const Container = styled.div`
 `;
 
 const SubNav = styled.ul`
+  z-index: 9;
   &:first-child {
     margin-left: 3rem;
   }
@@ -342,6 +382,7 @@ const SubNav = styled.ul`
 `;
 
 const NavBtn = styled.li`
+  z-index: 9;
   cursor: pointer;
   margin-right: 1rem;
   border-radius: 20px;
