@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 
 import * as Api from '../api/api';
-import { CHECK_USER } from '../api/Request';
+import { CHECK_USER } from '../api/endpoints';
 
 import { UserContext } from '../App';
 import GeneralContext from '../context/GeneralContext';

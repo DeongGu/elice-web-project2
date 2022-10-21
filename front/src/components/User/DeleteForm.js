@@ -10,7 +10,7 @@ import InputList from './InputList';
 import ModalBackground from '../UI/ModalBackground';
 import BreakLine from '../UI/BreakLine';
 
-import { DELETE_USER, LOGIN_USER } from '../../api/Request';
+import { DELETE_USER, LOGIN_USER } from '../../api/endpoints';
 
 const inputData = [
   {

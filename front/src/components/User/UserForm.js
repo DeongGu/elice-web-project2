@@ -15,7 +15,7 @@ import { Validate } from './Validate';
 import BreakLine from '../UI/BreakLine';
 import Gender from '../UI/Gender';
 
-import { CHECK_DIBS, EDIT_USER } from '../../api/Request';
+import { CHECK_DIBS, EDIT_USER } from '../../api/endpoints';
 import useFetch from '../../hooks/useFetch';
 
 export default function UserForm() {

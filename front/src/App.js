@@ -7,7 +7,7 @@ import useFetch from './hooks/useFetch';
 import Header from './components/UI/Header';
 import { GeneralContextProvider } from './context/GeneralContext';
 
-import { CHECK_USER } from './api/Request';
+import { CHECK_USER } from './api/endpoints';
 
 import About from './pages/About';
 import Main from './pages/Main';

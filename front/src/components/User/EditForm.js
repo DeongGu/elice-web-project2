@@ -7,7 +7,7 @@ import useForm from '../../hooks/useForm';
 import useRequest from '../../hooks/useRequest';
 import useValidation from '../../hooks/useValidation';
 
-import { EDIT_USER, LOGIN_USER } from '../../api/Request';
+import { EDIT_USER, LOGIN_USER } from '../../api/endpoints';
 import ModalBackground from '../UI/ModalBackground';
 import BreakLine from '../UI/BreakLine';
 import { UserContext } from '../../App';

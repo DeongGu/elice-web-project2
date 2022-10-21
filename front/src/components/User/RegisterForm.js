@@ -11,7 +11,7 @@ import ValidateInputList from './ValidateInputList';
 import ModalBackground from '../UI/ModalBackground';
 import BreakLine from '../UI/BreakLine';
 
-import { REGISTER_USER } from '../../api/Request';
+import { REGISTER_USER } from '../../api/endpoints';
 
 const inputData = [
   {
