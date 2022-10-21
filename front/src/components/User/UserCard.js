@@ -1,21 +1,21 @@
-import { useState, useContext, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
+import { useState, useContext, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 
-import { UserContext } from "../../App";
-import GeneralContext from "../../context/GeneralContext";
+import { UserContext } from '../../App';
+import GeneralContext from '../../context/GeneralContext';
 
-import useRequest from "../../hooks/useRequest";
+import useRequest from '../../hooks/useRequest';
 
-import { Validate } from "./Validate";
+import { Validate } from './Validate';
 
-import BreakLine from "../UI/BreakLine";
-import Gender from "../UI/Gender";
+import BreakLine from '../UI/BreakLine';
+import Gender from '../UI/Gender';
 
-import EditIconImage from "../../assets/imgs/EditIcon.png";
-import LockIconImage from "../../assets/imgs/LockIcon.png";
+import EditIconImage from '../../assets/imgs/EditIcon.png';
+import LockIconImage from '../../assets/imgs/LockIcon.png';
 
-import { EDIT_USER } from "../../api/Request";
+import { EDIT_USER } from '../../api/Request';
 
 export default function UserCard() {
   const userContext = useContext(UserContext);
@@ -23,49 +23,63 @@ export default function UserCard() {
 
   const navigate = useNavigate();
 
-  const initialState = userContext.user?.nickname;
+  const initialState = {
+    nickname: userContext.user.nickname,
+    userDesc: userContext.user.userDesc || null,
+  };
 
-  const [nickname, setNickname] = useState(initialState);
+  const [form, setForm] = useState(initialState);
   const [formData, setFormData] = useState(null);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [tempEditValue, setTempEditValue] = useState(initialState);
   const [editMode, setEditMode] = useState(false);
 
   const { requestHandler: formDataHandler } = useRequest(EDIT_USER, formData);
-  const { requestHandler: nicknameHandler } = useRequest(EDIT_USER, {
-    nickname,
-  });
+  const { requestHandler: formHandler } = useRequest(EDIT_USER, form);
 
   const submitHandler = async (e) => {
     e.preventDefault();
 
-    if (!Validate["nickname"].test(nickname)) {
-      setError("4 ~ 16자, 영문, 한글 혹은 숫자여야 합니다.");
+    if (!Validate['nickname'].test(form.nickname)) {
+      setError('4 ~ 16자, 영문, 한글 혹은 숫자여야 합니다.');
       return;
     }
 
+    if (form.userDesc) {
+      if (form.userDesc.length > 200) {
+        setError('한 줄 소개는 200자 이하여야 합니다.');
+        return;
+      }
+    }
+
     const formData = new FormData();
-    formData.append("file", e.target.fileInput.files[0]);
-    formData.append("nickname", nickname);
+    formData.append('file', e.target.fileInput.files[0]);
 
     setFormData(formData);
     setEditMode(false);
-    setTempEditValue(nickname);
-    setError("");
+    setTempEditValue(form);
+    setError('');
 
     await formDataHandler();
-    await nicknameHandler();
+    await formHandler();
   };
 
   const toggleHandler = () => {
-    setError("");
+    setError('');
     setEditMode((prevState) => !prevState);
-    setNickname(tempEditValue);
+    setForm(tempEditValue);
+  };
+
+  const onChangeHandler = (event) => {
+    setForm((prevState) => ({
+      ...prevState,
+      [event.target.name]: event.target.value,
+    }));
   };
 
   useEffect(() => {
     if (!userContext.user) {
-      navigate("/");
+      navigate('/');
     }
   }, [userContext.user]);
 
@@ -78,10 +92,10 @@ export default function UserCard() {
               {!editMode && (
                 <>
                   <ProfileImage
-                    src={userContext.user.profileImage || Gender["male"]}
+                    src={userContext.user.profileImage || Gender['male']}
                   />
                   <EditButton
-                    type="button"
+                    type='button'
                     src={EditIconImage}
                     onClick={toggleHandler}
                   />
@@ -89,30 +103,40 @@ export default function UserCard() {
               )}
               {editMode && (
                 <>
-                  <ProfileImageLabel htmlFor="fileInput">
+                  <ProfileImageLabel htmlFor='fileInput'>
                     <ProfileLabelText>이미지 변경</ProfileLabelText>
                   </ProfileImageLabel>
                   <ProfileImageInput
-                    id="fileInput"
-                    type="file"
-                    name="fileInput"
+                    id='fileInput'
+                    type='file'
+                    name='fileInput'
                   />
                 </>
               )}
             </div>
             {error && <ErrorMsg>{error}</ErrorMsg>}
-            {!editMode && <ProfileName>{nickname}</ProfileName>}
+            {!editMode && <ProfileName>{form.nickname}</ProfileName>}
             {editMode && (
               <ProfileEditName
-                value={nickname}
-                onChange={(event) => setNickname(event.target.value)}
+                name='nickname'
+                value={form.nickname}
+                onChange={onChangeHandler}
               />
             )}
             <ProfileEmail>{userContext.user.email}</ProfileEmail>
             {editMode && (
+              <ProfileEditDescription
+                maxLength='200'
+                name='userDesc'
+                value={form.userDesc}
+                onChange={onChangeHandler}
+              />
+            )}
+            {!editMode && <UserDescription>{form.userDesc}</UserDescription>}
+            {editMode && (
               <ButtonWrapper>
                 <Button>확인</Button>
-                <Button type="button" onClick={toggleHandler}>
+                <Button type='button' onClick={toggleHandler}>
                   취소
                 </Button>
               </ButtonWrapper>
@@ -133,13 +157,13 @@ export default function UserCard() {
             </SecuritySection>
             <ButtonWrapper>
               <PasswordEditButton
-                type="button"
+                type='button'
                 onClick={generalContext.editFormHandler}
               >
                 비밀번호 수정
               </PasswordEditButton>
               <DeleteIdButton
-                type="button"
+                type='button'
                 onClick={generalContext.deleteFormHandler}
               >
                 회원 탈퇴하기
@@ -240,6 +264,19 @@ const ProfileEditName = styled.input`
   font-family: elice-bold;
 `;
 
+const ProfileEditDescription = styled.textarea`
+  padding: 0.5rem 1rem;
+  margin-top: 1rem;
+  text-align: left;
+  width: 360px;
+  height: 100px;
+  border: lightgray 1px solid;
+  border-radius: 20px;
+  background-color: transparent;
+  font-size: 1rem;
+  resize: none;
+`;
+
 const ProfileEmail = styled.div`
   font-size: 1rem;
   font-family: elice-bold;
@@ -265,6 +302,10 @@ const EditSection = styled.div`
   font-size: 1.2rem;
   font-family: elice-bold;
   padding-right: 32px;
+`;
+
+const UserDescription = styled.div`
+  margin-top: 1rem;
 `;
 
 const EditButton = styled.img`
