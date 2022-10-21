@@ -43,17 +43,17 @@ const customTooltip = ({ active, payload, label }) => {
         <p style={{ fontSize: "17px", fontWeight: "bolder" }}>
           <text>{label}</text>
         </p>
-        <text style={{ color: "#32AAFF" }}>
+        <text style={{ color: "#a0a0a0" }}>
           매우 비동의 : {payload[0].value}%
         </text>
         <br />
-        <text style={{ color: "#63CC63" }}>비동의 : {payload[1].value}%</text>
+        <text style={{ color: "#a0a0a0" }}>비동의 : {payload[1].value}%</text>
         <br />
-        <text style={{ color: "#DC6089" }}>보통 : {payload[2].value}%</text>
+        <text style={{ color: "#a0a0a0" }}>보통 : {payload[2].value}%</text>
         <br />
-        <text style={{ color: "#FFDC37" }}>동의 : {payload[3].value}%</text>
+        <text style={{ color: "#77bb3f" }}>동의 : {payload[3].value}%</text>
         <br />
-        <text style={{ color: "#82ca9d" }}>매우 동의: {payload[4].value}%</text>
+        <text style={{ color: "#369F36" }}>매우 동의: {payload[4].value}%</text>
       </div>
     );
   }
@@ -64,7 +64,7 @@ const customTooltip = ({ active, payload, label }) => {
 const StackedChart = () => {
   return (
     <BarChart
-      width={600}
+      width={700}
       height={300}
       data={data}
       layout="vertical"
@@ -99,22 +99,22 @@ const StackedChart = () => {
         dataKey="v1"
         name="매우 비동의"
         stackId="a"
-        fill="#32AAFF"
+        fill="#dcdcdc"
         barSize={40}
       />
       <Bar
         dataKey="v2"
         name="비동의"
         stackId="a"
-        fill="#63CC63"
+        fill="#dcdcdc"
         maxBarSize={200}
       />
 
-      <Bar dataKey="v3" name="보통" stackId="a" fill="#DC6089" />
+      <Bar dataKey="v3" name="보통" stackId="a" fill="#d2d2d2" />
 
-      <Bar dataKey="v4" name="동의" stackId="a" fill="#FFDC37" />
+      <Bar dataKey="v4" name="동의" stackId="a" fill="#77bb3f" />
 
-      <Bar dataKey="v5" name="매우 동의" stackId="a" fill="#82ca9d" />
+      <Bar dataKey="v5" name="매우 동의" stackId="a" fill="#369F36" />
     </BarChart>
   );
 };

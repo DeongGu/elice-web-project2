@@ -66,11 +66,11 @@ const CustomTooltip = ({ active, payload, label }) => {
 
   return null;
 };
-const BarChartSecond = () => {
+const BarChartOne = () => {
   return (
     <BarChart
       width={500}
-      height={300}
+      height={500}
       data={data}
       margin={{
         top: 5,
@@ -87,9 +87,9 @@ const BarChartSecond = () => {
         wrapperStyle={{ outline: "none" }}
       />
       <Legend />
-      <Bar name="가장 시급한 환경문제 " dataKey="응답" fill="#82ca9d" />
+      <Bar name="가장 심각한 환경문제 " dataKey="응답" fill="#77bb3f" />
     </BarChart>
   );
 };
 
-export default BarChartSecond;
+export default BarChartOne;
