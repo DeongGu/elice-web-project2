@@ -1,20 +1,56 @@
-import { Joi } from "joi";
-import { clientSideError } from "../middlewares/errorHandler";
+import db from "../../models";
+import { clientSideError } from "../../middlewares/errorHandler";
+const Joi = require("joi");
+const User = db.user;
 
-const userSchema = Joi.object({
-  userId: Joi.string().required(),
+const userSchema = Joi.object().keys({
   email: Joi.string().email().required(),
-  password: Joi.string().required(),
+  password: Joi.string().allow(null, ""),
   nickname: Joi.string().required(),
-  profileImage: Joi.string(),
-  userDesc: Joi.string(),
+  userDesc: Joi.string().allow(null, ""),
 });
 
-function userValidation(req, res, next) {
+const userValidation = async (req, res, next) => {
   const body = req.body;
   const { error, value } = userSchema.validate(body);
-  if (error) throw new clientSideError("User information is not valid");
-  next();
-}
 
-export default userValidation;
+  if (error) {
+    try {
+      console.log(error);
+      throw new clientSideError(error.message);
+    } catch (err) {
+      next(err);
+    }
+  }
+  next();
+};
+
+const userValidationPut = async (req, res, next) => {
+  const body = req.body;
+
+  const foundUser = await User.findOne({
+    raw: true,
+    where: {
+      userId: req.currentUserId,
+    },
+  });
+
+  req.body.email = foundUser.email;
+
+  if (!req.body.nickname) {
+    body.nickname = foundUser.nickname;
+  }
+
+  const { error, value } = userSchema.validate(body, { abortEarly: false });
+
+  if (error) {
+    try {
+      throw new clientSideError(error.message);
+    } catch (error) {
+      next(error);
+    }
+  }
+  next();
+};
+
+export { userValidation, userValidationPut };

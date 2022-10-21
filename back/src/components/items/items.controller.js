@@ -2,24 +2,21 @@ import db from "../../models";
 import jwt from "jsonwebtoken";
 import { SECRET_KEY } from "../../config/env.config";
 import { Op } from "sequelize";
+import {
+  notFoundError,
+  authorizationError,
+} from "../../middlewares/errorHandler";
+import { apiSuccess, creationSuccess } from "../../middlewares/successHandler";
 const Item = db.item;
 const Dibs = db.dibs;
 
+// 상품등록
 export const createItem = async (req, res, next) => {
   try {
-    // 로그인여부 확인(미들웨어 적용예정)
-    if (!req.headers.authentication) {
-      return res.status(401).send({ message: "로그인 하지 않은 상태입니다." });
-    }
-    const currentUserId = jwt.verify(
-      req.headers.authentication,
-      SECRET_KEY
-    ).userId;
-    // ----------
-
+    const currentUserId = req.currentUserId;
     let createInfo = { ...req.body, userId: currentUserId };
 
-    if (req.files && req.files.length > 0) {
+    if (req.files?.length > 0) {
       let urls = new Array();
       req.files.map((file) => {
         urls.push(file.location);
@@ -28,27 +25,23 @@ export const createItem = async (req, res, next) => {
     }
 
     if (createInfo.itemType) {
-      const itemType = createInfo.itemType?.split(",");
-      createInfo["itemType"] = itemType;
+      createInfo["itemType"] = createInfo.itemType?.split(",");
     }
 
-    const createResult = await Item.create(createInfo);
+    await Item.create(createInfo);
 
-    if (createResult) {
-      res.status(201).json({ message: "Item created successfully!" });
-    }
+    res.send(creationSuccess(null, "Item created successfully!"));
   } catch (err) {
     next(err);
   }
 };
 
+// 상품조회(단건)
 export const findItem = async (req, res, next) => {
   try {
-    let searchId = req.params.itemId;
-    let currentUserId = null;
-    if (req.headers.authentication) {
-      currentUserId = jwt.verify(req.headers.authentication, SECRET_KEY).userId;
-    }
+    const searchId = req.params.itemId;
+    const decodedToken = jwt.verify(req.headers?.authentication, SECRET_KEY);
+    const currentUserId = decodedToken?.userId;
 
     const foundItem = await Item.findOne({
       raw: true,
@@ -64,25 +57,23 @@ export const findItem = async (req, res, next) => {
       },
     });
 
-    let editable = false;
-    if (currentUserId && foundItem.userId === currentUserId) {
-      editable = true;
+    if (!foundItem) {
+      throw new notFoundError("Item");
     }
-    foundItem["editable"] = editable;
 
-    res.status(200).send(foundItem);
+    foundItem["editable"] = foundItem?.userId === currentUserId;
+
+    res.send(apiSuccess(foundItem, "Item found successfully"));
   } catch (err) {
     next(err);
   }
 };
 
+// 상품목록조회(검색포함)
 export const findItems = async (req, res, next) => {
   try {
-    let currentUserId = null;
-    if (req.headers.authentication) {
-      currentUserId = jwt.verify(req.headers.authentication, SECRET_KEY).userId;
-    }
-    console.log(currentUserId);
+    const decodedToken = jwt.verify(req.headers?.authentication, SECRET_KEY);
+    const currentUserId = decodedToken?.userId;
     const { status, search, limit, offset } = req.query;
     const foundItems = await Item.findAll({
       raw: true,
@@ -112,41 +103,21 @@ export const findItems = async (req, res, next) => {
       limit: Number(!limit ? 1000 : limit),
       offset: Number(!offset ? 0 : offset),
     });
-    res.status(200).send(foundItems);
+
+    if (!foundItems) {
+      throw new notFoundError("Items");
+    }
+
+    res.send(apiSuccess(foundItems, "Items found successfully"));
   } catch (err) {
     next(err);
   }
 };
 
+// 상품수정
 export const updateItem = async (req, res, next) => {
+  console.log(req.params.itemId);
   try {
-    // 로그인여부 확인(미들웨어 적용예정)
-    if (!req.headers.authentication) {
-      return res.status(401).send({ message: "로그인 하지 않은 상태입니다." });
-    }
-    const currentUserId = jwt.verify(
-      req.headers.authentication,
-      SECRET_KEY
-    ).userId;
-    // ----------
-
-    // 본인이 올린 상품인지 확인
-    let targetItemId = req.params.itemId;
-
-    const foundItem = await Item.findOne({
-      raw: true,
-      where: {
-        itemId: targetItemId,
-      },
-    });
-
-    if (foundItem?.userId !== currentUserId) {
-      return res
-        .status(401)
-        .send({ message: "You do not have permission to update" });
-    }
-    // ----------
-
     const updateInfo = req.body;
 
     if (req.files && req.files.length > 0) {
@@ -162,33 +133,25 @@ export const updateItem = async (req, res, next) => {
       updateInfo["itemType"] = itemType;
     }
 
-    const updatedItem = await Item.update(updateInfo, {
-      where: { itemId: targetItemId },
+    const updatedResult = await Item.update(updateInfo, {
+      where: { itemId: req.params.itemId },
     });
 
-    if (updatedItem) {
-      res.status(200).send({ message: "Item is updated" });
+    if (updatedResult) {
+      res.send(apiSuccess(null, "Item is updated"));
     }
   } catch (err) {
     next(err);
   }
 };
 
+// 상품삭제
 export const deleteItem = async (req, res, next) => {
   try {
-    // 로그인여부 확인(미들웨어 적용예정)
-    if (!req.headers.authentication) {
-      return res.status(401).send({ message: "로그인 하지 않은 상태입니다." });
-    }
-    const currentUserId = jwt.verify(
-      req.headers.authentication,
-      SECRET_KEY
-    ).userId;
-    // ----------
+    const currentUserId = req.currentUserId;
+    const targetItemId = req.params.itemId;
 
     // 본인이 올린 상품인지 확인
-    let targetItemId = req.params.itemId;
-
     const foundItem = await Item.findOne({
       raw: true,
       where: {
@@ -197,18 +160,15 @@ export const deleteItem = async (req, res, next) => {
     });
 
     if (foundItem?.userId !== currentUserId) {
-      return res
-        .status(401)
-        .send({ message: "You do not have permission to delete" });
+      throw new authorizationError("Unauthorized");
     }
-    // ----------
 
     const deletedItem = await Item.destroy({
       where: { itemId: targetItemId },
     });
 
     if (deletedItem) {
-      res.status(200).send({ message: "Item is deleted" });
+      res.send(apiSuccess(null, "Item is deleted"));
     }
   } catch (err) {
     next(err);
