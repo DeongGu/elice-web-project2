@@ -74,6 +74,7 @@
 # 4. 프로젝트 구성도
 ---
 - 와이어프레임: https://whimsical.com/team12-BzR6uR5QPcSny29KFjYwFd
+- 데이터 분석: https://github.com/futureme2030/project1/blob/main/check_data.ipynb 
 
 # 5. 프로젝트 팀원 역할 분담
 
