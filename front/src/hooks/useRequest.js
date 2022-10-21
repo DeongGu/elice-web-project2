@@ -17,7 +17,9 @@ export default function useRequest(request, params = '', form = {}) {
     try {
       setIsLoading(true);
 
-      const data = await Api[request[0]](
+      const {
+        data: { data },
+      } = await Api[request[0]](
         request[1],
         params || form,
         params && form && form
@@ -28,7 +30,9 @@ export default function useRequest(request, params = '', form = {}) {
       if (accessToken) {
         sessionStorage.setItem('accessToken', accessToken);
 
-        const userData = await Api[CHECK_USER[0]](CHECK_USER[1]);
+        const {
+          data: { data: userData },
+        } = await Api[CHECK_USER[0]](CHECK_USER[1]);
         userContext.setUser(userData);
       }
 
