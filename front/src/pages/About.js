@@ -288,10 +288,13 @@ export default function About() {
           focusOn={currentSection === 6}
           focusOut={currentSection !== 6}
         >
-          <Slide {...slideProps}>
-            <ProfileCard teamMember={teamMembers[count]} />
-          </Slide>
+          <TeamSubSection>
+            <Slide {...slideProps}>
+              <ProfileCard teamMember={teamMembers[count]} />
+            </Slide>
+          </TeamSubSection>
         </TeamSection>
+        <Footer></Footer>
       </Container>
     </>
   );
@@ -614,6 +617,7 @@ const Logo = styled.img`
 `;
 
 const TeamSection = styled(Section)`
+  height: 80vh;
   background-image: url(${TeamImage});
   background-size: 30%;
   background-position: 10% 90%;
@@ -630,4 +634,18 @@ const TeamSection = styled(Section)`
     css`
       animation: ${FadeOut} 0.5s forwards;
     `}
+`;
+
+const TeamSubSection = styled(Section)`
+  height: 80%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Footer = styled.div`
+  height: 20vh;
+  background-color: lightgray;
 `;
