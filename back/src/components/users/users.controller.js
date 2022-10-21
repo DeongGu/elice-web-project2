@@ -20,9 +20,12 @@ export const register = async (req, res, next) => {
       throw new clientSideError("Email already exists");
     }
 
-    await User.create(req.body);
+    const createResult = await User.create(req.body);
 
-    res.send(creationSuccess(null, "User registered successfully"));
+    if (createResult) {
+      res.send(creationSuccess(createResult, "User registered successfully"));
+    }
+    
   } catch (err) {
     next(err);
   }
