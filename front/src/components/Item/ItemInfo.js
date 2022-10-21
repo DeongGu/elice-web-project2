@@ -214,265 +214,275 @@ const ItemInfo = () => {
 
   return (
     <StyledForm onSubmit={handleSubmit}>
-      <StyledLabel htmlFor="itemImage">상품 이미지</StyledLabel>
-      {isEdit ? (
-        <StyledInput
-          type="file"
-          name="itemImage"
-          onChange={(e) => {
-            encodeFile(e.target.files[0]);
-          }}
-          accept="image/*"
-          multiple
-        />
-      ) : null}
-      <StyledPreview>
-        <SlideBlock>
-          {Array.isArray(itemImage) ? (
-            <StyledImage src={itemImage[slide]} alt="미리보기 이미지" />
-          ) : itemImage ? (
-            <StyledImage src={itemImage} alt="미리보기 이미지" />
-          ) : (
-            <StyledImage
-              src={"/assets/images/default.png"}
-              alt="미리보기 이미지"
-            />
-          )}
-        </SlideBlock>
-        <SlideButtonBlock>
-          <SlideButton onClick={preSlide} type="button">
-            {"<"}
-          </SlideButton>
-          <SlideButton onClick={nextSlide} type="button">
-            {">"}
-          </SlideButton>
-        </SlideButtonBlock>
-      </StyledPreview>
-
-      <StyledStatusBlock>
+      <StyledImageBlock>
+        <StyledLabel htmlFor="itemImage">상품 이미지</StyledLabel>
         {isEdit ? (
-          <>
-            <label>
-              <StyledRadio
-                type="radio"
-                onChange={handleChange}
-                name="status"
-                id="inStock"
-                value="inStock"
-                checked={status === "inStock"}
-              ></StyledRadio>
-              거래가능
-            </label>
-            <label>
-              <StyledRadio
-                type="radio"
-                onChange={handleChange}
-                name="status"
-                id="onTrading"
-                value="onTrading"
-                checked={status === "onTrading"}
-              ></StyledRadio>
-              거래중
-            </label>
-            <label>
-              <StyledRadio
-                type="radio"
-                onChange={handleChange}
-                name="status"
-                id="outOfStock"
-                value="outOfStock"
-                checked={status === "outOfStock"}
-              ></StyledRadio>
-              거래완료
-            </label>
-          </>
-        ) : (
-          <>
-            {status === "inStock" ? (
-              <StyledStatus style={{ backgroundColor: "rgba(0, 0, 0, 0.1)" }}>
-                거래가능
-              </StyledStatus>
-            ) : (
-              <StyledStatus>거래가능</StyledStatus>
-            )}
-            {status === "onTrading" ? (
-              <StyledStatus style={{ backgroundColor: "rgba(0, 0, 0, 0.1)" }}>
-                거래중
-              </StyledStatus>
-            ) : (
-              <StyledStatus>거래중</StyledStatus>
-            )}
-            {status === "outOfStock" ? (
-              <StyledStatus style={{ backgroundColor: "rgba(0, 0, 0, 0.1)" }}>
-                거래완료
-              </StyledStatus>
-            ) : (
-              <StyledStatus>거래완료</StyledStatus>
-            )}
-          </>
-        )}
-      </StyledStatusBlock>
-
-      <StyledLabel htmlFor="itemName">상품명</StyledLabel>
-      {isEdit ? (
-        <StyledInput
-          onChange={handleChange}
-          name="itemName"
-          id="itemName"
-          type="text"
-          value={itemName}
-        />
-      ) : (
-        <StyledP>{itemName}</StyledP>
-      )}
-      {isEdit ? (
-        <Styledfieldset>
-          <StyledLegend>상품카테고리</StyledLegend>
-          <StyledLabel>
-            <input
-              onChange={handleChange}
-              type="radio"
-              value="상의"
-              name="itemCategory"
-              checked={itemCategory === "상의"}
-            />
-            상의
-          </StyledLabel>
-          <StyledLabel>
-            <input
-              onChange={handleChange}
-              type="radio"
-              value="하의"
-              name="itemCategory"
-              checked={itemCategory === "하의"}
-            />
-            하의
-          </StyledLabel>
-          <StyledLabel>
-            <input
-              onChange={handleChange}
-              type="radio"
-              value="아우터"
-              name="itemCategory"
-              checked={itemCategory === "아우터"}
-            />
-            아우터
-          </StyledLabel>
-          <StyledLabel>
-            <input
-              onChange={handleChange}
-              type="radio"
-              value="모자"
-              name="itemCategory"
-              checked={itemCategory === "모자"}
-            />
-            모자
-          </StyledLabel>
-          <StyledLabel>
-            <input
-              onChange={handleChange}
-              type="radio"
-              value="기타"
-              name="itemCategory"
-              checked={itemCategory === "기타"}
-            />
-            기타
-          </StyledLabel>
-        </Styledfieldset>
-      ) : itemCategory ? (
-        <StyledLabel>
-          {"상품카테고리"}
-          <StyledP>{itemCategory}</StyledP>
-        </StyledLabel>
-      ) : (
-        <StyledLabel>
-          {"상품카테고리"}
-          <StyledP>{"기타"}</StyledP>
-        </StyledLabel>
-      )}
-
-      <StyledLabel htmlFor="itemType">상품타입</StyledLabel>
-      {isEdit ? (
-        <StyledInput
-          onChange={handleChange}
-          name="itemType"
-          id="itemType"
-          type="text"
-          value={itemType}
-        />
-      ) : (
-        <StyledP>{itemType}</StyledP>
-      )}
-      <StyledLabel htmlFor="itemDesc">한 마디</StyledLabel>
-      {isEdit ? (
-        <StyledInput
-          type="text"
-          onChange={handleChange}
-          name="itemDesc"
-          id="itemDesc"
-          value={itemDesc}
-        />
-      ) : (
-        <StyledP>{itemDesc}</StyledP>
-      )}
-      <StyledLabel htmlFor="openChat">오픈카톡방 주소</StyledLabel>
-      {isEdit ? (
-        <StyledInput
-          type="text"
-          onChange={handleChange}
-          name="openChat"
-          id="openChat"
-          value={openChat}
-        />
-      ) : (
-        <StyledP>
-          <a href={openChat} target="_blank" rel="noreferrer">
-            {openChat}
-          </a>
-        </StyledP>
-      )}
-      <ButtonBlock>
-        {isEdit ? (
-          <>
-            <StyledBtn disabled={!validate}>완료</StyledBtn>
-            <StyledBtn type="button" onClick={handleDelete}>
-              삭제
-            </StyledBtn>
-          </>
-        ) : (
-          <>
-            <StyledBtn type="button" onClick={handleDibs}>
-              찜하기
-              {item["dibs.dibsId"] ? "❤️" : null}
-            </StyledBtn>
-          </>
-        )}
-
-        {editable ? (
-          <>
-            {isEdit ? (
-              <StyledBtn
-                type="button"
-                onClick={() => {
-                  setIsEdit((preState) => !preState);
-                  setItem(tempValue);
-                }}
-              >
-                {"취소"}
-              </StyledBtn>
-            ) : (
-              <StyledBtn
-                type="button"
-                onClick={() => {
-                  setIsEdit((preState) => !preState);
-                }}
-              >
-                {"편집"}
-              </StyledBtn>
-            )}
-          </>
+          <StyledInput
+            type="file"
+            name="itemImage"
+            onChange={(e) => {
+              encodeFile(e.target.files[0]);
+            }}
+            accept="image/*"
+            multiple
+          />
         ) : null}
-      </ButtonBlock>
+        <StyledPreview>
+          <SlideBlock>
+            {Array.isArray(itemImage) ? (
+              <StyledImage src={itemImage[slide]} alt="미리보기 이미지" />
+            ) : itemImage ? (
+              <StyledImage src={itemImage} alt="미리보기 이미지" />
+            ) : (
+              <StyledImage
+                src={"/assets/images/default.png"}
+                alt="미리보기 이미지"
+              />
+            )}
+          </SlideBlock>
+          <SlideButtonBlock>
+            <SlideButton onClick={preSlide} type="button">
+              {"<"}
+            </SlideButton>
+            <SlideButton onClick={nextSlide} type="button">
+              {">"}
+            </SlideButton>
+          </SlideButtonBlock>
+        </StyledPreview>
+        <StyledStatusBlock>
+          {isEdit ? (
+            <>
+              <label>
+                <StyledRadio
+                  type="radio"
+                  onChange={handleChange}
+                  name="status"
+                  id="inStock"
+                  value="inStock"
+                  checked={status === "inStock"}
+                ></StyledRadio>
+                거래가능
+              </label>
+              <label>
+                <StyledRadio
+                  type="radio"
+                  onChange={handleChange}
+                  name="status"
+                  id="onTrading"
+                  value="onTrading"
+                  checked={status === "onTrading"}
+                ></StyledRadio>
+                거래중
+              </label>
+              <label>
+                <StyledRadio
+                  type="radio"
+                  onChange={handleChange}
+                  name="status"
+                  id="outOfStock"
+                  value="outOfStock"
+                  checked={status === "outOfStock"}
+                ></StyledRadio>
+                거래완료
+              </label>
+            </>
+          ) : (
+            <>
+              {status === "inStock" ? (
+                <StyledStatus style={{ backgroundColor: "rgba(0, 0, 0, 0.1)" }}>
+                  거래가능
+                </StyledStatus>
+              ) : (
+                <StyledStatus>거래가능</StyledStatus>
+              )}
+              {status === "onTrading" ? (
+                <StyledStatus style={{ backgroundColor: "rgba(0, 0, 0, 0.1)" }}>
+                  거래중
+                </StyledStatus>
+              ) : (
+                <StyledStatus>거래중</StyledStatus>
+              )}
+              {status === "outOfStock" ? (
+                <StyledStatus style={{ backgroundColor: "rgba(0, 0, 0, 0.1)" }}>
+                  거래완료
+                </StyledStatus>
+              ) : (
+                <StyledStatus>거래완료</StyledStatus>
+              )}
+            </>
+          )}
+        </StyledStatusBlock>
+      </StyledImageBlock>
+      <StyledInfoBlock>
+        <StyledBlock>
+          <StyledLabel htmlFor="itemName">상품명</StyledLabel>
+          {isEdit ? (
+            <StyledInput
+              onChange={handleChange}
+              name="itemName"
+              id="itemName"
+              type="text"
+              value={itemName}
+            />
+          ) : (
+            <StyledP>{itemName}</StyledP>
+          )}
+        </StyledBlock>
+
+        {isEdit ? (
+          <Styledfieldset>
+            <StyledLegend>상품카테고리</StyledLegend>
+            <StyledLabel>
+              <input
+                onChange={handleChange}
+                type="radio"
+                value="상의"
+                name="itemCategory"
+                checked={itemCategory === "상의"}
+              />
+              상의
+            </StyledLabel>
+            <StyledLabel>
+              <input
+                onChange={handleChange}
+                type="radio"
+                value="하의"
+                name="itemCategory"
+                checked={itemCategory === "하의"}
+              />
+              하의
+            </StyledLabel>
+            <StyledLabel>
+              <input
+                onChange={handleChange}
+                type="radio"
+                value="아우터"
+                name="itemCategory"
+                checked={itemCategory === "아우터"}
+              />
+              아우터
+            </StyledLabel>
+            <StyledLabel>
+              <input
+                onChange={handleChange}
+                type="radio"
+                value="모자"
+                name="itemCategory"
+                checked={itemCategory === "모자"}
+              />
+              모자
+            </StyledLabel>
+            <StyledLabel>
+              <input
+                onChange={handleChange}
+                type="radio"
+                value="기타"
+                name="itemCategory"
+                checked={itemCategory === "기타"}
+              />
+              기타
+            </StyledLabel>
+          </Styledfieldset>
+        ) : itemCategory ? (
+          <StyledBlock>
+            <StyledLabel>{"상품카테고리"}</StyledLabel>
+            <StyledP>{itemCategory}</StyledP>
+          </StyledBlock>
+        ) : (
+          <StyledLabel>
+            {"상품카테고리"}
+            <StyledP>{"기타"}</StyledP>
+          </StyledLabel>
+        )}
+        <StyledBlock>
+          <StyledLabel htmlFor="itemType">상품타입</StyledLabel>
+          {isEdit ? (
+            <StyledInput
+              onChange={handleChange}
+              name="itemType"
+              id="itemType"
+              type="text"
+              value={itemType}
+            />
+          ) : (
+            <StyledP>{itemType}</StyledP>
+          )}
+        </StyledBlock>
+        <StyledBlock>
+          <StyledLabel htmlFor="itemDesc">한 마디</StyledLabel>
+          {isEdit ? (
+            <StyledInput
+              type="text"
+              onChange={handleChange}
+              name="itemDesc"
+              id="itemDesc"
+              value={itemDesc}
+            />
+          ) : (
+            <StyledP>{itemDesc}</StyledP>
+          )}
+        </StyledBlock>
+        <StyledBlock>
+          <StyledLabel htmlFor="openChat">오픈카톡방 주소</StyledLabel>
+          {isEdit ? (
+            <StyledInput
+              type="text"
+              onChange={handleChange}
+              name="openChat"
+              id="openChat"
+              value={openChat}
+            />
+          ) : (
+            <StyledP>
+              <a href={openChat} target="_blank" rel="noreferrer">
+                {openChat}
+              </a>
+            </StyledP>
+          )}
+        </StyledBlock>
+        <ButtonBlock>
+          {isEdit ? (
+            <>
+              <StyledBtn disabled={!validate}>완료</StyledBtn>
+              <StyledBtn type="button" onClick={handleDelete}>
+                삭제
+              </StyledBtn>
+            </>
+          ) : (
+            <>
+              <StyledBtn type="button" onClick={handleDibs}>
+                찜하기
+                {item["dibs.dibsId"] ? "❤️" : null}
+              </StyledBtn>
+            </>
+          )}
+
+          {editable ? (
+            <>
+              {isEdit ? (
+                <StyledBtn
+                  type="button"
+                  onClick={() => {
+                    setIsEdit((preState) => !preState);
+                    setItem(tempValue);
+                  }}
+                >
+                  {"취소"}
+                </StyledBtn>
+              ) : (
+                <StyledBtn
+                  type="button"
+                  onClick={() => {
+                    setIsEdit((preState) => !preState);
+                  }}
+                >
+                  {"편집"}
+                </StyledBtn>
+              )}
+            </>
+          ) : null}
+        </ButtonBlock>
+      </StyledInfoBlock>
     </StyledForm>
   );
 };
@@ -481,19 +491,19 @@ export default ItemInfo;
 
 const StyledForm = styled.form`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   margin: 20px auto;
   border: 1rem solid gray;
   outline: 1rem solid lightgray;
   border-radius: 20px;
-  width: 600px;
-  height: 1100px;
+  width: 1100px;
+  height: 500px;
   box-sizing: border-box;
+  padding-left: 20px;
 `;
 
 const StyledImage = styled.img`
-  margin-top: 20px;
-  width: 490px;
+  width: 400px;
   height: 290px;
   object-fit: contain;
 `;
@@ -502,24 +512,24 @@ const StyledPreview = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-
-  margin-bottom: 30px;
+  margin-bottom: 10px;
 `;
 const StyledInput = styled.input`
   margin: 10px 20px;
-  height: 50px;
+  height: 30px;
+  width: 70%;
 `;
 
 const StyledBtn = styled.button`
-  width: 100px;
-  height: 50px;
-  margin: 30px auto;
+  width: 170px;
+  height: 65px;
+  margin: 0 auto;
   background-color: rgb(119, 187, 63);
   border: none;
   cursor: pointer;
   color: white;
   border-radius: 20px;
-  font-size: 20px;
+  font-size: 25px;
 
   &:hover {
     background-color: rgba(119, 187, 63, 0.5);
@@ -537,6 +547,7 @@ const StyledBtn = styled.button`
 
 const ButtonBlock = styled.div`
   display: flex;
+  margin-top: 40px;
 `;
 
 const StyledLabel = styled.label`
@@ -545,11 +556,14 @@ const StyledLabel = styled.label`
   & + & {
     margin: 5px;
   }
+  width: 110px;
 `;
 
 const StyledP = styled.p`
+  font-size: 20px;
   margin: 10px 20px;
   height: 30px;
+  width: 500px;
 `;
 
 const StyledStatusBlock = styled.div`
@@ -560,21 +574,21 @@ const StyledStatusBlock = styled.div`
 const StyledStatus = styled.p`
   margin: 5px 20px 20px 20px;
   width: 80px;
-  height: 40px;
+  height: 30px;
   border: 1px solid black;
-  line-height: 40px;
+  line-height: 30px;
   text-align: center;
 `;
 
 const StyledRadio = styled.input`
-  margin: 5px 5px 10px 20px;
+  margin: 0px 0px 10px 20px;
 `;
 
 const SlideButtonBlock = styled.div`
   display: flex;
   width: 100px;
   justify-content: space-between;
-  margin: 20px auto 0 auto;
+  margin: 0 auto;
 `;
 
 const SlideButton = styled.button`
@@ -596,12 +610,34 @@ const SlideBlock = styled.div`
 const Styledfieldset = styled.fieldset`
   border: 1px solid black;
   margin: 10px auto;
-  width: 460px;
-  padding-bottom: 13px;
+  width: 47%;
+  padding-bottom: 10px;
   box-sizing: border-box;
   cursor: pointer;
+  text-align: center;
 `;
 
 const StyledLegend = styled.legend`
-  margin: 10px 0;
+  /* margin: 10px 0; */
+  font-weight: bold;
+`;
+
+const StyledInfoBlock = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 22px;
+`;
+
+const StyledImageBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
+
+const StyledBlock = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
 `;
