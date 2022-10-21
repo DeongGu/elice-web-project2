@@ -44,7 +44,7 @@ const ItemBlock = styled.div`
   }
   &:active {
     position: relative;
-    top: 2px;
+    top: 4px;
   }
 `;
 const StyledImg = styled.img`

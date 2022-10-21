@@ -132,7 +132,7 @@ const Main = (props) => {
           <IndexBlock>
             <StyledLabel>
               <input
-                type="radio"
+                type="checkbox"
                 name="itemCategory"
                 value="상의"
                 checked={category.includes("상의")}
@@ -142,7 +142,7 @@ const Main = (props) => {
             </StyledLabel>
             <StyledLabel>
               <input
-                type="radio"
+                type="checkbox"
                 name="itemCategory"
                 value="하의"
                 checked={category.includes("하의")}
@@ -152,7 +152,7 @@ const Main = (props) => {
             </StyledLabel>
             <StyledLabel>
               <input
-                type="radio"
+                type="checkbox"
                 name="itemCategory"
                 value="아우터"
                 checked={category.includes("아우터")}
@@ -162,7 +162,7 @@ const Main = (props) => {
             </StyledLabel>
             <StyledLabel>
               <input
-                type="radio"
+                type="checkbox"
                 name="itemCategory"
                 value="모자"
                 checked={category.includes("모자")}
@@ -172,7 +172,7 @@ const Main = (props) => {
             </StyledLabel>
             <StyledLabel>
               <input
-                type="radio"
+                type="checkbox"
                 name="itemCategory"
                 value="기타"
                 checked={category.includes("기타")}
@@ -197,7 +197,18 @@ const Main = (props) => {
             ></StyledInput>
             거래가능만 보기
           </StyledLabel>
-          <StyledBtn onClick={() => navigate("/items")}>상품 생성</StyledBtn>
+          <StyledBtn
+            onClick={() => {
+              if (!sessionStorage.getItem("accessToken")) {
+                alert("로그인부탁드려요^^");
+                navigate("/");
+              } else {
+                navigate("/items");
+              }
+            }}
+          >
+            상품 생성
+          </StyledBtn>
         </StyledDiv>
         <ItemList itemList={itemList}></ItemList>
       </ItemBlock>
@@ -230,6 +241,10 @@ const StyledBtn = styled.button`
 
   &:hover {
     background-color: rgba(119, 187, 63, 0.3);
+  }
+  &:active {
+    position: relative;
+    top: 3px;
   }
 `;
 
