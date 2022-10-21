@@ -10,6 +10,8 @@ import InputList from './InputList';
 import ModalBackground from '../UI/ModalBackground';
 import BreakLine from '../UI/BreakLine';
 
+import LogoImage from '../../assets/images/Vring-logo.png';
+
 import { LOGIN_USER } from '../../api/endpoints';
 
 const inputData = [
@@ -60,7 +62,7 @@ export default function LoginForm() {
         <Text onClick={changeFormHandler}>
           <TextColor>아이디</TextColor>가 없으신가요?
         </Text>
-        <Logo src={'assets/images/Vring-logo.png'} />
+        <Logo src={LogoImage} />
       </Form>
     </>
   );

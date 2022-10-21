@@ -11,6 +11,8 @@ import ValidateInputList from './ValidateInputList';
 import ModalBackground from '../UI/ModalBackground';
 import BreakLine from '../UI/BreakLine';
 
+import LogoImage from '../../assets/images/Vring-logo.png';
+
 import { REGISTER_USER } from '../../api/endpoints';
 
 const inputData = [
@@ -104,7 +106,7 @@ export default function RegisterForm() {
         <Text onClick={changeFormHandler}>
           이미 <TextColor>아이디</TextColor>가 있으신가요?
         </Text>
-        <Logo src={'assets/images/Vring-logo.png'} />
+        <Logo src={LogoImage} />
       </Form>
     </>
   );
