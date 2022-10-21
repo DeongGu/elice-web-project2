@@ -11,7 +11,6 @@ import { CHECK_USER } from './api/Request';
 
 import About from './pages/About';
 import Main from './pages/Main';
-import User from './pages/User';
 
 import ItemCreate from './pages/ItemCreate';
 import ItemPage from './pages/ItemPage';
@@ -36,8 +35,6 @@ function App() {
           <Routes>
             <Route path='/' element={<Main />} exact></Route>
             <Route path='/about' element={<About />} />
-            <Route path='/users/my-profile' element={<User />} exact />
-            <Route path='/users/:userId' element={<User />} />
             <Route path='/items/:itemId' element={<ItemPage />}></Route>
             <Route path='/items' element={<ItemCreate />}></Route>
             <Route path='*' element={<NotFound />}></Route>

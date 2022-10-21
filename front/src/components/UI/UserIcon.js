@@ -1,21 +1,21 @@
-import { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useContext } from 'react';
 
-import styled from "styled-components";
-import { UserContext } from "../../App";
+import styled from 'styled-components';
+import { UserContext } from '../../App';
+import GeneralContext from '../../context/GeneralContext';
 
-import Gender from "./Gender";
+import Gender from './Gender';
 
 export default function UserIcon() {
   const userContext = useContext(UserContext);
+  const generalContext = useContext(GeneralContext);
   const [userInfo, setUserInfo] = useState(false);
-  const navigate = useNavigate();
 
   return (
     <>
       <UserIconStyle
         onClick={() => setUserInfo((prevState) => !prevState)}
-        src={userContext.user.profileImage || Gender["male"]}
+        src={userContext.user.profileImage || Gender['male']}
       />
       {userInfo && (
         <>
@@ -23,12 +23,12 @@ export default function UserIcon() {
           <UserInfo>
             <UserTop>
               <UserInfoIcon
-                src={userContext.user.profileImage || Gender["male"]}
+                src={userContext.user.profileImage || Gender['male']}
               />
               <UserDescription>
                 <UserName>{userContext.user.nickname}</UserName>
                 <UserEmail>{userContext.user.email}</UserEmail>
-                <GoToUserInfo onClick={() => navigate("/users/my-profile")}>
+                <GoToUserInfo onClick={generalContext.userFormHandler}>
                   계정 정보
                 </GoToUserInfo>
               </UserDescription>

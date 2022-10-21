@@ -9,6 +9,7 @@ import LoginForm from '../User/LoginForm';
 import RegisterForm from '../User/RegisterForm';
 import DeleteForm from '../User/DeleteForm';
 import EditForm from '../User/EditForm';
+import UserForm from '../User/UserForm';
 
 import styled from 'styled-components';
 
@@ -25,6 +26,8 @@ export default function Header() {
       return <EditForm />;
     } else if (generalContext.showDeleteForm) {
       return <DeleteForm />;
+    } else if (generalContext.showUserForm) {
+      return <UserForm />;
     }
   };
 
