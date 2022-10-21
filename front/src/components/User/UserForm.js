@@ -1,32 +1,33 @@
-import * as Api from "../../api/api";
+import * as Api from '../../api/api';
 
-import { useState, useContext, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
-import ModalBackground from "../UI/ModalBackground";
+import { useState, useContext, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import ModalBackground from '../UI/ModalBackground';
 
-import { UserContext } from "../../App";
-import GeneralContext from "../../context/GeneralContext";
+import { UserContext } from '../../App';
+import GeneralContext from '../../context/GeneralContext';
 
-import useRequest from "../../hooks/useRequest";
+import useRequest from '../../hooks/useRequest';
 
-import { Validate } from "./Validate";
+import { Validate } from './Validate';
 
-import BreakLine from "../UI/BreakLine";
-import Gender from "../UI/Gender";
+import BreakLine from '../UI/BreakLine';
+import Gender from '../UI/Gender';
 
-import { CHECK_DIBS, EDIT_USER } from "../../api/endpoints";
-import useFetch from "../../hooks/useFetch";
+import { CHECK_DIBS, EDIT_USER } from '../../api/endpoints';
+import useFetch from '../../hooks/useFetch';
 
 export default function UserForm() {
   const generalContext = useContext(GeneralContext);
   const userContext = useContext(UserContext);
 
+  const inputRef = useRef();
   const imageRef = useRef();
 
   const imageHandler = (event) => {
     event.preventDefault();
-    imageRef.current.click();
+    inputRef.current.click();
   };
 
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ export default function UserForm() {
   };
 
   const [form, setForm] = useState(initialState);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [tempEditValue, setTempEditValue] = useState(initialState);
   const [editMode, setEditMode] = useState(false);
 
@@ -47,14 +48,14 @@ export default function UserForm() {
   const submitHandler = async (e) => {
     e.preventDefault();
 
-    if (!Validate["nickname"].test(form.nickname)) {
-      setError("4 ~ 16자, 영문, 한글 혹은 숫자여야 합니다.");
+    if (!Validate['nickname'].test(form.nickname)) {
+      setError('4 ~ 16자, 영문, 한글 혹은 숫자여야 합니다.');
       return;
     }
 
     if (form.userDesc) {
       if (form.userDesc.length > 200) {
-        setError("한 줄 소개는 200자 이하여야 합니다.");
+        setError('한 줄 소개는 200자 이하여야 합니다.');
         return;
       }
     }
@@ -62,19 +63,36 @@ export default function UserForm() {
     const image = e.target.fileInput.files[0];
 
     const formData = new FormData();
-    formData.append("file", image);
+    formData.append('file', image);
 
-    Api.put("users", formData);
+    Api.put('users', formData);
 
     setEditMode(false);
     setTempEditValue(form);
-    setError("");
+    setError('');
 
     await formHandler();
   };
 
+  const inputOnChange = (event) => {
+    if (!event.target.files[0]) {
+      return;
+    }
+
+    const image = event.target.files[0];
+    const fileReader = new FileReader();
+
+    fileReader.onload = (event) => {
+      imageRef.current.src = event.target.result;
+      console.log(event.target.result);
+      console.log();
+    };
+
+    fileReader.readAsDataURL(image);
+  };
+
   const toggleHandler = () => {
-    setError("");
+    setError('');
     setEditMode((prevState) => !prevState);
     setForm(tempEditValue);
   };
@@ -88,9 +106,9 @@ export default function UserForm() {
 
   const DibsHandler = () => {
     return dibData.map((dib, index) => (
-      <div key={"dibs" + index}>
+      <div key={'dibs' + index}>
         <ProductImage
-          src={dib["item.itemImage"] || "/assets/images/default.png"}
+          src={dib['item.itemImage'] || '/assets/images/default.png'}
           onClick={() => navigate(`/items/${dib.itemId}`)}
         />
       </div>
@@ -107,20 +125,25 @@ export default function UserForm() {
     <>
       <ModalBackground />
       {!userContext.isLoading && (
-        <UserFormStyle>
-          <form onSubmit={submitHandler}>
-            <img
-              src={userContext.user.profileImage || Gender["male"]}
-              onClick={imageHandler}
-            />
-            <input type="file" ref={imageRef} accept="image/* " />
-            <ProfileName>{form.nickname}</ProfileName>
-            <ProfileEmail>{userContext.user.email}</ProfileEmail>
-            <UserDescription>{form.userDesc}</UserDescription>
-            <BreakLine />
-            <Dibs />
-            <Security />
-          </form>
+        <UserFormStyle onSubmit={submitHandler}>
+          <img
+            src={userContext.user.profileImage || Gender['male']}
+            onClick={imageHandler}
+            ref={imageRef}
+          />
+          <input
+            type='file'
+            ref={inputRef}
+            onChange={inputOnChange}
+            accept='image/* '
+            name='image'
+          />
+          <ProfileName>{form.nickname}</ProfileName>
+          <ProfileEmail>{userContext.user.email}</ProfileEmail>
+          <UserDescription>{form.userDesc}</UserDescription>
+          <BreakLine />
+          <Dibs />
+          <Security />
         </UserFormStyle>
       )}
     </>

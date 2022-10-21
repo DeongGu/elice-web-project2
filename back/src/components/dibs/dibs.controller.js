@@ -16,7 +16,7 @@ export const createDibs = async (req, res, next) => {
     const targetItemId = req.params.itemId;
     let createInfo = { itemId: targetItemId, userId: currentUserId };
 
-    await Dibs.create(createInfo);
+    const createResult = await Dibs.create(createInfo);
 
     if (createResult) {
       res.send(creationSuccess(createResult, "Dibs created successfully!"));

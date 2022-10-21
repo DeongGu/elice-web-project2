@@ -1,7 +1,16 @@
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 export default function Logo() {
-  return <LogoStyle className='logo' src={'assets/images/Vring-logo.png'} />;
+  const navigate = useNavigate();
+
+  return (
+    <LogoStyle
+      className='logo'
+      src={'assets/images/Vring-logo.png'}
+      onClick={() => navigate('/')}
+    />
+  );
 }
 
 const LogoStyle = styled.img`
