@@ -139,7 +139,7 @@ export default function About() {
             </SubContainer>
           </LeftSide>
           <RightSide>
-            <SubContainer>
+            <SubContainer focusOut={currentSection !== 2}>
               <Reason focusOn={currentSection === 2}>
                 <text className='title'>
                   <strong>환경</strong>과 <strong>패션 산업</strong>
@@ -173,7 +173,11 @@ export default function About() {
                 </p>
               </Reason>
             </SubContainer>
-            <SubContainer image={ReasonImage} reversed={true}>
+            <SubContainer
+              focusOut={currentSection !== 3}
+              image={ReasonImage}
+              reversed={true}
+            >
               <Reason focusOn={currentSection === 3}>
                 <text className='title'>
                   <strong>패션 산업</strong>과 <strong>국민 환경 인식</strong>
@@ -193,7 +197,7 @@ export default function About() {
                 </p>
               </Reason>
             </SubContainer>
-            <SubContainer>
+            <SubContainer focusOut={currentSection !== 4}>
               <Reason focusOn={currentSection === 4}>
                 <text className='title'>
                   <strong>문제점</strong>
@@ -509,9 +513,6 @@ const Reason = styled.div`
 `;
 
 const Graph = styled.div`
-  position: sticky;
-  top: 20vh;
-
   ${({ firstFocusOn }) =>
     firstFocusOn &&
     css`
@@ -520,7 +521,7 @@ const Graph = styled.div`
   ${({ focusOn }) =>
     focusOn &&
     css`
-      animation: ${FadeIn} 2s;
+      animation: ${FadeInLeft} 1s;
     `};
 `;
 
