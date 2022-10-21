@@ -28,7 +28,7 @@ export const createItem = async (req, res, next) => {
       createInfo["itemType"] = createInfo.itemType?.split(",");
     }
 
-    const createResult = await Item.create(createInfo);
+    await Item.create(createInfo);
 
     if (createResult) {
       res.send(creationSuccess(createResult, "Item created successfully!"));

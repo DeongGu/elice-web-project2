@@ -144,7 +144,7 @@ const ItemInfo = () => {
           },
         })
         .then((res) => {
-          console.log("response:", res.data);
+          console.log(res.data.message);
           alert("삭제되었습니다.");
           navigate("/");
         });
@@ -183,7 +183,7 @@ const ItemInfo = () => {
             },
           })
           .then((res) => {
-            console.log(res);
+            console.log(res.data.message);
             const newItem = { ...item };
             setItem(newItem);
             setCheckedDibs((preState) => !preState);
@@ -486,7 +486,7 @@ const StyledForm = styled.form`
   border: 1rem solid gray;
   outline: 1rem solid lightgray;
   border-radius: 20px;
-  width: 500px;
+  width: 600px;
   height: 1100px;
   box-sizing: border-box;
 `;
