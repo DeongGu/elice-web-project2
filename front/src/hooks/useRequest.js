@@ -17,14 +17,13 @@ export default function useRequest(request, params = '', form = {}) {
     try {
       setIsLoading(true);
 
-      const {
-        data,
-        data: { Authentication: accessToken },
-      } = await Api[request[0]](
+      const data = await Api[request[0]](
         request[1],
         params || form,
         params && form && form
       );
+
+      const accessToken = data.Authentication;
 
       if (accessToken) {
         sessionStorage.setItem('accessToken', accessToken);
