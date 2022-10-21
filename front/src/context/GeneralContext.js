@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useState } from 'react';
 
 const GeneralContext = createContext({
   showRegisterForm: false,
@@ -6,11 +6,13 @@ const GeneralContext = createContext({
   showEditForm: false,
   showDeleteForm: false,
   showAboutForm: false,
+  showUserForm: false,
   registerFormHandler: () => {},
   loginFormHandler: () => {},
   editFormHandler: () => {},
   deleteFormHandler: () => {},
   disableFormHandler: () => {},
+  userFormHandler: () => {},
 });
 
 export const GeneralContextProvider = ({ children }) => {
@@ -19,6 +21,7 @@ export const GeneralContextProvider = ({ children }) => {
   const [showEditForm, setShowEditForm] = useState(false);
   const [showDeleteForm, setShowDeleteForm] = useState(false);
   const [showAboutForm, setShowAboutForm] = useState(true);
+  const [showUserForm, setShowUserForm] = useState(false);
 
   const registerFormHandler = () => {
     setShowRegisterForm((prevState) => !prevState);
@@ -36,12 +39,17 @@ export const GeneralContextProvider = ({ children }) => {
     setShowDeleteForm((prevState) => !prevState);
   };
 
+  const userFormHandler = () => {
+    setShowUserForm((prevState) => !prevState);
+  };
+
   const disableFormHandler = () => {
     setShowLoginForm(false);
     setShowRegisterForm(false);
     setShowEditForm(false);
     setShowDeleteForm(false);
     setShowAboutForm(false);
+    setShowUserForm(false);
   };
 
   const contextValues = {
@@ -50,11 +58,13 @@ export const GeneralContextProvider = ({ children }) => {
     showEditForm,
     showDeleteForm,
     showAboutForm,
+    showUserForm,
     registerFormHandler,
     loginFormHandler,
     editFormHandler,
     deleteFormHandler,
     disableFormHandler,
+    userFormHandler,
   };
 
   return (
