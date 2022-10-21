@@ -23,12 +23,12 @@ const ItemListBlock = styled.div`
   margin: 30px auto;
 
   @media (max-width: 1280px) {
-    width: 960px;
+    width: 1000px;
   }
   @media (max-width: 990px) {
-    width: 640px;
+    width: 800px;
   }
-  @media (max-width: 430px) {
+  @media (max-width: 530px) {
     width: 300px;
   }
 `;

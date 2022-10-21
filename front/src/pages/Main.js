@@ -1,7 +1,7 @@
 // import { useState } from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+
 import styled from "styled-components";
 import ItemList from "../components/Item/ItemList.js";
 import SlideBanner from "../components/UI/SlideBanner.js";
@@ -9,8 +9,6 @@ import SlideBanner from "../components/UI/SlideBanner.js";
 const Main = (props) => {
   const portNum = 5000;
   const url = "http://" + window.location.hostname + ":" + portNum + "/";
-
-  const navigate = useNavigate();
 
   const [itemList, setItemList] = useState([]);
   const [initialList, setInitialList] = useState([]);
@@ -197,18 +195,6 @@ const Main = (props) => {
             ></StyledInput>
             거래가능만 보기
           </StyledLabel>
-          <StyledBtn
-            onClick={() => {
-              if (!sessionStorage.getItem("accessToken")) {
-                alert("로그인부탁드려요^^");
-                navigate("/");
-              } else {
-                navigate("/items");
-              }
-            }}
-          >
-            상품 생성
-          </StyledBtn>
         </StyledDiv>
         <ItemList itemList={itemList}></ItemList>
       </ItemBlock>
@@ -227,25 +213,6 @@ const ItemBlock = styled.div`
   display: flex;
   margin: 30px auto;
   flex-direction: column;
-`;
-
-const StyledBtn = styled.button`
-  width: 100px;
-  height: 50px;
-  cursor: pointer;
-  border-radius: 15px;
-  border: none;
-  font-size: 20px;
-  color: white;
-  background-color: rgb(119, 187, 63);
-
-  &:hover {
-    background-color: rgba(119, 187, 63, 0.3);
-  }
-  &:active {
-    position: relative;
-    top: 3px;
-  }
 `;
 
 const SearchBlock = styled.div`
@@ -295,6 +262,7 @@ const IndexBlock = styled.div`
 const StyleLegend = styled.legend`
   cursor: pointer;
   font-size: 25px;
+  text-align: center;
 `;
 
 const StyledLabel = styled.label`

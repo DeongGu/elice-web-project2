@@ -99,13 +99,10 @@ const SlideBanner = () => {
 export default SlideBanner;
 
 const Wrapper = styled.div`
-  width: 900px;
+  width: 800px;
   margin: 10px auto;
   overflow: hidden;
-  @media (max-width: 935px) {
-    width: 750px;
-  }
-  @media (max-width: 525px) {
+  @media (max-width: 600px) {
     width: 400px;
   }
 `;
@@ -116,11 +113,8 @@ const SlideBlock = styled.div`
 `;
 
 const StyledImg = styled.img`
-  width: 900px;
-  @media (max-width: 935px) {
-    width: 750px;
-  }
-  @media (max-width: 525px) {
+  width: 800px;
+  @media (max-width: 600px) {
     width: 400px;
   }
 `;
