@@ -20,8 +20,8 @@ const Main = (props) => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`${url}items`);
-        setItemList(response.data);
-        setInitialList(response.data);
+        setItemList(response);
+        setInitialList(response);
       } catch (err) {
         console.log(err);
       }
@@ -43,7 +43,7 @@ const Main = (props) => {
             },
           })
           .then((res) => {
-            setItemList(res.data);
+            setItemList(res);
           });
       } catch (err) {
         console.log(err);
@@ -60,7 +60,7 @@ const Main = (props) => {
           },
         })
         .then((res) => {
-          setItemList(res.data);
+          setItemList(res);
         });
     } catch (err) {
       console.log(err);

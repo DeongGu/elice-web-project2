@@ -21,7 +21,7 @@ const ItemInfo = () => {
       const fetchData = async () => {
         try {
           const response = await axios.get(`${url}items/${itemId}`);
-          setItem(response.data);
+          setItem(response);
         } catch (err) {
           console.log(err);
         }
@@ -36,8 +36,8 @@ const ItemInfo = () => {
               Authentication: `${sessionStorage.getItem("accessToken")}`,
             },
           });
-          setItem(response.data);
-          setTempValue(response.data);
+          setItem(response);
+          setTempValue(response);
         } catch (err) {
           console.log(err);
         }
@@ -125,7 +125,7 @@ const ItemInfo = () => {
           },
         })
         .then((res) => {
-          console.log("response:", res.data);
+          console.log("response:", res);
           alert("수정되었습니다.");
           setIsEdit(false);
           navigate(`/items/${itemId}`);
@@ -202,7 +202,7 @@ const ItemInfo = () => {
           .then((res) => {
             console.log(res);
             const newItem = { ...item };
-            newItem["dibs.dibsId"] = res.data.result.dibsId;
+            newItem["dibs.dibsId"] = res.result.dibsId;
             setItem(newItem);
             setCheckedDibs((preState) => !preState);
           });
