@@ -37,6 +37,8 @@ export default function AboutForm() {
             이를 위해 <strong>‘자원 순환’</strong>에 초점을 맞춰 ‘의류 및 패션
             용품의 재사용’을 할 수 있도록 <br />
             <strong>‘중고 의류 교환 서비스’</strong>가 탄생했습니다!
+            <br /> <br />
+            전부 읽으셨다면 <strong>검은 배경</strong>을 눌러서 창을 꺼주세요!
           </p>
         </Reason>
       </Form>
