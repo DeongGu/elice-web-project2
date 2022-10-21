@@ -486,7 +486,7 @@ const StyledForm = styled.form`
   border: 1rem solid gray;
   outline: 1rem solid lightgray;
   border-radius: 20px;
-  width: 500px;
+  width: 600px;
   height: 1100px;
   box-sizing: border-box;
 `;
