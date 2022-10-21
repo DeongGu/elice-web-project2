@@ -51,7 +51,7 @@ drwxr-xr-x 1 wisht 197609    0 10월 12 18:57 front/
 
 <br>
 
-## 4. 벡엔드 환경 파일 작성
+## 4-1. 벡엔드 환경 파일 작성
 
 - ./back 경로에 `.env` 파일을 작성한다.
 - 내용은 아래와 같다. \
@@ -67,6 +67,30 @@ MYSQL_HOST=localhost
 MYSQL_PORT=3306
 JWT_SECRET_KEY=6ASFASDADASQWXCZX
 SEQUELIZE_LOGGING=false
+NODE_ENV=development
+AWS_SDK_LOAD_CONFIG=true
+AWS_KEY=AKIAYWK4DYI5LY2ZCZRS
+AWS_SECRET_KEY=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
+BURKET=team12-s3
+REGION=ap-northeast-2
+```
+
+<br>
+
+## 4-2. AWS S3(파일 서버) 벡엔드 환경 파일 작성
+
+- 이미지 업로드(aws) 기능 추가로 인해 설정 파일(2개)을 \
+  아래 경로에 넣어둬야 백엔드 로컬 서버 기동이 가능
+
+- Linux, Unix 및 macOS의 공유 자격 증명 파일 위치: `~/.aws/` \
+  Windows의 공유 자격 증명 파일: `C:\Users\사용자이름\.aws\`
+
+- 파일명: credentials, config (각 1개씩 동일 내용으로 작성, 확장자 없음)
+
+```
+[default]
+aws_access_key_id = AKIAYWK4DYI5LY2ZCZRS
+aws_secret_access_key = 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
 ```
 
 <br>
@@ -95,6 +119,18 @@ $ yarn db
 - MySQL, Networt, DB Admin Docker image 다운로드
 - 위 image로 Docker Container 자동 생성 및 백그라운드 실행
 - MySQL DB shop 데이터베이스 생성
+
+<br>
+
+## (참고) DB를 초기화하고 싶다면
+
+- docker 컨테이너 삭제
+  <br><br>
+  ![08](/_doc/img/08.png)
+
+- `_db\mysql\data` 폴더 삭제 후
+
+- 6번부터 다시 실행
 
 <br>
 
@@ -138,7 +174,13 @@ $ yarn start
 
 <br>
 
-## 11. 간단한 DB 확인은 관리자 화면에서 가능하다.
+## 11. DB 를 확인한다.
+
+- DBeaver 툴 사용
+  https://dbeaver.io <br><br>
+  ![07](/_doc/img/07.png)
+
+## 12. 간단한 DB 확인은 관리자 화면에서 가능하다.
 
 - http://localhost:8080
 - 상세한 사항은 '기타' 참고
@@ -154,45 +196,22 @@ $ yarn start
 ![03](/_doc/img/03.png)
 ![04](/_doc/img/04.png)
 
----
-
-<br>
-
-# 기타
-
-## pm2 로 yarn 실행 (windows 기준)
-
-```
-yarn pm2
-```
-
-<br>
-
-## 포스트맨 테스트 방법
+## 13. 포스트맨 테스트 방법
 
 1. Local에서 테스트할지 VM에서 테스트할지 정하고, 해당 콜랙션으로 들어간다.
 
 2. User API 에서 회원가입을 한다.
 
 3. 로그인을 하고 응답 body 값을 확인한다.
-   { "Authentication": "긴 JWT 코드"}
+   { userId : ....,
+   "Authentication": "긴 JWT 코드" }
 
-4. 이걸 콜랙션(ex. Local)에 Authentication 에 넣는다. <br><br>
+4. jwt 코드를 콜랙션(ex. Local)에 Authentication 에 붙여넣는다. <br><br>
    ![05](/_doc/img/05.png)
 
-5. 회원 목록을 조회한다.
-
-6. 내가 로그인한 userId 값을 복사한다.
-
-7. 이걸 콜랙션(ex. Local)에 Varables 의 userId의 VALUE 에 넣는다. <br><br>
+5. userId 값을 콜랙션(ex. Local)에 Varables 의 userId의 VALUE 에 붙여넣는다. <br><br>
    ![06](/_doc/img/06.png)
 
-8. 이제 테스트를 진행한다.
+6. 이제 테스트를 진행한다.
 
 <br>
-
-## DB 편리하게 보기
-
-- DBeaver 툴 사용
-  https://dbeaver.io <br><br>
-  ![07](/_doc/img/07.png)

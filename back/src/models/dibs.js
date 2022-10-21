@@ -3,11 +3,12 @@ module.exports = (sequelize, DataTypes) => {
   const dibs = sequelize.define(
     "dibs",
     {
-      id: {
+      dibsId: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         allowNull: false,
         primaryKey: true,
+        field: "id",
       },
     },
     {
@@ -19,12 +20,11 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
   dibs.associate = function (models) {
-    // associations can be defined here
     dibs.belongsTo(models.user, {
-      foreignKey: "user_id",
+      foreignKey: "userId",
     });
     dibs.belongsTo(models.item, {
-      foreignKey: "item_id",
+      foreignKey: "itemId",
     });
   };
   return dibs;
