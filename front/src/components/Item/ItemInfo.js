@@ -4,6 +4,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 const ItemInfo = () => {
+  const portNum = 5000;
+  const url = "http://" + window.location.hostname + ":" + portNum + "/";
   const navigate = useNavigate();
   const { itemId } = useParams();
 
@@ -27,9 +29,7 @@ const ItemInfo = () => {
     if (!sessionStorage.getItem("accessToken")) {
       const fetchData = async () => {
         try {
-          const response = await axios.get(
-            `http://localhost:5000/items/${itemId}`
-          );
+          const response = await axios.get(`${url}items/${itemId}`);
           setItem(response.data);
         } catch (err) {
           console.log(err);
@@ -40,14 +40,11 @@ const ItemInfo = () => {
     } else {
       const fetchData = async () => {
         try {
-          const response = await axios.get(
-            `http://localhost:5000/items/${itemId}`,
-            {
-              headers: {
-                Authentication: `${sessionStorage.getItem("accessToken")}`,
-              },
-            }
-          );
+          const response = await axios.get(`${url}items/${itemId}`, {
+            headers: {
+              Authentication: `${sessionStorage.getItem("accessToken")}`,
+            },
+          });
           setItem(response.data);
           setTempValue(response.data);
         } catch (err) {
@@ -120,7 +117,7 @@ const ItemInfo = () => {
 
     try {
       await axios
-        .put(`http://localhost:5000/items/${itemId}`, formData, {
+        .put(`${url}items/${itemId}`, formData, {
           headers: {
             Authentication: `${sessionStorage.getItem("accessToken")}`,
           },
@@ -139,7 +136,7 @@ const ItemInfo = () => {
   const handleDelete = async (e) => {
     try {
       await axios
-        .delete(`http://localhost:5000/items/${itemId}`, {
+        .delete(`${url}items/${itemId}`, {
           headers: {
             Authentication: `${sessionStorage.getItem("accessToken")}`,
           },
@@ -178,7 +175,7 @@ const ItemInfo = () => {
         alert("로그인을 하세요");
       } else if (item["dibs.dibsId"]) {
         await axios
-          .delete(`http://localhost:5000/dibs/${item["dibs.dibsId"]}`, {
+          .delete(`${url}dibs/${item["dibs.dibsId"]}`, {
             headers: {
               Authentication: `${sessionStorage.getItem("accessToken")}`,
             },
@@ -189,7 +186,7 @@ const ItemInfo = () => {
           });
       } else {
         await axios
-          .post(`http://localhost:5000/dibs/${itemId}`, {
+          .post(`${url}dibs/${itemId}`, {
             headers: {
               Authentication: `${sessionStorage.getItem("accessToken")}`,
             },

@@ -4,6 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 const ItemForm = () => {
+  const portNum = 5000;
+  const url = "http://" + window.location.hostname + ":" + portNum + "/";
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -81,7 +84,7 @@ const ItemForm = () => {
 
     try {
       axios
-        .post("http://localhost:5000/items", formData, {
+        .post(`${url}items`, formData, {
           headers: {
             Authentication: `${sessionStorage.getItem("accessToken")}`,
           },

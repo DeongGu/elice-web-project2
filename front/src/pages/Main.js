@@ -7,6 +7,9 @@ import ItemList from "../components/Item/ItemList.js";
 import SlideBanner from "../components/UI/SlideBanner.js";
 
 const Main = (props) => {
+  const portNum = 5000;
+  const url = "http://" + window.location.hostname + ":" + portNum + "/";
+
   const navigate = useNavigate();
 
   const [itemList, setItemList] = useState([]);
@@ -18,7 +21,7 @@ const Main = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/items");
+        const response = await axios.get(`${url}items`);
         setItemList(response.data);
         setInitialList(response.data);
       } catch (err) {
@@ -36,7 +39,7 @@ const Main = (props) => {
     if (e.key === "Enter") {
       try {
         await axios
-          .get(`http://localhost:5000/items?search=${search}`, {
+          .get(`${url}items?search=${search}`, {
             headers: {
               Authentication: `${sessionStorage.getItem("accessToken")}`,
             },
@@ -53,7 +56,7 @@ const Main = (props) => {
   const handleSearch = async (e) => {
     try {
       await axios
-        .get(`http://localhost:5000/items?search=${search}`, {
+        .get(`${url}items?search=${search}`, {
           headers: {
             Authentication: `${sessionStorage.getItem("accessToken")}`,
           },
@@ -82,11 +85,12 @@ const Main = (props) => {
   };
 
   useEffect(() => {
-    if (category.length) {
+    if (category.length !== 0) {
       const filterItems = itemList.filter((item) =>
         category.includes(item.itemCategory)
       );
       setItemList(filterItems);
+      return;
     } else {
       setItemList(initialList);
     }
@@ -182,20 +186,19 @@ const Main = (props) => {
 
       <SlideBanner></SlideBanner>
       <ItemBlock>
-        <div>
-          <label>
-            <input
+        <StyledDiv>
+          <StyledLabel>
+            <StyledInput
               type="checkbox"
               checked={checked}
               onChange={() => {
                 setChecked((preState) => !preState);
               }}
-            ></input>
+            ></StyledInput>
             거래가능만 보기
-          </label>
-        </div>
-
-        <StyledBtn onClick={() => navigate("/items")}>상품 생성</StyledBtn>
+          </StyledLabel>
+          <StyledBtn onClick={() => navigate("/items")}>상품 생성</StyledBtn>
+        </StyledDiv>
         <ItemList itemList={itemList}></ItemList>
       </ItemBlock>
     </MainBlock>
@@ -211,15 +214,12 @@ const MainBlock = styled.div`
 
 const ItemBlock = styled.div`
   display: flex;
-  width: 1280px;
   margin: 30px auto;
   flex-direction: column;
 `;
 
 const StyledBtn = styled.button`
-  display: block;
   width: 100px;
-  margin: 0 0 0 auto;
   height: 50px;
   cursor: pointer;
   border-radius: 15px;
@@ -269,7 +269,7 @@ const IndexBlock = styled.div`
   position: absolute;
   top: 10px;
   right: 90px;
-  width: 330px;
+  width: 350px;
   height: 100px;
   border: 2px solid rgba(0, 0, 0, 0.4);
   z-index: 10;
@@ -279,10 +279,22 @@ const IndexBlock = styled.div`
 
 const StyleLegend = styled.legend`
   cursor: pointer;
+  font-size: 25px;
 `;
 
 const StyledLabel = styled.label`
   & {
     margin-right: 10px;
   }
+  font-size: 22px;
+`;
+
+const StyledDiv = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const StyledInput = styled.input`
+  margin-right: 20px;
+  transform: scale(2);
 `;

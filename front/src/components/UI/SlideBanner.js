@@ -102,6 +102,12 @@ const Wrapper = styled.div`
   width: 900px;
   margin: 10px auto;
   overflow: hidden;
+  @media (max-width: 935px) {
+    width: 750px;
+  }
+  @media (max-width: 525px) {
+    width: 400px;
+  }
 `;
 
 const SlideBlock = styled.div`
@@ -111,6 +117,12 @@ const SlideBlock = styled.div`
 
 const StyledImg = styled.img`
   width: 900px;
+  @media (max-width: 935px) {
+    width: 750px;
+  }
+  @media (max-width: 525px) {
+    width: 400px;
+  }
 `;
 
 const ButtonBlock = styled.div`

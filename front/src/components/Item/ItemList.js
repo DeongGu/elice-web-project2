@@ -21,4 +21,14 @@ const ItemListBlock = styled.div`
   flex-wrap: wrap;
   width: 1280px;
   margin: 30px auto;
+
+  @media (max-width: 1280px) {
+    width: 960px;
+  }
+  @media (max-width: 990px) {
+    width: 640px;
+  }
+  @media (max-width: 430px) {
+    width: 300px;
+  }
 `;
