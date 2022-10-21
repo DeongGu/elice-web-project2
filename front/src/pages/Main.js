@@ -74,83 +74,23 @@ const Main = (props) => {
     if (e.target.checked) {
       const newCategory = [...category, e.target.value];
       setCategory(newCategory);
-
-      if (category.length === 1) {
-        const filterItems = itemList.filter(
-          (item) => item.itemCategory === category[0]
-        );
-        setItemList(filterItems);
-      } else if (category.length === 2) {
-        const filterItems = itemList.filter(
-          (item) => item.itemCategory === (category[0] || category[1])
-        );
-        setItemList(filterItems);
-      } else if (category.length === 3) {
-        const filterItems = itemList.filter(
-          (item) =>
-            item.itemCategory === (category[0] || category[1] || category[2])
-        );
-        setItemList(filterItems);
-      } else if (category.length === 4) {
-        const filterItems = itemList.filter(
-          (item) =>
-            item.itemCategory ===
-            (category[0] || category[1] || category[2] || category[3])
-        );
-        setItemList(filterItems);
-      } else if (category.length === 5) {
-        const filterItems = itemList.filter(
-          (item) =>
-            item.itemCategory ===
-            (category[0] ||
-              category[1] ||
-              category[2] ||
-              category[3] ||
-              category[4])
-        );
-        setItemList(filterItems);
-      }
     } else {
       const newCategory = [...category];
       const result = newCategory.filter((el) => el !== e.target.value);
       setCategory(result);
-      if (category.length === 1) {
-        const filterItems = itemList.filter(
-          (item) => item.itemCategory === category[0]
-        );
-        setItemList(filterItems);
-      } else if (category.length === 2) {
-        const filterItems = itemList.filter(
-          (item) => item.itemCategory === (category[0] || category[1])
-        );
-        setItemList(filterItems);
-      } else if (category.length === 3) {
-        const filterItems = itemList.filter(
-          (item) =>
-            item.itemCategory === (category[0] || category[1] || category[2])
-        );
-        setItemList(filterItems);
-      } else if (category.length === 4) {
-        const filterItems = itemList.filter(
-          (item) =>
-            item.itemCategory ===
-            (category[0] || category[1] || category[2] || category[3])
-        );
-        setItemList(filterItems);
-      } else if (category.length === 5) {
-        const filterItems = itemList.filter(
-          (item) =>
-            item.itemCategory ===
-            (category[0] ||
-              category[1] ||
-              category[2] ||
-              category[3] ||
-              category[4])
-        );
-        setItemList(filterItems);
-      }
     }
   };
+
+  useEffect(() => {
+    if (category.length) {
+      const filterItems = itemList.filter((item) =>
+        category.includes(item.itemCategory)
+      );
+      setItemList(filterItems);
+    } else {
+      setItemList(initialList);
+    }
+  }, [category]);
 
   useEffect(() => {
     if (checked) {
@@ -191,6 +131,7 @@ const Main = (props) => {
                 type="checkbox"
                 name="상의"
                 value="상의"
+                checked={category.includes("상의")}
                 onChange={handleCategory}
               ></input>
               상의
@@ -200,6 +141,7 @@ const Main = (props) => {
                 type="checkbox"
                 name="하의"
                 value="하의"
+                checked={category.includes("하의")}
                 onChange={handleCategory}
               ></input>
               하의
@@ -209,6 +151,7 @@ const Main = (props) => {
                 type="checkbox"
                 name="아우터"
                 value="아우터"
+                checked={category.includes("아우터")}
                 onChange={handleCategory}
               ></input>
               아우터
@@ -218,6 +161,7 @@ const Main = (props) => {
                 type="checkbox"
                 name="모자"
                 value="모자"
+                checked={category.includes("모자")}
                 onChange={handleCategory}
               ></input>
               모자
@@ -227,6 +171,7 @@ const Main = (props) => {
                 type="checkbox"
                 name="기타"
                 value="기타"
+                checked={category.includes("기타")}
                 onChange={handleCategory}
               ></input>
               기타
