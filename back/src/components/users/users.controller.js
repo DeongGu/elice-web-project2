@@ -118,7 +118,7 @@ export const updateUser = async (req, res, next) => {
       where: { userId: currentUserId },
     });
     if (updatedResult) {
-      res.send(apiSuccess(null, "User profile is updated"));
+      res.send(apiSuccess(updatedResult, "User profile is updated"));
     }
   } catch (err) {
     next(err);
@@ -130,12 +130,12 @@ export const deleteUser = async (req, res, next) => {
   try {
     const currentUserId = req.currentUserId;
 
-    const foundUser = await User.destroy({
+    const deletedUser = await User.destroy({
       where: { userId: currentUserId },
     });
 
-    if (foundUser) {
-      res.send(apiSuccess(null, "User information deleted"));
+    if (deletedUser) {
+      res.send(apiSuccess(deletedUser, "User information deleted"));
     }
   } catch (err) {
     next(err);

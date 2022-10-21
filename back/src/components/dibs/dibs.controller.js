@@ -16,35 +16,7 @@ export const createDibs = async (req, res, next) => {
     const targetItemId = req.params.itemId;
     let createInfo = { itemId: targetItemId, userId: currentUserId };
 
-    // const foundDibs = await Dibs.findOne({
-    //   raw: true,
-    //   include: {
-    //     [Op.and]: [
-    //       {
-    //         model: Item,
-    //         as: "item",
-    //         where: [{ itemId: createInfo.itemId }],
-    //         attributes: ["itemId"],
-    //         required: true,
-    //       },
-    //       {
-    //         model: User,
-    //         as: "user",
-    //         where: [{ userId: createInfo.userId }],
-    //         attributes: ["userId"],
-    //         required: true,
-    //       },
-    //     ],
-    //   },
-    // });
-
-    // if (foundDibs) {
-    //   throw new authorizationError("Duplicate dibs is not allowed.");
-    // }
-
     const createResult = await Dibs.create(createInfo);
-
-    console.log(createResult);
 
     if (createResult) {
       res.send(creationSuccess(createResult, "Dibs created successfully!"));

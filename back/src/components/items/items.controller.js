@@ -28,9 +28,11 @@ export const createItem = async (req, res, next) => {
       createInfo["itemType"] = createInfo.itemType?.split(",");
     }
 
-    await Item.create(createInfo);
+    const createResult = await Item.create(createInfo);
 
-    res.send(creationSuccess(null, "Item created successfully!"));
+    if (createResult) {
+      res.send(creationSuccess(createResult, "Item created successfully!"));
+    }
   } catch (err) {
     next(err);
   }
@@ -143,7 +145,7 @@ export const updateItem = async (req, res, next) => {
     });
 
     if (updatedResult) {
-      res.send(apiSuccess(null, "Item is updated"));
+      res.send(apiSuccess(updatedResult, "Item is updated"));
     }
   } catch (err) {
     next(err);
@@ -173,7 +175,7 @@ export const deleteItem = async (req, res, next) => {
     });
 
     if (deletedItem) {
-      res.send(apiSuccess(null, "Item is deleted"));
+      res.send(apiSuccess(deletedItem, "Item is deleted"));
     }
   } catch (err) {
     next(err);
