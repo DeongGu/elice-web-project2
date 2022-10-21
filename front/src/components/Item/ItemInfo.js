@@ -9,21 +9,10 @@ const ItemInfo = () => {
   const navigate = useNavigate();
   const { itemId } = useParams();
 
-  const [item, setItem] = useState({
-    itemImage: "/assets/images/default.png",
-    itemName: "",
-    itemType: "",
-    itemDesc: "",
-    userId: "",
-    editable: false,
-    status: "inStock",
-    openChat: "",
-    itemCategory: "기타",
-  });
+  const [item, setItem] = useState({});
 
   const [isEdit, setIsEdit] = useState(false);
   const [tempValue, setTempValue] = useState({});
-  const [checkedDibs, setCheckedDibs] = useState(false);
 
   useEffect(() => {
     if (!sessionStorage.getItem("accessToken")) {
@@ -54,7 +43,7 @@ const ItemInfo = () => {
 
       fetchData();
     }
-  }, []);
+  }, [item]);
 
   const {
     itemImage,
@@ -182,18 +171,25 @@ const ItemInfo = () => {
           })
           .then((res) => {
             console.log(res);
-            setCheckedDibs((preState) => !preState);
+            const newItem = { ...item };
+            setItem(newItem);
           });
       } else {
         await axios
-          .post(`${url}dibs/${itemId}`, {
-            headers: {
-              Authentication: `${sessionStorage.getItem("accessToken")}`,
-            },
-          })
+          .post(
+            `${url}dibs/${itemId}`,
+            {},
+            {
+              headers: {
+                Authentication: `${sessionStorage.getItem("accessToken")}`,
+              },
+            }
+          )
           .then((res) => {
             console.log(res);
-            setCheckedDibs((preState) => !preState);
+            const newItem = { ...item };
+            newItem["dibs.dibsId"] = res.data.result.dibsId;
+            setItem(newItem);
           });
       }
     } catch (err) {
@@ -432,8 +428,8 @@ const ItemInfo = () => {
           <>
             <StyledBtn type="button" onClick={handleDibs}>
               찜하기
+              {item["dibs.dibsId"] ? "❤️" : null}
             </StyledBtn>
-            {checkedDibs ? "❤️❤️" : null}
           </>
         )}
 
