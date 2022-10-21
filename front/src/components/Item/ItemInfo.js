@@ -457,7 +457,9 @@ const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
   margin: 20px auto;
-  border: 1px solid black;
+  border: 1rem solid gray;
+  outline: 1rem solid lightgray;
+  border-radius: 20px;
   width: 500px;
   height: 1100px;
   box-sizing: border-box;
