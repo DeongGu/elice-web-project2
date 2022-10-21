@@ -1,35 +1,35 @@
-import { useContext } from 'react';
-import styled from 'styled-components';
+import { useContext } from "react";
+import styled from "styled-components";
 
-import useForm from '../../hooks/useForm';
-import useRequest from '../../hooks/useRequest';
+import useForm from "../../hooks/useForm";
+import useRequest from "../../hooks/useRequest";
 
-import GeneralContext from '../../context/GeneralContext';
+import GeneralContext from "../../context/GeneralContext";
 
-import InputList from './InputList';
-import ModalBackground from '../UI/ModalBackground';
-import BreakLine from '../UI/BreakLine';
+import InputList from "./InputList";
+import ModalBackground from "../UI/ModalBackground";
+import BreakLine from "../UI/BreakLine";
 
-import logoImage from '../../assets/imgs/Vring-logo.png';
+import logoImage from "../../assets/imgs/Vring-logo.png";
 
-import { LOGIN_USER } from '../../api/Request';
+import { LOGIN_USER } from "../../api/Request";
 
 const inputData = [
   {
-    type: 'email',
-    name: 'email',
-    description: '이메일',
+    type: "email",
+    name: "email",
+    description: "이메일",
   },
   {
-    type: 'password',
-    name: 'password',
-    description: '비밀번호',
+    type: "password",
+    name: "password",
+    description: "비밀번호",
   },
 ];
 
 const initialState = {
-  email: '',
-  password: '',
+  email: "",
+  password: "",
 };
 
 export default function LoginForm() {
@@ -113,7 +113,7 @@ const Button = styled.button`
   margin-top: 2rem;
   width: 50%;
   height: 3rem;
-  background-color: ${({ disabled }) => (disabled ? 'lightgray' : '#77bb3f')};
+  background-color: ${({ disabled }) => (disabled ? "lightgray" : "#77bb3f")};
   color: white;
   border: none;
   border-radius: 20px;

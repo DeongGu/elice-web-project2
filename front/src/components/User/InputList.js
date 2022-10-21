@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export default function InputList({ inputData, onChangeHandler, form }) {
   return inputData.map((data, index) => {

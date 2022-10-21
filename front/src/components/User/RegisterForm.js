@@ -1,58 +1,58 @@
-import { useContext } from 'react';
-import styled from 'styled-components';
+import { useContext } from "react";
+import styled from "styled-components";
 
-import GeneralContext from '../../context/GeneralContext';
+import GeneralContext from "../../context/GeneralContext";
 
-import useForm from '../../hooks/useForm';
-import useRequest from '../../hooks/useRequest';
-import useValidation from '../../hooks/useValidation';
+import useForm from "../../hooks/useForm";
+import useRequest from "../../hooks/useRequest";
+import useValidation from "../../hooks/useValidation";
 
-import ValidateInputList from './ValidateInputList';
-import ModalBackground from '../UI/ModalBackground';
-import BreakLine from '../UI/BreakLine';
+import ValidateInputList from "./ValidateInputList";
+import ModalBackground from "../UI/ModalBackground";
+import BreakLine from "../UI/BreakLine";
 
-import logoImage from '../../assets/imgs/Vring-logo.png';
+import logoImage from "../../assets/imgs/Vring-logo.png";
 
-import { REGISTER_USER } from '../../api/Request';
+import { REGISTER_USER } from "../../api/Request";
 
 const inputData = [
   {
-    type: 'email',
-    name: 'email',
-    description: '이메일',
-    alert: '이메일 형식에 맞춰 주세요.',
+    type: "email",
+    name: "email",
+    description: "이메일",
+    alert: "이메일 형식에 맞춰 주세요.",
   },
   {
-    type: 'text',
-    name: 'nickname',
-    description: '별명',
-    alert: '4 ~ 16자, 영문, 한글 혹은 숫자여야 합니다.',
+    type: "text",
+    name: "nickname",
+    description: "별명",
+    alert: "4 ~ 16자, 영문, 한글 혹은 숫자여야 합니다.",
   },
   {
-    type: 'password',
-    name: 'password',
-    description: '비밀번호',
-    alert: '6자 이상, 영문 및 숫자 조합이어야 합니다.',
+    type: "password",
+    name: "password",
+    description: "비밀번호",
+    alert: "6자 이상, 영문 및 숫자 조합이어야 합니다.",
   },
   {
-    type: 'password',
-    name: 'confirmPwd',
-    description: '비밀번호 확인',
+    type: "password",
+    name: "confirmPwd",
+    description: "비밀번호 확인",
   },
 ];
 
 const initialState = {
-  email: '',
-  nickname: '',
-  password: '',
-  confirmPwd: '',
+  email: "",
+  nickname: "",
+  password: "",
+  confirmPwd: "",
 };
 
 export default function RegisterForm() {
   const generalContext = useContext(GeneralContext);
   const { form, setForm, formIsValid, setFormIsValid } = useForm(initialState);
   const { validateHandler } = useValidation(setForm, setFormIsValid);
-  const { requestHandler, error } = useRequest(REGISTER_USER, '', form);
+  const { requestHandler, error } = useRequest(REGISTER_USER, "", form);
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
@@ -153,7 +153,7 @@ const Button = styled.button`
   margin-top: 2rem;
   width: 50%;
   height: 3rem;
-  background-color: ${({ disabled }) => (disabled ? 'lightgray' : '#77bb3f')};
+  background-color: ${({ disabled }) => (disabled ? "lightgray" : "#77bb3f")};
   color: white;
   border: none;
   border-radius: 20px;

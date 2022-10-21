@@ -1,10 +1,10 @@
-import { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
-import styled from 'styled-components';
-import { UserContext } from '../../App';
+import styled from "styled-components";
+import { UserContext } from "../../App";
 
-import Gender from './Gender';
+import Gender from "./Gender";
 
 export default function UserIcon() {
   const userContext = useContext(UserContext);
@@ -15,7 +15,7 @@ export default function UserIcon() {
     <>
       <UserIconStyle
         onClick={() => setUserInfo((prevState) => !prevState)}
-        src={userContext.user.profileImage || Gender['male']}
+        src={userContext.user.profileImage || Gender["male"]}
       />
       {userInfo && (
         <>
@@ -23,12 +23,12 @@ export default function UserIcon() {
           <UserInfo>
             <UserTop>
               <UserInfoIcon
-                src={userContext.user.profileImage || Gender['male']}
+                src={userContext.user.profileImage || Gender["male"]}
               />
               <UserDescription>
                 <UserName>{userContext.user.nickname}</UserName>
                 <UserEmail>{userContext.user.email}</UserEmail>
-                <GoToUserInfo onClick={() => navigate('/users/my-profile')}>
+                <GoToUserInfo onClick={() => navigate("/users/my-profile")}>
                   계정 정보
                 </GoToUserInfo>
               </UserDescription>
@@ -133,7 +133,7 @@ const UserBottom = styled.div`
   width: 100%;
   height: 50%;
   display: flex;
-  flex-directin: row;
+  flex-direction: row;
   justify-content: flex-start;
   align-items: center;
   margin-left: 1rem;

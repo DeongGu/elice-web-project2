@@ -1,11 +1,11 @@
-import { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
 
-import { UserContext } from '../../App';
-import GeneralContext from '../../context/GeneralContext';
+import { UserContext } from "../../App";
+import GeneralContext from "../../context/GeneralContext";
 
-import UserIcon from './UserIcon';
+import UserIcon from "./UserIcon";
 
 export default function NavBar() {
   const userContext = useContext(UserContext);
@@ -38,8 +38,8 @@ export default function NavBar() {
   return (
     <Nav>
       <NavList>
-        <ListElement onClick={() => navigate('/about')}>소개</ListElement>
-        <ListElement onClick={() => navigate('/')}>마켓</ListElement>
+        <ListElement onClick={() => navigate("/about")}>소개</ListElement>
+        <ListElement onClick={() => navigate("/")}>마켓</ListElement>
         <LoginCheck />
       </NavList>
     </Nav>
@@ -71,7 +71,7 @@ const StartButton = styled(ListElement)`
   cursor: pointer;
   padding: 4px 16px;
   font-size: 1.25rem;
-  font-family: 'elice-bold';
+  font-family: "elice-bold";
   color: white;
   background-color: #77bb3f;
   border: #77bb3f 1px solid;

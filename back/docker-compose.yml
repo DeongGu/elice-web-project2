@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  mysqldb:
+    image: mysql:8
+    container_name: dev-mysql
+    command:
+      - --default-authentication-plugin=mysql_native_password
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --skip-character-set-client-handshake
+    ports:
+      - 3306:3306
+    volumes:
+      - ./../_db/mysql/data:/var/lib/mysql
+      - ./../_db/mysql/conf:/etc/mysql/conf.d
+      - ./../_db/mysql/init:/docker-entrypoint-initdb.d
+    environment:
+      TZ: Asia/Seoul
+      MYSQL_ROOT_PASSWORD: pwteam12
+      MYSQL_DATABASE: shop
+      MYSQL_USER: team12
+      MYSQL_PASSWORD: pwteam12
+    restart: always
+
+  adminer:
+    image: adminer
+    container_name: dev-admin
+    restart: always
+    ports:
+      - 8080:8080

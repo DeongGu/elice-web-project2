@@ -1,6 +1,6 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
-import { Validate } from './Validate';
+import { Validate } from "./Validate";
 
 export default function ValidateInputList({
   inputData,

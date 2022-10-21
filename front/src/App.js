@@ -1,19 +1,21 @@
-import { createContext } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import "./App.css";
+import { createContext } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import useFetch from './hooks/useFetch';
+import useFetch from "./hooks/useFetch";
 
-import { GeneralContextProvider } from './context/GeneralContext';
+import Header from "./components/UI/Header";
+import { GeneralContextProvider } from "./context/GeneralContext";
 
-import { CHECK_USER } from './api/Request';
+import { CHECK_USER } from "./api/Request";
 
-import Header from './components/UI/Header';
+import About from "./pages/About";
+import Main from "./pages/Main";
+import User from "./pages/User";
 
-import About from './pages/About';
-import Market from './pages/Market';
-import User from './pages/User';
-
-import './App.css';
+import ItemCreate from "./pages/ItemCreate";
+import ItemPage from "./pages/ItemPage";
+import NotFound from "./pages/NotFound";
 
 export const UserContext = createContext(null);
 
@@ -31,10 +33,13 @@ function App() {
         <Router>
           <Header />
           <Routes>
-            <Route path='/' element={<Market />} exact />
-            <Route path='/about' element={<About />} />
-            <Route path='/users/my-profile' element={<User />} exact />
-            <Route path='/users/:userId' element={<User />} />
+            <Route path="/" element={<Main />} exact></Route>
+            <Route path="/about" element={<About />} />
+            <Route path="/users/my-profile" element={<User />} exact />
+            <Route path="/users/:userId" element={<User />} />
+            <Route path="/items/:itemId" element={<ItemPage />}></Route>
+            <Route path="/items" element={<ItemCreate />}></Route>
+            <Route path="*" element={<NotFound />}></Route>
           </Routes>
         </Router>
       </GeneralContextProvider>

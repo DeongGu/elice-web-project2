@@ -1,12 +1,12 @@
-import { useContext, useState } from 'react';
+import { useContext, useState } from "react";
 
-import * as Api from '../api/api';
-import { CHECK_USER } from '../api/Request';
+import * as Api from "../api/api";
+import { CHECK_USER } from "../api/Request";
 
-import { UserContext } from '../App';
-import GeneralContext from '../context/GeneralContext';
+import { UserContext } from "../App";
+import GeneralContext from "../context/GeneralContext";
 
-export default function useRequest(request, params = '', form = {}) {
+export default function useRequest(request, params = "", form = {}) {
   const userContext = useContext(UserContext);
   const generalContext = useContext(GeneralContext);
 
@@ -27,7 +27,7 @@ export default function useRequest(request, params = '', form = {}) {
       );
 
       if (accessToken) {
-        sessionStorage.setItem('accessToken', accessToken);
+        sessionStorage.setItem("accessToken", accessToken);
 
         const { data: userData } = await Api[CHECK_USER[0]](CHECK_USER[1]);
         userContext.setUser({ ...userData });
@@ -36,10 +36,10 @@ export default function useRequest(request, params = '', form = {}) {
       generalContext.disableFormHandler();
       return data;
     } catch (err) {
-      setError('해당 요청을 실패했습니다. 다시 한번 확인해주세요.');
+      setError("해당 요청을 실패했습니다. 다시 한번 확인해주세요.");
       console.log(err.response.data.message);
-      if (err.response.data.message === 'Email already exists.') {
-        setError('중복된 이메일이 있습니다.');
+      if (err.response.data.message === "Email already exists.") {
+        setError("중복된 이메일이 있습니다.");
       }
     } finally {
       setIsLoading(false);
