@@ -14,6 +14,8 @@ const ItemInfo = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [tempValue, setTempValue] = useState({});
 
+  const [checkedDibs, setCheckedDibs] = useState(false);
+
   useEffect(() => {
     if (!sessionStorage.getItem("accessToken")) {
       const fetchData = async () => {
@@ -43,7 +45,7 @@ const ItemInfo = () => {
 
       fetchData();
     }
-  }, [item]);
+  }, [checkedDibs]);
 
   const {
     itemImage,
@@ -103,6 +105,17 @@ const ItemInfo = () => {
     formData.append("status", status);
     formData.append("openChat", openChat);
     formData.append("itemCategory", itemCategory);
+
+    setTempValue({
+      itemImage,
+      itemName,
+      itemType,
+      itemDesc,
+      editable,
+      status,
+      openChat,
+      itemCategory,
+    });
 
     try {
       await axios
@@ -173,6 +186,7 @@ const ItemInfo = () => {
             console.log(res);
             const newItem = { ...item };
             setItem(newItem);
+            setCheckedDibs((preState) => !preState);
           });
       } else {
         await axios
@@ -190,6 +204,7 @@ const ItemInfo = () => {
             const newItem = { ...item };
             newItem["dibs.dibsId"] = res.data.result.dibsId;
             setItem(newItem);
+            setCheckedDibs((preState) => !preState);
           });
       }
     } catch (err) {
@@ -435,15 +450,26 @@ const ItemInfo = () => {
 
         {editable ? (
           <>
-            <StyledBtn
-              type="button"
-              onClick={() => {
-                setIsEdit((preState) => !preState);
-                setItem(tempValue);
-              }}
-            >
-              {isEdit ? "취소" : "편집"}
-            </StyledBtn>
+            {isEdit ? (
+              <StyledBtn
+                type="button"
+                onClick={() => {
+                  setIsEdit((preState) => !preState);
+                  setItem(tempValue);
+                }}
+              >
+                {"취소"}
+              </StyledBtn>
+            ) : (
+              <StyledBtn
+                type="button"
+                onClick={() => {
+                  setIsEdit((preState) => !preState);
+                }}
+              >
+                {"편집"}
+              </StyledBtn>
+            )}
           </>
         ) : null}
       </ButtonBlock>
