@@ -13,7 +13,9 @@ export default function useFetch(request) {
     }
 
     try {
-      const data = await Api[request[0]](request[1]);
+      const {
+        data: { data },
+      } = await Api[request[0]](request[1]);
       setData(data);
     } catch (err) {
       console.log(err.message);

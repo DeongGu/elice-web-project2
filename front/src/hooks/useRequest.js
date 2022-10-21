@@ -17,11 +17,15 @@ export default function useRequest(request, params = '', form = {}) {
     try {
       setIsLoading(true);
 
-      const data = await Api[request[0]](
+      const {
+        data: { data },
+      } = await Api[request[0]](
         request[1],
         params || form,
         params && form && form
       );
+
+      console.log(data);
 
       const accessToken = data.Authentication;
 
