@@ -22,11 +22,12 @@ export default function UserForm() {
   const generalContext = useContext(GeneralContext);
   const userContext = useContext(UserContext);
 
+  const inputRef = useRef();
   const imageRef = useRef();
 
   const imageHandler = (event) => {
     event.preventDefault();
-    imageRef.current.click();
+    inputRef.current.click();
   };
 
   const navigate = useNavigate();
@@ -73,6 +74,23 @@ export default function UserForm() {
     await formHandler();
   };
 
+  const inputOnChange = (event) => {
+    if (!event.target.files[0]) {
+      return;
+    }
+
+    const image = event.target.files[0];
+    const fileReader = new FileReader();
+
+    fileReader.onload = (event) => {
+      imageRef.current.src = event.target.result;
+      console.log(event.target.result);
+      console.log();
+    };
+
+    fileReader.readAsDataURL(image);
+  };
+
   const toggleHandler = () => {
     setError('');
     setEditMode((prevState) => !prevState);
@@ -111,8 +129,15 @@ export default function UserForm() {
           <img
             src={userContext.user.profileImage || Gender['male']}
             onClick={imageHandler}
+            ref={imageRef}
           />
-          <input type='file' ref={imageRef} accept='image/* ' />
+          <input
+            type='file'
+            ref={inputRef}
+            onChange={inputOnChange}
+            accept='image/* '
+            name='image'
+          />
           <ProfileName>{form.nickname}</ProfileName>
           <ProfileEmail>{userContext.user.email}</ProfileEmail>
           <UserDescription>{form.userDesc}</UserDescription>
