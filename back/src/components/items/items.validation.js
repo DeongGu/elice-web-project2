@@ -11,6 +11,7 @@ const itemSchema = Joi.object().keys({
   itemCategory: Joi.string().required(),
   itemType: Joi.string().allow(null, ""),
   itemImage: Joi.array().allow(null, ""),
+  status: Joi.string().allow(null, ""),
   itemDesc: Joi.string().allow(null, ""),
   openChat: Joi.string().uri().allow(null, ""),
 });
