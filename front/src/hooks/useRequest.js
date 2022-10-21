@@ -25,14 +25,14 @@ export default function useRequest(request, params = '', form = {}) {
         params && form && form
       );
 
-      console.log(data);
-
       const accessToken = data.Authentication;
 
       if (accessToken) {
         sessionStorage.setItem('accessToken', accessToken);
 
-        const userData = await Api[CHECK_USER[0]](CHECK_USER[1]);
+        const {
+          data: { data: userData },
+        } = await Api[CHECK_USER[0]](CHECK_USER[1]);
         userContext.setUser(userData);
       }
 
