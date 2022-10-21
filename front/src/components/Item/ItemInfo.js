@@ -414,7 +414,11 @@ const ItemInfo = () => {
           value={openChat}
         />
       ) : (
-        <StyledP>{openChat}</StyledP>
+        <StyledP>
+          <a href={openChat} target="_blank" rel="noreferrer">
+            {openChat}
+          </a>
+        </StyledP>
       )}
       <ButtonBlock>
         {isEdit ? (
