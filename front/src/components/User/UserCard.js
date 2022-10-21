@@ -88,7 +88,6 @@ export default function UserCard() {
           src={dib['item.itemImage'] || '/assets/images/default.png'}
           onClick={() => navigate(`/items/${dib.itemId}`)}
         />
-        <ProductName>{dib['item.itemName']}</ProductName>
       </div>
     ));
   };
