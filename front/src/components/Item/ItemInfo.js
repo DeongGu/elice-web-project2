@@ -177,22 +177,27 @@ const ItemInfo = () => {
       if (!sessionStorage.getItem("accessToken")) {
         alert("로그인을 하세요");
       } else if (item["dibs.dibsId"]) {
-        await axios.delete(
-          `http://localhost:5000/dibs/${item["dibs.dibsId"]}`,
-          {
+        await axios
+          .delete(`http://localhost:5000/dibs/${item["dibs.dibsId"]}`, {
             headers: {
               Authentication: `${sessionStorage.getItem("accessToken")}`,
             },
-          }
-        );
-        setCheckedDibs((preState) => !preState);
+          })
+          .then((res) => {
+            console.log(res);
+            setCheckedDibs((preState) => !preState);
+          });
       } else {
-        await axios.post(`http://localhost:5000/dibs/${itemId}`, {
-          headers: {
-            Authentication: `${sessionStorage.getItem("accessToken")}`,
-          },
-        });
-        setCheckedDibs((preState) => !preState);
+        await axios
+          .post(`http://localhost:5000/dibs/${itemId}`, {
+            headers: {
+              Authentication: `${sessionStorage.getItem("accessToken")}`,
+            },
+          })
+          .then((res) => {
+            console.log(res);
+            setCheckedDibs((preState) => !preState);
+          });
       }
     } catch (err) {
       console.log(err);
