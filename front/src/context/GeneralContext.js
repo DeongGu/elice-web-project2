@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState } from 'react';
 
 const GeneralContext = createContext({
   showRegisterForm: false,
@@ -10,7 +10,6 @@ const GeneralContext = createContext({
   loginFormHandler: () => {},
   editFormHandler: () => {},
   deleteFormHandler: () => {},
-  aboutFormHandler: () => {},
   disableFormHandler: () => {},
 });
 
@@ -19,7 +18,7 @@ export const GeneralContextProvider = ({ children }) => {
   const [showLoginForm, setShowLoginForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
   const [showDeleteForm, setShowDeleteForm] = useState(false);
-  const [showAboutForm, setShowAboutForm] = useState(false);
+  const [showAboutForm, setShowAboutForm] = useState(true);
 
   const registerFormHandler = () => {
     setShowRegisterForm((prevState) => !prevState);
@@ -35,12 +34,6 @@ export const GeneralContextProvider = ({ children }) => {
 
   const deleteFormHandler = () => {
     setShowDeleteForm((prevState) => !prevState);
-  };
-
-  const aboutFormHandler = (currentSection) => {
-    if (window.pageYOffset > 500) {
-      setShowAboutForm((prevState) => !prevState);
-    }
   };
 
   const disableFormHandler = () => {
@@ -61,7 +54,6 @@ export const GeneralContextProvider = ({ children }) => {
     loginFormHandler,
     editFormHandler,
     deleteFormHandler,
-    aboutFormHandler,
     disableFormHandler,
   };
 
