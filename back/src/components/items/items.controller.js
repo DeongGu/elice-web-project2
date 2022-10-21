@@ -28,9 +28,11 @@ export const createItem = async (req, res, next) => {
       createInfo["itemType"] = createInfo.itemType?.split(",");
     }
 
-    await Item.create(createInfo);
+    const createResult = await Item.create(createInfo);
 
-    res.send(creationSuccess(null, "Item created successfully!"));
+    if (createResult) {
+      res.send(creationSuccess(createResult, "Item created successfully!"));
+    }
   } catch (err) {
     next(err);
   }
@@ -40,8 +42,10 @@ export const createItem = async (req, res, next) => {
 export const findItem = async (req, res, next) => {
   try {
     const searchId = req.params.itemId;
-    const decodedToken = jwt.verify(req.headers?.authentication, SECRET_KEY);
-    const currentUserId = decodedToken?.userId;
+    let currentUserId = null;
+    if (req.headers.authentication) {
+      currentUserId = jwt.verify(req.headers.authentication, SECRET_KEY).userId;
+    }
 
     const foundItem = await Item.findOne({
       raw: true,
@@ -72,8 +76,11 @@ export const findItem = async (req, res, next) => {
 // 상품목록조회(검색포함)
 export const findItems = async (req, res, next) => {
   try {
-    const decodedToken = jwt.verify(req.headers?.authentication, SECRET_KEY);
-    const currentUserId = decodedToken?.userId;
+    let currentUserId = null;
+    if (req.headers.authentication) {
+      currentUserId = jwt.verify(req.headers.authentication, SECRET_KEY).userId;
+    }
+
     const { status, search, limit, offset } = req.query;
     const foundItems = await Item.findAll({
       raw: true,
@@ -138,7 +145,7 @@ export const updateItem = async (req, res, next) => {
     });
 
     if (updatedResult) {
-      res.send(apiSuccess(null, "Item is updated"));
+      res.send(apiSuccess(updatedResult, "Item is updated"));
     }
   } catch (err) {
     next(err);
@@ -168,7 +175,7 @@ export const deleteItem = async (req, res, next) => {
     });
 
     if (deletedItem) {
-      res.send(apiSuccess(null, "Item is deleted"));
+      res.send(apiSuccess(deletedItem, "Item is deleted"));
     }
   } catch (err) {
     next(err);

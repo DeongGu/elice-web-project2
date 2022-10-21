@@ -16,35 +16,11 @@ export const createDibs = async (req, res, next) => {
     const targetItemId = req.params.itemId;
     let createInfo = { itemId: targetItemId, userId: currentUserId };
 
-    // const foundDibs = await Dibs.findOne({
-    //   raw: true,
-    //   include: {
-    //     [Op.and]: [
-    //       {
-    //         model: Item,
-    //         as: "item",
-    //         where: [{ itemId: createInfo.itemId }],
-    //         attributes: ["itemId"],
-    //         required: true,
-    //       },
-    //       {
-    //         model: User,
-    //         as: "user",
-    //         where: [{ userId: createInfo.userId }],
-    //         attributes: ["userId"],
-    //         required: true,
-    //       },
-    //     ],
-    //   },
-    // });
+    const createResult = await Dibs.create(createInfo);
 
-    // if (foundDibs) {
-    //   throw new authorizationError("Duplicate dibs is not allowed.");
-    // }
-
-    await Dibs.create(createInfo);
-
-    res.send(creationSuccess(null, "Dibs created successfully!"));
+    if (createResult) {
+      res.send(creationSuccess(createResult, "Dibs created successfully!"));
+    }
   } catch (err) {
     next(err);
   }
@@ -121,7 +97,7 @@ export const deleteDibs = async (req, res, next) => {
     });
 
     if (deletedDibs) {
-      res.send(apiSuccess(null, "Dibs canceled"));
+      res.send(apiSuccess(deletedDibs, "Dibs canceled"));
     }
   } catch (err) {
     next(err);
