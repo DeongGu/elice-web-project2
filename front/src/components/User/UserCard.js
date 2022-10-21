@@ -15,7 +15,8 @@ import Gender from '../UI/Gender';
 import EditIconImage from '../../assets/imgs/EditIcon.png';
 import LockIconImage from '../../assets/imgs/LockIcon.png';
 
-import { EDIT_USER } from '../../api/Request';
+import { CHECK_DIBS, EDIT_USER } from '../../api/Request';
+import useFetch from '../../hooks/useFetch';
 
 export default function UserCard() {
   const userContext = useContext(UserContext);
@@ -36,6 +37,7 @@ export default function UserCard() {
 
   const { requestHandler: formDataHandler } = useRequest(EDIT_USER, formData);
   const { requestHandler: formHandler } = useRequest(EDIT_USER, form);
+  const { data: dibData, isLoading } = useRequest(CHECK_DIBS);
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -75,6 +77,10 @@ export default function UserCard() {
       ...prevState,
       [event.target.name]: event.target.value,
     }));
+  };
+
+  const Dibs = () => {
+    console.log(dibData);
   };
 
   useEffect(() => {
@@ -146,6 +152,7 @@ export default function UserCard() {
           <UserCardRight>
             <FavoriteSection>
               찜한 상품
+              {!isLoading && <Dibs />}
               <FavoriteSectionBottom>
                 <BreakLine />
                 <Button>더보기</Button>
