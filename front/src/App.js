@@ -35,8 +35,8 @@ function App() {
           <Header />
           <Routes>
             <Route path='/' element={<Main />} exact></Route>
-            <Route path='/about' element={<About />} />
-            <Route path='/users/profile' element={<User />} />
+            <Route path='/about' element={<About />}></Route>
+            <Route path='/users/profile' element={<User />}></Route>
             <Route path='/items/:itemId' element={<ItemPage />}></Route>
             <Route path='/items' element={<ItemCreate />}></Route>
             <Route path='*' element={<NotFound />}></Route>
