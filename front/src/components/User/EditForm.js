@@ -13,6 +13,8 @@ import BreakLine from '../UI/BreakLine';
 import { UserContext } from '../../App';
 import ValidateInputList from './ValidateInputList';
 
+import LogoImage from '../assets/images/Vring-logo.png';
+
 const inputData = [
   {
     type: 'password',
@@ -59,9 +61,9 @@ export default function EditForm() {
     event.preventDefault();
 
     try {
-      const { getUserError } = await checkHandler();
+      const { error } = await checkHandler();
 
-      if (getUserError) {
+      if (error) {
         return;
       }
 
@@ -99,7 +101,7 @@ export default function EditForm() {
           수정
         </Button>
         <BreakLine />
-        <Logo src={'assets/imagess/Vring-logo.png'} />
+        <Logo src={LogoImage} />
       </Form>
     </>
   );

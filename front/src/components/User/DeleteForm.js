@@ -10,6 +10,8 @@ import InputList from './InputList';
 import ModalBackground from '../UI/ModalBackground';
 import BreakLine from '../UI/BreakLine';
 
+import LogoImage from '../assets/images/Vring-logo.png';
+
 import { DELETE_USER, LOGIN_USER } from '../../api/endpoints';
 
 const inputData = [
@@ -45,9 +47,9 @@ export default function DeleteForm() {
     event.preventDefault();
 
     try {
-      const { getUserError } = await checkUserHandler();
+      const { error } = await checkUserHandler();
 
-      if (getUserError) {
+      if (error) {
         return;
       }
 
@@ -73,7 +75,7 @@ export default function DeleteForm() {
         {error && <ErrorMsg>{error}</ErrorMsg>}
         <Button disabled={!(form.email && form.password)}>삭제</Button>
         <BreakLine />
-        <Logo src={'assets/images/Vring-logo.png'} />
+        <Logo src={LogoImage} />
       </Form>
     </>
   );
