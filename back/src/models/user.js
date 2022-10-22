@@ -5,11 +5,12 @@ module.exports = (sequelize, DataTypes) => {
   const user = sequelize.define(
     "user",
     {
-      id: {
+      userId: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         allowNull: false,
         primaryKey: true,
+        field: "id",
       },
       email: {
         type: DataTypes.STRING,
@@ -17,31 +18,28 @@ module.exports = (sequelize, DataTypes) => {
       },
       password: {
         type: DataTypes.STRING,
+        set(value) {
+          if (value.length >= 6) {
+            this.setDataValue("password", bcrypt.hashSync(value, 10));
+          } else {
+            throw new Error("Password should be at least 6 characters long!");
+          }
+        },
         allowNull: false,
       },
       nickname: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      role: {
+      profileImage: {
         type: DataTypes.STRING,
         allowNull: true,
+        field: "profile_image",
       },
-      name: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      phone_number: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      profile_image: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      user_desc: {
+      userDesc: {
         type: DataTypes.TEXT,
         allowNull: true,
+        field: "user_desc",
       },
     },
     {
@@ -53,18 +51,6 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  user.beforeSave(async (user) => {
-    try {
-      if (user.changed("password")) {
-        const salt = await bcrypt.genSalt(10);
-        const hash = await bcrypt.hash(user.password, salt);
-        user.password = hash;
-      }
-    } catch (err) {
-      throw new Error(err);
-    }
-  });
-
   user.prototype.isValidPassword = async function (pw) {
     try {
       return await bcrypt.compare(pw, this.password);
@@ -74,17 +60,13 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   user.associate = function (models) {
-    user.hasMany(models.address, {
-      foreignKey: "user_id",
-      as: "address",
-    });
     user.hasMany(models.item, {
-      foreignKey: "user_id",
+      foreignKey: "userId",
       as: "item",
     });
-    user.hasMany(models.user_image, {
-      foreignKey: "user_id",
-      as: "user_image",
+    user.hasMany(models.dibs, {
+      foreignKey: "userId",
+      as: "dibs",
     });
   };
   return user;

@@ -1,0 +1,27 @@
+@font-face {
+  font-family: 'elice';
+  src: url('./assets/fonts/EliceDigitalBaeum_Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'elice-bold';
+  src: url('./assets/fonts/EliceDigitalBaeum_Bold.ttf') format('truetype');
+}
+
+* {
+  font-family: 'elice';
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+}
+
+div#root {
+  height: 100%;
+}
