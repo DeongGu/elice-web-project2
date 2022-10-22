@@ -7,19 +7,20 @@ const SlideBanner = () => {
     "/assets/images/banner1.png",
     "/assets/images/banner2.png",
     "/assets/images/banner3.png",
+    "/assets/images/banner4.png",
   ];
   const [slide, setSlide] = useState(0);
 
   const preSlide = () => {
     if (slide === 0) {
-      setSlide(2);
+      setSlide(3);
     } else {
       setSlide(slide - 1);
     }
   };
 
   const nextSlide = () => {
-    if (slide >= 2) {
+    if (slide >= 3) {
       setSlide(0);
     } else {
       setSlide(slide + 1);
@@ -31,8 +32,10 @@ const SlideBanner = () => {
       setSlide(0);
     } else if (e.target.className[e.target.className.length - 1] === "2") {
       setSlide(1);
-    } else {
+    } else if (e.target.className[e.target.className.length - 1] === "2") {
       setSlide(2);
+    } else {
+      setSlide(3);
     }
   };
 
@@ -67,11 +70,12 @@ const SlideBanner = () => {
         <StyledImg src={slideList[0]} alt="이미지"></StyledImg>
         <StyledImg src={slideList[1]} alt="이미지"></StyledImg>
         <StyledImg src={slideList[2]} alt="이미지"></StyledImg>
+        <StyledImg src={slideList[3]} alt="이미지"></StyledImg>
       </SlideBlock>
       <ButtonBlock>
         <StyledBtn onClick={preSlide}>{"<"}</StyledBtn>
         <NavBlock>
-          {Array(3)
+          {Array(4)
             .fill()
             .map((_, i) => {
               if (i === slide) {
