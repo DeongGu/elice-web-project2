@@ -4,9 +4,9 @@ import styled from "styled-components";
 const SlideBanner = () => {
   const slideRef = useRef(null);
   const slideList = [
-    "/assets/images/banner1.jpg",
-    "/assets/images/banner2.jpg",
-    "/assets/images/banner3.jpg",
+    "/assets/images/banner1.png",
+    "/assets/images/banner2.png",
+    "/assets/images/banner3.png",
   ];
   const [slide, setSlide] = useState(0);
 
@@ -99,7 +99,7 @@ const SlideBanner = () => {
 export default SlideBanner;
 
 const Wrapper = styled.div`
-  width: 800px;
+  width: 1150px;
   margin: 10px auto;
   overflow: hidden;
   @media (max-width: 600px) {
@@ -113,7 +113,7 @@ const SlideBlock = styled.div`
 `;
 
 const StyledImg = styled.img`
-  width: 800px;
+  width: 1150px;
   @media (max-width: 600px) {
     width: 400px;
   }
