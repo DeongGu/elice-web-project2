@@ -10,7 +10,7 @@ import InputList from './InputList';
 import ModalBackground from '../UI/ModalBackground';
 import BreakLine from '../UI/BreakLine';
 
-import LogoImage from '../assets/images/Vring-logo.png';
+import LogoImage from '../../assets/images/Vring-logo.png';
 
 import { DELETE_USER, LOGIN_USER } from '../../api/endpoints';
 

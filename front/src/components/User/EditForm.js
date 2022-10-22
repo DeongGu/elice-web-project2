@@ -13,7 +13,7 @@ import BreakLine from '../UI/BreakLine';
 import { UserContext } from '../../App';
 import ValidateInputList from './ValidateInputList';
 
-import LogoImage from '../assets/images/Vring-logo.png';
+import LogoImage from '../../assets/images/Vring-logo.png';
 
 const inputData = [
   {
