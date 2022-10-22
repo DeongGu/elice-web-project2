@@ -76,9 +76,9 @@ const ItemInfo = () => {
     }
   };
 
-  const isItemName = itemName?.length >= 0 && itemName?.length <= 25;
+  const isItemName = itemName?.length >= 0 && itemName?.length <= 100;
   const isItemType = itemType?.length >= 0 && itemType?.length <= 100;
-  const isItemDesc = itemDesc?.length >= 0 && itemDesc?.length <= 30;
+  const isItemDesc = itemDesc?.length >= 0 && itemDesc?.length <= 100;
   const isOpenChat = openChat?.length >= 0;
   const validate = isItemName && isItemType && isItemDesc && isOpenChat;
 
