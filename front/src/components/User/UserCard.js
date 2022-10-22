@@ -27,8 +27,8 @@ export default function UserCard() {
   const navigate = useNavigate();
 
   const initialState = {
-    nickname: userContext.user.nickname,
-    userDesc: userContext.user.userDesc || null,
+    nickname: userContext.user?.nickname || null,
+    userDesc: userContext.user?.userDesc || null,
   };
 
   const [form, setForm] = useState(initialState);
