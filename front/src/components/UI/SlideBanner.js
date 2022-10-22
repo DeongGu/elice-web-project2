@@ -32,7 +32,7 @@ const SlideBanner = () => {
       setSlide(0);
     } else if (e.target.className[e.target.className.length - 1] === "2") {
       setSlide(1);
-    } else if (e.target.className[e.target.className.length - 1] === "2") {
+    } else if (e.target.className[e.target.className.length - 1] === "3") {
       setSlide(2);
     } else {
       setSlide(3);
